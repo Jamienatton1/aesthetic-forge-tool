@@ -23,8 +23,8 @@ export function MetricCard({
 }: MetricCardProps) {
   return (
     <div className={cn(
-      "bg-metric-card rounded-xl p-8 shadow-card border border-border",
-      "flex flex-col items-center text-center space-y-6",
+      "bg-metric-card rounded-xl p-8 shadow-card border border-border h-80",
+      "flex flex-col items-center text-center justify-between",
       className
     )}>
       <div className="w-16 h-16 bg-gradient-hero rounded-full flex items-center justify-center">
