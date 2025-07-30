@@ -52,6 +52,14 @@ export default {
 					DEFAULT: 'hsl(var(--card))',
 					foreground: 'hsl(var(--card-foreground))'
 				},
+				'sidebar-dark': 'hsl(var(--sidebar-dark))',
+				'sidebar-item': 'hsl(var(--sidebar-item))',
+				'sidebar-item-active': 'hsl(var(--sidebar-item-active))',
+				'metric-card': 'hsl(var(--metric-card))',
+				'chart-primary': 'hsl(var(--chart-primary))',
+				'chart-secondary': 'hsl(var(--chart-secondary))',
+				'chart-tertiary': 'hsl(var(--chart-tertiary))',
+				'shadow-card': 'hsl(var(--shadow-card))',
 				sidebar: {
 					DEFAULT: 'hsl(var(--sidebar-background))',
 					foreground: 'hsl(var(--sidebar-foreground))',
@@ -62,6 +70,13 @@ export default {
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
 				}
+			},
+			backgroundImage: {
+				'gradient-hero': 'var(--gradient-hero)',
+			},
+			boxShadow: {
+				'card': '0 4px 6px -1px hsl(var(--shadow-card) / 0.1), 0 2px 4px -2px hsl(var(--shadow-card) / 0.1)',
+				'card-lg': '0 10px 15px -3px hsl(var(--shadow-card) / 0.1), 0 4px 6px -4px hsl(var(--shadow-card) / 0.1)',
 			},
 			borderRadius: {
 				lg: 'var(--radius)',
