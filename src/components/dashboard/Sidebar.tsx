@@ -13,23 +13,27 @@ import {
   Building
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useLocation } from "react-router-dom";
 
 const navigationItems = [
-  { icon: BarChart3, label: "Overview", active: true },
-  { icon: Scale, label: "Balance" },
-  { icon: TreePine, label: "Trees" },
-  { icon: FileText, label: "Reports" },
-  { icon: Package, label: "Packages" },
-  { icon: Users, label: "Clients" },
-  { icon: Cloud, label: "Carbon" },
-  { icon: Leaf, label: "Climate CTB" },
-  { icon: Calendar, label: "Events" },
-  { icon: MessageCircle, label: "Meetings" },
-  { icon: Megaphone, label: "Marketing" },
-  { icon: Building, label: "My Company" },
+  { icon: BarChart3, label: "Overview", path: "/" },
+  { icon: Scale, label: "Balance", path: "/balance" },
+  { icon: TreePine, label: "Trees", path: "/trees" },
+  { icon: FileText, label: "Reports", path: "/reports" },
+  { icon: Package, label: "Packages", path: "/packages" },
+  { icon: Users, label: "Clients", path: "/clients" },
+  { icon: Cloud, label: "Carbon", path: "/carbon" },
+  { icon: Leaf, label: "Climate CTB", path: "/climate-ctb" },
+  { icon: Calendar, label: "Events", path: "/events" },
+  { icon: MessageCircle, label: "Meetings", path: "/meetings" },
+  { icon: Megaphone, label: "Marketing", path: "/marketing" },
+  { icon: Building, label: "My Company", path: "/my-company" },
 ];
 
 export function Sidebar() {
+  const location = useLocation();
+  const currentPath = location.pathname;
+
   return (
     <div className="w-64 bg-sidebar-dark h-screen flex flex-col">
       {/* Logo */}
@@ -47,19 +51,21 @@ export function Sidebar() {
         <ul className="space-y-1">
           {navigationItems.map((item) => {
             const Icon = item.icon;
+            const isActive = currentPath === item.path;
             return (
               <li key={item.label}>
-                <button
+                <a
+                  href={item.path}
                   className={cn(
                     "w-full flex items-center gap-3 px-6 py-3 text-left transition-colors",
-                    item.active
+                    isActive
                       ? "bg-sidebar-item-active text-white"
                       : "text-gray-400 hover:text-white hover:bg-sidebar-item"
                   )}
                 >
                   <Icon className="w-5 h-5" />
                   <span className="text-sm font-medium">{item.label}</span>
-                </button>
+                </a>
               </li>
             );
           })}
