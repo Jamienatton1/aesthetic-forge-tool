@@ -1,5 +1,5 @@
 import { Sidebar } from "@/components/dashboard/Sidebar";
-import { Header } from "@/components/dashboard/Header";
+import { EventsHeader } from "@/components/events/EventsHeader";
 import { EventsTable } from "@/components/events/EventsTable";
 
 const Events = () => {
@@ -8,7 +8,7 @@ const Events = () => {
       <Sidebar />
       
       <div className="flex-1 flex flex-col overflow-hidden">
-        <Header />
+        <EventsHeader />
         
         <main className="flex-1 overflow-auto p-8">
           <EventsTable />

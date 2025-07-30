@@ -83,7 +83,7 @@ export function EventsTable() {
     <div className="bg-metric-card rounded-xl shadow-card border border-border overflow-hidden">
       {/* Header */}
       <div className="bg-gradient-hero p-8 text-white">
-        <h2 className="text-3xl font-bold mb-2">ZEORO EVENTS</h2>
+        <h2 className="text-3xl font-bold mb-2">ZEERO EVENTS</h2>
         <p className="text-lg opacity-90">
           Our events calculator and tool will reduce your emissions and environmental impact.
         </p>
