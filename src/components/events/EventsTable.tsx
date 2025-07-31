@@ -13,6 +13,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
+import { useNavigate } from "react-router-dom";
 
 const eventData = [
   {
@@ -79,6 +80,7 @@ const ActionIcon = ({ icon: Icon, tooltip }: { icon: any, tooltip: string }) => 
 );
 
 export function EventsTable() {
+  const navigate = useNavigate();
   return (
     <div className="bg-metric-card rounded-xl shadow-card border border-border overflow-hidden">
       {/* Header */}
@@ -180,7 +182,10 @@ export function EventsTable() {
             <Upload className="w-4 h-4 mr-2" />
             IMPORT FROM CVENT
           </Button>
-          <Button className="bg-primary hover:bg-primary/90 text-white">
+          <Button 
+            className="bg-primary hover:bg-primary/90 text-white"
+            onClick={() => navigate("/events/new")}
+          >
             <Plus className="w-4 h-4 mr-2" />
             NEW EVENT
           </Button>
