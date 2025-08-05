@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 export function NewEventForm() {
@@ -11,15 +10,10 @@ export function NewEventForm() {
   const [formData, setFormData] = useState({
     eventName: "",
     client: "",
+    venueName: "",
     eventType: "",
-    startDate: "",
-    startTime: "",
-    endDate: "",
-    endTime: "",
-    venue: "",
-    venueType: "",
-    expectedAttendees: "",
-    description: ""
+    country: "",
+    city: ""
   });
 
   const handleInputChange = (field: string, value: string) => {
@@ -37,201 +31,142 @@ export function NewEventForm() {
   };
 
   return (
-    <div className="max-w-2xl mx-auto">
-      <div className="bg-background border border-border rounded-lg overflow-hidden">
-        {/* Header */}
-        <div className="px-6 py-4 border-b border-border">
-          <h2 className="text-xl font-semibold text-foreground">Create event</h2>
+    <div className="bg-metric-card rounded-xl shadow-card border border-border overflow-hidden">
+      {/* Header */}
+      <div className="bg-gradient-hero p-8 text-white">
+        <h2 className="text-3xl font-bold mb-2">CREATE NEW EVENT</h2>
+        <p className="text-lg opacity-90">
+          Set up a new environmental event for tracking
+        </p>
+      </div>
+
+      {/* Form */}
+      <form onSubmit={handleSubmit} className="p-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          {/* Left Column */}
+          <div className="space-y-6">
+            <div className="space-y-2">
+              <Label htmlFor="eventName" className="text-sm font-medium text-foreground">
+                Event Name
+              </Label>
+              <Input
+                id="eventName"
+                placeholder="Enter event name"
+                value={formData.eventName}
+                onChange={(e) => handleInputChange("eventName", e.target.value)}
+                className="w-full"
+                required
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="client" className="text-sm font-medium text-foreground">
+                Client
+              </Label>
+              <Input
+                id="client"
+                placeholder="Enter client name"
+                value={formData.client}
+                onChange={(e) => handleInputChange("client", e.target.value)}
+                className="w-full"
+                required
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="venueName" className="text-sm font-medium text-foreground">
+                Venue Name
+              </Label>
+              <Input
+                id="venueName"
+                placeholder="Enter venue name"
+                value={formData.venueName}
+                onChange={(e) => handleInputChange("venueName", e.target.value)}
+                className="w-full"
+                required
+              />
+            </div>
+          </div>
+
+          {/* Right Column */}
+          <div className="space-y-6">
+            <div className="space-y-2">
+              <Label htmlFor="eventType" className="text-sm font-medium text-foreground">
+                Event Type
+              </Label>
+              <Select value={formData.eventType} onValueChange={(value) => handleInputChange("eventType", value)}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select event type" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="conference">Conference</SelectItem>
+                  <SelectItem value="workshop">Workshop</SelectItem>
+                  <SelectItem value="seminar">Seminar</SelectItem>
+                  <SelectItem value="meeting">Meeting</SelectItem>
+                  <SelectItem value="exhibition">Exhibition</SelectItem>
+                  <SelectItem value="other">Other</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="country" className="text-sm font-medium text-foreground">
+                Country
+              </Label>
+              <Select value={formData.country} onValueChange={(value) => handleInputChange("country", value)}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select country" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="uk">United Kingdom</SelectItem>
+                  <SelectItem value="us">United States</SelectItem>
+                  <SelectItem value="ca">Canada</SelectItem>
+                  <SelectItem value="de">Germany</SelectItem>
+                  <SelectItem value="fr">France</SelectItem>
+                  <SelectItem value="es">Spain</SelectItem>
+                  <SelectItem value="it">Italy</SelectItem>
+                  <SelectItem value="nl">Netherlands</SelectItem>
+                  <SelectItem value="au">Australia</SelectItem>
+                  <SelectItem value="sg">Singapore</SelectItem>
+                  <SelectItem value="other">Other</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="city" className="text-sm font-medium text-foreground">
+                City
+              </Label>
+              <Input
+                id="city"
+                placeholder="Enter city"
+                value={formData.city}
+                onChange={(e) => handleInputChange("city", e.target.value)}
+                className="w-full"
+                required
+              />
+            </div>
+          </div>
         </div>
 
-        {/* Form */}
-        <form onSubmit={handleSubmit} className="p-6 space-y-5">
-          <div className="space-y-2">
-            <Label htmlFor="eventName" className="text-sm font-medium text-foreground">
-              Event Name
-            </Label>
-            <Input
-              id="eventName"
-              placeholder="Enter event name"
-              value={formData.eventName}
-              onChange={(e) => handleInputChange("eventName", e.target.value)}
-              className="w-full"
-              required
-            />
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="client" className="text-sm font-medium text-foreground">
-              Client
-            </Label>
-            <Input
-              id="client"
-              placeholder="Enter client name"
-              value={formData.client}
-              onChange={(e) => handleInputChange("client", e.target.value)}
-              className="w-full"
-              required
-            />
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="eventType" className="text-sm font-medium text-foreground">
-              Event Type
-            </Label>
-            <Select value={formData.eventType} onValueChange={(value) => handleInputChange("eventType", value)}>
-              <SelectTrigger>
-                <SelectValue placeholder="Select event type" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="conference">Conference</SelectItem>
-                <SelectItem value="workshop">Workshop</SelectItem>
-                <SelectItem value="seminar">Seminar</SelectItem>
-                <SelectItem value="meeting">Meeting</SelectItem>
-                <SelectItem value="exhibition">Exhibition</SelectItem>
-                <SelectItem value="other">Other</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-
-          <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="startDate" className="text-sm font-medium text-foreground">
-                Start Date
-              </Label>
-              <Input
-                id="startDate"
-                type="date"
-                value={formData.startDate}
-                onChange={(e) => handleInputChange("startDate", e.target.value)}
-                className="w-full"
-                required
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="startTime" className="text-sm font-medium text-foreground">
-                Start Time
-              </Label>
-              <Input
-                id="startTime"
-                type="time"
-                value={formData.startTime}
-                onChange={(e) => handleInputChange("startTime", e.target.value)}
-                className="w-full"
-                required
-              />
-            </div>
-          </div>
-
-          <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="endDate" className="text-sm font-medium text-foreground">
-                End Date
-              </Label>
-              <Input
-                id="endDate"
-                type="date"
-                value={formData.endDate}
-                onChange={(e) => handleInputChange("endDate", e.target.value)}
-                className="w-full"
-                required
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="endTime" className="text-sm font-medium text-foreground">
-                End Time
-              </Label>
-              <Input
-                id="endTime"
-                type="time"
-                value={formData.endTime}
-                onChange={(e) => handleInputChange("endTime", e.target.value)}
-                className="w-full"
-                required
-              />
-            </div>
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="venue" className="text-sm font-medium text-foreground">
-              Venue
-            </Label>
-            <Input
-              id="venue"
-              placeholder="Enter venue name"
-              value={formData.venue}
-              onChange={(e) => handleInputChange("venue", e.target.value)}
-              className="w-full"
-              required
-            />
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="venueType" className="text-sm font-medium text-foreground">
-              Venue Type
-            </Label>
-            <Select value={formData.venueType} onValueChange={(value) => handleInputChange("venueType", value)}>
-              <SelectTrigger>
-                <SelectValue placeholder="Select venue type" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="exhibition-centre">Exhibition Centre</SelectItem>
-                <SelectItem value="hotel">Hotel</SelectItem>
-                <SelectItem value="conference-centre">Conference Centre</SelectItem>
-                <SelectItem value="office">Office</SelectItem>
-                <SelectItem value="outdoor">Outdoor</SelectItem>
-                <SelectItem value="virtual">Virtual</SelectItem>
-                <SelectItem value="other">Other</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="expectedAttendees" className="text-sm font-medium text-foreground">
-              Expected Attendees
-            </Label>
-            <Input
-              id="expectedAttendees"
-              type="number"
-              placeholder="Enter number of attendees"
-              value={formData.expectedAttendees}
-              onChange={(e) => handleInputChange("expectedAttendees", e.target.value)}
-              className="w-full"
-              required
-            />
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="description" className="text-sm font-medium text-foreground">
-              Description
-            </Label>
-            <Textarea
-              id="description"
-              placeholder="Enter event description (optional)"
-              value={formData.description}
-              onChange={(e) => handleInputChange("description", e.target.value)}
-              className="min-h-[100px] resize-none"
-            />
-          </div>
-
-          {/* Form Actions */}
-          <div className="flex justify-end gap-3 pt-4">
-            <Button
-              type="button"
-              variant="outline"
-              onClick={handleCancel}
-              className="px-6"
-            >
-              Cancel
-            </Button>
-            <Button
-              type="submit"
-              className="px-6 bg-destructive hover:bg-destructive/90 text-destructive-foreground"
-            >
-              Save and Continue
-            </Button>
-          </div>
-        </form>
-      </div>
+        {/* Form Actions */}
+        <div className="flex justify-end gap-4 mt-8 pt-6 border-t border-border">
+          <Button
+            type="button"
+            variant="outline"
+            onClick={handleCancel}
+            className="px-8"
+          >
+            Cancel
+          </Button>
+          <Button
+            type="submit"
+            className="px-8"
+          >
+            Create Event
+          </Button>
+        </div>
+      </form>
     </div>
   );
 }
