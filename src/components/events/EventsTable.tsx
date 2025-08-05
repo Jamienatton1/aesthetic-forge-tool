@@ -39,56 +39,46 @@ import { useNavigate } from "react-router-dom";
 const eventData = [
   {
     name: "Event July 2025",
-    createdBy: "Trees4Travel",
     client: "ABC Test",
-    created: "21 Jul 25",
     startDate: "15 Sep 25",
     endDate: "18 Sep 25",
-    attendees: 1000,
+    treesGifted: 2500,
     status: "Not created",
     invoiceStatus: "Not created"
   },
   {
     name: "test",
-    createdBy: "Trees4Travel", 
     client: "ABC Test",
-    created: "07 Jul 25",
     startDate: "07 Jul 25",
     endDate: "07 Jul 25",
-    attendees: 10,
+    treesGifted: 25,
     status: "Created",
     invoiceStatus: "Created"
   },
   {
     name: "Cvent Accelerat...",
-    createdBy: "Trees4Travel",
     client: "Cvent Accelerat...",
-    created: "12 Jun 25",
     startDate: "16 Jul 25", 
     endDate: "16 Jul 25",
-    attendees: 483,
+    treesGifted: 1208,
     status: "Not created",
     invoiceStatus: "Not created"
   },
   {
     name: "Singapore",
-    createdBy: "Trees4Travel",
     client: "Cvent Accelera...",
-    created: "12 Jun 25",
     startDate: "11 Jul 25",
     endDate: "11 Jul 25", 
-    attendees: 652,
+    treesGifted: 1630,
     status: "Not created",
     invoiceStatus: "Not created"
   },
   {
     name: "Corporate Trave...",
-    createdBy: "Trees4Travel",
     client: "FC Business Aus...",
-    created: "21 May 25",
     startDate: "22 May 25",
     endDate: "23 May 25",
-    attendees: 8,
+    treesGifted: 20,
     status: "Created", 
     invoiceStatus: "Created"
   }
@@ -238,13 +228,9 @@ export function EventsTable() {
           <thead className="bg-muted/50 border-b border-border">
             <tr>
               <th className="text-left p-4 font-medium text-sm">NAME</th>
-              <th className="text-left p-4 font-medium text-sm">CREATED BY</th>
               <th className="text-left p-4 font-medium text-sm">CLIENT</th>
-              <th className="text-left p-4 font-medium text-sm">CREATED</th>
               <th className="text-left p-4 font-medium text-sm">START - END DATE</th>
-              <th className="text-center p-4 font-medium text-sm">👥</th>
-              <th className="text-center p-4 font-medium text-sm">📋</th>
-              <th className="text-center p-4 font-medium text-sm">📊</th>
+              <th className="text-center p-4 font-medium text-sm">TREES GIFTED</th>
               <th className="text-left p-4 font-medium text-sm">STATUS</th>
               <th className="text-left p-4 font-medium text-sm">INVOICE STATUS</th>
               <th className="text-center p-4 font-medium text-sm">ACTIONS</th>
@@ -254,13 +240,9 @@ export function EventsTable() {
             {eventData.map((event, index) => (
               <tr key={index} className="border-b border-border hover:bg-muted/25">
                 <td className="p-4 font-medium">{event.name}</td>
-                <td className="p-4 text-muted-foreground">{event.createdBy}</td>
                 <td className="p-4 text-muted-foreground">{event.client}</td>
-                <td className="p-4 text-muted-foreground">{event.created}</td>
                 <td className="p-4 text-muted-foreground">{event.startDate} - {event.endDate}</td>
-                <td className="p-4 text-center">{event.attendees}</td>
-                <td className="p-4 text-center">0</td>
-                <td className="p-4 text-center">0</td>
+                <td className="p-4 text-center font-medium">{event.treesGifted.toLocaleString()}</td>
                 <td className="p-4">
                   <Badge variant={event.status === "Created" ? "default" : "secondary"}>
                     {event.status}
