@@ -8,11 +8,32 @@ import {
   Search,
   Download,
   Upload,
-  Plus
+  Plus,
+  MoreHorizontal,
+  FileText,
+  CreditCard,
+  QrCode,
+  Pause,
+  Trash2,
+  DollarSign
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
+import { 
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { 
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { useNavigate } from "react-router-dom";
 
 const eventData = [
@@ -73,11 +94,109 @@ const eventData = [
   }
 ];
 
-const ActionIcon = ({ icon: Icon, tooltip }: { icon: any, tooltip: string }) => (
-  <Button variant="ghost" size="sm" className="h-8 w-8 p-0" title={tooltip}>
-    <Icon className="h-4 w-4" />
-  </Button>
-);
+const EventActions = ({ event }: { event: typeof eventData[0] }) => {
+  const isCreated = event.status === "Created";
+  const hasInvoice = event.invoiceStatus === "Created";
+
+  return (
+    <TooltipProvider>
+      <div className="flex items-center gap-2">
+        {/* Primary Actions */}
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button variant="outline" size="sm" className="h-8 px-3">
+              <Eye className="h-4 w-4 mr-1" />
+              View
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>View event details</p>
+          </TooltipContent>
+        </Tooltip>
+
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button variant="outline" size="sm" className="h-8 px-3">
+              <Edit className="h-4 w-4 mr-1" />
+              Edit
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>Edit event information</p>
+          </TooltipContent>
+        </Tooltip>
+
+        {/* More Actions Dropdown */}
+        <DropdownMenu>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+                  <MoreHorizontal className="h-4 w-4" />
+                </Button>
+              </DropdownMenuTrigger>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>More actions</p>
+            </TooltipContent>
+          </Tooltip>
+          
+          <DropdownMenuContent align="end" className="w-48">
+            <DropdownMenuLabel>Data Actions</DropdownMenuLabel>
+            <DropdownMenuItem>
+              <RefreshCw className="mr-2 h-4 w-4" />
+              Sync with Cvent
+            </DropdownMenuItem>
+            <DropdownMenuItem>
+              <Copy className="mr-2 h-4 w-4" />
+              Copy Event
+            </DropdownMenuItem>
+            <DropdownMenuItem>
+              <FileText className="mr-2 h-4 w-4" />
+              Emissions Report
+            </DropdownMenuItem>
+            <DropdownMenuItem>
+              <CreditCard className="mr-2 h-4 w-4" />
+              {hasInvoice ? "View Invoice" : "Create Invoice"}
+            </DropdownMenuItem>
+            
+            <DropdownMenuSeparator />
+            <DropdownMenuLabel>Event Control</DropdownMenuLabel>
+            {!isCreated && (
+              <DropdownMenuItem>
+                <CheckCircle className="mr-2 h-4 w-4" />
+                Approve Event
+              </DropdownMenuItem>
+            )}
+            <DropdownMenuItem>
+              <DollarSign className="mr-2 h-4 w-4" />
+              Quote
+            </DropdownMenuItem>
+            <DropdownMenuItem>
+              <QrCode className="mr-2 h-4 w-4" />
+              Manage QR Codes
+            </DropdownMenuItem>
+            
+            <DropdownMenuSeparator />
+            <DropdownMenuLabel className="text-destructive">Danger Zone</DropdownMenuLabel>
+            <DropdownMenuItem>
+              <Archive className="mr-2 h-4 w-4" />
+              Archive
+            </DropdownMenuItem>
+            <DropdownMenuItem>
+              <Pause className="mr-2 h-4 w-4" />
+              Pause
+            </DropdownMenuItem>
+            <DropdownMenuItem className="text-destructive focus:text-destructive">
+              <Trash2 className="mr-2 h-4 w-4" />
+              Delete
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
+    </TooltipProvider>
+  );
+};
 
 export function EventsTable() {
   const navigate = useNavigate();
@@ -153,14 +272,7 @@ export function EventsTable() {
                   </Badge>
                 </td>
                 <td className="p-4">
-                  <div className="flex items-center gap-1">
-                    <ActionIcon icon={Copy} tooltip="Copy event" />
-                    <ActionIcon icon={RefreshCw} tooltip="Sync with third party" />
-                    <ActionIcon icon={Edit} tooltip="Edit event" />
-                    <ActionIcon icon={CheckCircle} tooltip="Approve quote" />
-                    <ActionIcon icon={Eye} tooltip="View quote" />
-                    <ActionIcon icon={Archive} tooltip="Archive" />
-                  </div>
+                  <EventActions event={event} />
                 </td>
               </tr>
             ))}
