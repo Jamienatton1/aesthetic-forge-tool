@@ -163,7 +163,7 @@ export function NewEventForm() {
             type="submit"
             className="px-8"
           >
-            Create Event
+            Save and Continue
           </Button>
         </div>
       </form>

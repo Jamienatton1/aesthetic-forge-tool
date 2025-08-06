@@ -8,7 +8,7 @@ const NewEvent = () => {
       <Sidebar />
       
       <div className="flex-1 flex flex-col overflow-hidden">
-        <EventsHeader title="Create New Event" subtitle="Set up a new environmental event for tracking" />
+        <EventsHeader />
         
         <main className="flex-1 overflow-auto p-8">
           <NewEventForm />
