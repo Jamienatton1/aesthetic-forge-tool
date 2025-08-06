@@ -66,100 +66,54 @@ export function EventDetailsForm({ initialEventType = "" }: EventDetailsFormProp
 
       {/* Form */}
       <form onSubmit={handleSubmit} className="p-8">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {/* Left Column */}
-          <div className="space-y-6">
-            <div className="space-y-2">
-              <Label htmlFor="eventType" className="text-sm font-medium text-foreground">
-                Event Type
-              </Label>
-              <Select value={formData.eventType} onValueChange={(value) => handleInputChange("eventType", value)}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Select event type" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="conference">Conference</SelectItem>
-                  <SelectItem value="workshop">Workshop</SelectItem>
-                  <SelectItem value="seminar">Seminar</SelectItem>
-                  <SelectItem value="meeting">Meeting</SelectItem>
-                  <SelectItem value="exhibition">Exhibition</SelectItem>
-                  <SelectItem value="other">Other</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="industry" className="text-sm font-medium text-foreground">
-                Industry
-              </Label>
-              <Select value={formData.industry} onValueChange={(value) => handleInputChange("industry", value)}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Select industry" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="technology">Technology</SelectItem>
-                  <SelectItem value="healthcare">Healthcare</SelectItem>
-                  <SelectItem value="finance">Finance</SelectItem>
-                  <SelectItem value="education">Education</SelectItem>
-                  <SelectItem value="manufacturing">Manufacturing</SelectItem>
-                  <SelectItem value="retail">Retail</SelectItem>
-                  <SelectItem value="energy">Energy</SelectItem>
-                  <SelectItem value="transportation">Transportation</SelectItem>
-                  <SelectItem value="media">Media & Entertainment</SelectItem>
-                  <SelectItem value="government">Government</SelectItem>
-                  <SelectItem value="other">Other</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="physicalAttendees" className="text-sm font-medium text-foreground">
-                Physical Attendees
-              </Label>
-              <Input
-                id="physicalAttendees"
-                type="number"
-                placeholder="Number of physical attendees"
-                value={formData.physicalAttendees}
-                onChange={(e) => handleInputChange("physicalAttendees", e.target.value)}
-                className="w-full"
-                min="0"
-              />
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="virtualAttendees" className="text-sm font-medium text-foreground">
-                Virtual Attendees
-              </Label>
-              <Input
-                id="virtualAttendees"
-                type="number"
-                placeholder="Number of virtual attendees"
-                value={formData.virtualAttendees}
-                onChange={(e) => handleInputChange("virtualAttendees", e.target.value)}
-                className="w-full"
-                min="0"
-              />
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="eventStaff" className="text-sm font-medium text-foreground">
-                Event Staff
-              </Label>
-              <Input
-                id="eventStaff"
-                type="number"
-                placeholder="Number of event staff"
-                value={formData.eventStaff}
-                onChange={(e) => handleInputChange("eventStaff", e.target.value)}
-                className="w-full"
-                min="0"
-              />
-            </div>
+        <div className="space-y-6">
+          {/* Event Type */}
+          <div className="space-y-2">
+            <Label htmlFor="eventType" className="text-sm font-medium text-foreground">
+              Event Type
+            </Label>
+            <Select value={formData.eventType} onValueChange={(value) => handleInputChange("eventType", value)}>
+              <SelectTrigger>
+                <SelectValue placeholder="Select event type" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="conference">Conference</SelectItem>
+                <SelectItem value="workshop">Workshop</SelectItem>
+                <SelectItem value="seminar">Seminar</SelectItem>
+                <SelectItem value="meeting">Meeting</SelectItem>
+                <SelectItem value="exhibition">Exhibition</SelectItem>
+                <SelectItem value="other">Other</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
 
-          {/* Right Column */}
-          <div className="space-y-6">
+          {/* Industry */}
+          <div className="space-y-2">
+            <Label htmlFor="industry" className="text-sm font-medium text-foreground">
+              Industry
+            </Label>
+            <Select value={formData.industry} onValueChange={(value) => handleInputChange("industry", value)}>
+              <SelectTrigger>
+                <SelectValue placeholder="Select industry" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="technology">Technology</SelectItem>
+                <SelectItem value="healthcare">Healthcare</SelectItem>
+                <SelectItem value="finance">Finance</SelectItem>
+                <SelectItem value="education">Education</SelectItem>
+                <SelectItem value="manufacturing">Manufacturing</SelectItem>
+                <SelectItem value="retail">Retail</SelectItem>
+                <SelectItem value="energy">Energy</SelectItem>
+                <SelectItem value="transportation">Transportation</SelectItem>
+                <SelectItem value="media">Media & Entertainment</SelectItem>
+                <SelectItem value="government">Government</SelectItem>
+                <SelectItem value="other">Other</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          {/* Date Fields - Side by Side */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-2">
               <Label className="text-sm font-medium text-foreground">
                 Event Live Start Date
@@ -218,14 +172,63 @@ export function EventDetailsForm({ initialEventType = "" }: EventDetailsFormProp
                 </PopoverContent>
               </Popover>
             </div>
+          </div>
 
-            {daysDifference !== null && (
-              <div className="mt-4 p-4 bg-accent/50 rounded-lg border border-border">
-                <p className="text-sm font-medium text-foreground">
-                  Event Duration: <span className="text-primary font-bold">{daysDifference} day{daysDifference !== 1 ? 's' : ''}</span>
-                </p>
-              </div>
-            )}
+          {/* Duration Display */}
+          {daysDifference !== null && (
+            <div className="p-4 bg-accent/50 rounded-lg border border-border">
+              <p className="text-sm font-medium text-foreground">
+                Event Duration: <span className="text-primary font-bold">{daysDifference} day{daysDifference !== 1 ? 's' : ''}</span>
+              </p>
+            </div>
+          )}
+
+          {/* Attendees Section */}
+          <div className="space-y-6">
+            <div className="space-y-2">
+              <Label htmlFor="physicalAttendees" className="text-sm font-medium text-foreground">
+                Physical Attendees
+              </Label>
+              <Input
+                id="physicalAttendees"
+                type="number"
+                placeholder="Number of physical attendees"
+                value={formData.physicalAttendees}
+                onChange={(e) => handleInputChange("physicalAttendees", e.target.value)}
+                className="w-full"
+                min="0"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="virtualAttendees" className="text-sm font-medium text-foreground">
+                Virtual Attendees
+              </Label>
+              <Input
+                id="virtualAttendees"
+                type="number"
+                placeholder="Number of virtual attendees"
+                value={formData.virtualAttendees}
+                onChange={(e) => handleInputChange("virtualAttendees", e.target.value)}
+                className="w-full"
+                min="0"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="eventStaff" className="text-sm font-medium text-foreground">
+                Event Staff
+              </Label>
+              <Input
+                id="eventStaff"
+                type="number"
+                placeholder="Number of event staff"
+                value={formData.eventStaff}
+                onChange={(e) => handleInputChange("eventStaff", e.target.value)}
+                className="w-full"
+                min="0"
+              />
+            </div>
           </div>
         </div>
 
