@@ -22,8 +22,8 @@ export function NewEventForm() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Event created:", formData);
-    navigate("/events");
+    console.log("Event basic info:", formData);
+    navigate("/events/details", { state: formData });
   };
 
   const handleCancel = () => {
