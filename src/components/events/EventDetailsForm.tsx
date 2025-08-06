@@ -22,8 +22,9 @@ export function EventDetailsForm({ initialEventType = "" }: EventDetailsFormProp
   const [formData, setFormData] = useState({
     eventType: initialEventType || eventData.eventType || "",
     industry: "",
-    country: "",
-    city: "",
+    physicalAttendees: "",
+    virtualAttendees: "",
+    eventStaff: "",
     startDate: undefined as Date | undefined,
     endDate: undefined as Date | undefined
   });
@@ -112,40 +113,47 @@ export function EventDetailsForm({ initialEventType = "" }: EventDetailsFormProp
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="country" className="text-sm font-medium text-foreground">
-                Country
+              <Label htmlFor="physicalAttendees" className="text-sm font-medium text-foreground">
+                Physical Attendees
               </Label>
-              <Select value={formData.country} onValueChange={(value) => handleInputChange("country", value)}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Select country" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="uk">United Kingdom</SelectItem>
-                  <SelectItem value="us">United States</SelectItem>
-                  <SelectItem value="ca">Canada</SelectItem>
-                  <SelectItem value="de">Germany</SelectItem>
-                  <SelectItem value="fr">France</SelectItem>
-                  <SelectItem value="es">Spain</SelectItem>
-                  <SelectItem value="it">Italy</SelectItem>
-                  <SelectItem value="nl">Netherlands</SelectItem>
-                  <SelectItem value="au">Australia</SelectItem>
-                  <SelectItem value="sg">Singapore</SelectItem>
-                  <SelectItem value="other">Other</SelectItem>
-                </SelectContent>
-              </Select>
+              <Input
+                id="physicalAttendees"
+                type="number"
+                placeholder="Number of physical attendees"
+                value={formData.physicalAttendees}
+                onChange={(e) => handleInputChange("physicalAttendees", e.target.value)}
+                className="w-full"
+                min="0"
+              />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="city" className="text-sm font-medium text-foreground">
-                City
+              <Label htmlFor="virtualAttendees" className="text-sm font-medium text-foreground">
+                Virtual Attendees
               </Label>
               <Input
-                id="city"
-                placeholder="Enter city"
-                value={formData.city}
-                onChange={(e) => handleInputChange("city", e.target.value)}
+                id="virtualAttendees"
+                type="number"
+                placeholder="Number of virtual attendees"
+                value={formData.virtualAttendees}
+                onChange={(e) => handleInputChange("virtualAttendees", e.target.value)}
                 className="w-full"
-                required
+                min="0"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="eventStaff" className="text-sm font-medium text-foreground">
+                Event Staff
+              </Label>
+              <Input
+                id="eventStaff"
+                type="number"
+                placeholder="Number of event staff"
+                value={formData.eventStaff}
+                onChange={(e) => handleInputChange("eventStaff", e.target.value)}
+                className="w-full"
+                min="0"
               />
             </div>
           </div>
