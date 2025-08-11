@@ -46,8 +46,9 @@ export function EventDetailsForm({ initialEventType = "" }: EventDetailsFormProp
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Event details completed:", { ...eventData, ...formData });
-    navigate("/events");
+    const completeEventData = { ...eventData, ...formData };
+    console.log("Event details completed:", completeEventData);
+    navigate("/events/success", { state: completeEventData });
   };
 
   const handleBack = () => {
