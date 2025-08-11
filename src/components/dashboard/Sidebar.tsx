@@ -16,8 +16,8 @@ import { cn } from "@/lib/utils";
 import { useLocation } from "react-router-dom";
 
 const navigationItems = [
-  { icon: Calendar, label: "Events", path: "/events" },
   { icon: BarChart3, label: "Overview", path: "/" },
+  { icon: Calendar, label: "Events", path: "/events" },
   { icon: Scale, label: "Balance", path: "/balance" },
   { icon: TreePine, label: "Trees", path: "/trees" },
   { icon: FileText, label: "Reports", path: "/reports" },
