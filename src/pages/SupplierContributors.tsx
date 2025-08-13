@@ -69,7 +69,7 @@ const SupplierContributors = () => {
   };
 
   const handleSkip = () => {
-    navigate("/events", { 
+    navigate("/events/status", { 
       state: { 
         eventData, 
         selectedCategories,
@@ -81,7 +81,7 @@ const SupplierContributors = () => {
   const handleSaveAndContinue = () => {
     const validSuppliers = suppliers.filter(s => s.name && s.email && s.category);
     console.log("Valid suppliers:", validSuppliers);
-    navigate("/events", { 
+    navigate("/events/status", { 
       state: { 
         eventData, 
         selectedCategories,
