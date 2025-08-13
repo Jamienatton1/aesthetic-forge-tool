@@ -37,7 +37,7 @@ const EventSuccess = () => {
 
   const handleContinue = () => {
     console.log("Selected categories:", selectedCategories);
-    navigate("/events/calculate", { 
+    navigate("/events/suppliers", { 
       state: { 
         eventData, 
         selectedCategories 
