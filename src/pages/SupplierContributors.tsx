@@ -1,19 +1,23 @@
 import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { Plus, ArrowLeft, Trash2 } from "lucide-react";
+import { Plus, ArrowLeft, Trash2, CalendarIcon } from "lucide-react";
+import { format } from "date-fns";
 import { Sidebar } from "@/components/dashboard/Sidebar";
 import { EventsHeader } from "@/components/events/EventsHeader";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Calendar } from "@/components/ui/calendar";
+import { cn } from "@/lib/utils";
 
 interface Supplier {
   id: string;
   name: string;
   email: string;
   category: string;
-  dueDate: string;
+  dueDate: Date | undefined;
 }
 
 const SupplierContributors = () => {
@@ -27,7 +31,7 @@ const SupplierContributors = () => {
       name: "",
       email: "",
       category: "",
-      dueDate: ""
+      dueDate: undefined
     }
   ]);
 
@@ -39,7 +43,7 @@ const SupplierContributors = () => {
     space: "Event Space"
   };
 
-  const handleSupplierChange = (id: string, field: keyof Supplier, value: string) => {
+  const handleSupplierChange = (id: string, field: keyof Supplier, value: string | Date | undefined) => {
     setSuppliers(prev => prev.map(supplier => 
       supplier.id === id ? { ...supplier, [field]: value } : supplier
     ));
@@ -51,7 +55,7 @@ const SupplierContributors = () => {
       name: "",
       email: "",
       category: "",
-      dueDate: ""
+      dueDate: undefined
     };
     setSuppliers(prev => [...prev, newSupplier]);
   };
@@ -162,11 +166,29 @@ const SupplierContributors = () => {
                       </Select>
                       
                       <div className="flex gap-2">
-                        <Input
-                          type="date"
-                          value={supplier.dueDate}
-                          onChange={(e) => handleSupplierChange(supplier.id, "dueDate", e.target.value)}
-                        />
+                        <Popover>
+                          <PopoverTrigger asChild>
+                            <Button
+                              variant="outline"
+                              className={cn(
+                                "w-full justify-start text-left font-normal",
+                                !supplier.dueDate && "text-muted-foreground"
+                              )}
+                            >
+                              <CalendarIcon className="mr-2 h-4 w-4" />
+                              {supplier.dueDate ? format(supplier.dueDate, "dd/MM/yyyy") : "DD/MM/YYYY"}
+                            </Button>
+                          </PopoverTrigger>
+                          <PopoverContent className="w-auto p-0" align="start">
+                            <Calendar
+                              mode="single"
+                              selected={supplier.dueDate}
+                              onSelect={(date) => handleSupplierChange(supplier.id, "dueDate", date)}
+                              initialFocus
+                              className={cn("p-3 pointer-events-auto")}
+                            />
+                          </PopoverContent>
+                        </Popover>
                         {suppliers.length > 1 && (
                           <Button
                             variant="outline"
