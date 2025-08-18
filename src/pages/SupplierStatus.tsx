@@ -34,8 +34,14 @@ const SupplierStatus = () => {
   const remainingCategories = selectedCategories.filter((cat: string) => !assignedCategories.includes(cat));
 
   const handleEnterInformation = (categoryId?: string) => {
-    // Navigate to data entry form with the specific category
-    console.log("Enter information for:", categoryId || "supplier");
+    // Navigate to venue information form
+    navigate("/events/venue-information", {
+      state: {
+        eventData,
+        categoryType: categoryId,
+        venueData: eventData
+      }
+    });
   };
 
   return (
