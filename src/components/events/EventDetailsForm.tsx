@@ -26,7 +26,9 @@ export function EventDetailsForm({ initialEventType = "" }: EventDetailsFormProp
     virtualAttendees: "",
     eventStaff: "",
     startDate: undefined as Date | undefined,
-    endDate: undefined as Date | undefined
+    endDate: undefined as Date | undefined,
+    buildStartDate: undefined as Date | undefined,
+    degridEndDate: undefined as Date | undefined
   });
 
   const [daysDifference, setDaysDifference] = useState<number | null>(null);
@@ -113,8 +115,37 @@ export function EventDetailsForm({ initialEventType = "" }: EventDetailsFormProp
             </Select>
           </div>
 
-          {/* Date Fields - Side by Side */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* Date Fields - Four columns */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="space-y-2">
+              <Label className="text-sm font-medium text-foreground">
+                Event Build Start Date
+              </Label>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant="outline"
+                    className={cn(
+                      "w-full justify-start text-left font-normal",
+                      !formData.buildStartDate && "text-muted-foreground"
+                    )}
+                  >
+                    <CalendarIcon className="mr-2 h-4 w-4" />
+                    {formData.buildStartDate ? format(formData.buildStartDate, "PPP") : <span>Pick a date</span>}
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0" align="start">
+                  <Calendar
+                    mode="single"
+                    selected={formData.buildStartDate}
+                    onSelect={(date) => handleInputChange("buildStartDate", date)}
+                    initialFocus
+                    className="p-3 pointer-events-auto"
+                  />
+                </PopoverContent>
+              </Popover>
+            </div>
+
             <div className="space-y-2">
               <Label className="text-sm font-medium text-foreground">
                 Event Live Start Date
@@ -139,6 +170,7 @@ export function EventDetailsForm({ initialEventType = "" }: EventDetailsFormProp
                     onSelect={(date) => handleInputChange("startDate", date)}
                     initialFocus
                     className="p-3 pointer-events-auto"
+                    disabled={(date) => formData.buildStartDate ? date < formData.buildStartDate : false}
                   />
                 </PopoverContent>
               </Popover>
@@ -169,6 +201,36 @@ export function EventDetailsForm({ initialEventType = "" }: EventDetailsFormProp
                     initialFocus
                     className="p-3 pointer-events-auto"
                     disabled={(date) => formData.startDate ? date < formData.startDate : false}
+                  />
+                </PopoverContent>
+              </Popover>
+            </div>
+
+            <div className="space-y-2">
+              <Label className="text-sm font-medium text-foreground">
+                Event Degrid End Date
+              </Label>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant="outline"
+                    className={cn(
+                      "w-full justify-start text-left font-normal",
+                      !formData.degridEndDate && "text-muted-foreground"
+                    )}
+                  >
+                    <CalendarIcon className="mr-2 h-4 w-4" />
+                    {formData.degridEndDate ? format(formData.degridEndDate, "PPP") : <span>Pick a date</span>}
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0" align="start">
+                  <Calendar
+                    mode="single"
+                    selected={formData.degridEndDate}
+                    onSelect={(date) => handleInputChange("degridEndDate", date)}
+                    initialFocus
+                    className="p-3 pointer-events-auto"
+                    disabled={(date) => formData.endDate ? date < formData.endDate : false}
                   />
                 </PopoverContent>
               </Popover>
