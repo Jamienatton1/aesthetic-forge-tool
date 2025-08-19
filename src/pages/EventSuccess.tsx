@@ -22,32 +22,27 @@ const EventSuccess = () => {
     { 
       id: "venue", 
       label: "Venue", 
-      description: "Calculate environmental impact of venue usage",
       details: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
     },
     { 
       id: "food", 
       label: "Food & Drink", 
-      description: "Calculate carbon footprint of catering and beverages",
-      details: "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+      details: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
     },
     { 
       id: "travel", 
       label: "Travel", 
-      description: "Calculate emissions from attendee and staff travel",
-      details: "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo."
+      details: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
     },
     { 
-      id: "accommodation", 
-      label: "Accommodation", 
-      description: "Calculate impact of hotel stays and lodging",
-      details: "Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt."
+      id: "accommodations", 
+      label: "Accommodations", 
+      details: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
     },
     { 
-      id: "space", 
-      label: "Event Space", 
-      description: "Calculate energy usage and facility emissions",
-      details: "Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem."
+      id: "promotion", 
+      label: "Promotion Items", 
+      details: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
     }
   ];
 
@@ -172,8 +167,8 @@ const EventSuccess = () => {
               {/* Calculation Categories */}
               <div className="space-y-6 mb-8">
                 <div>
-                  <h3 className="text-xl font-semibold text-foreground">Choose What to Calculate</h3>
-                  <p className="text-muted-foreground mb-4">Select the categories you want to include in your environmental impact calculation</p>
+                  <h3 className="text-xl font-semibold text-foreground">Choose Which Emissions to Calculate</h3>
+                  <p className="text-muted-foreground mb-4">Empower your meetings and events sustainability; accurately track and reduce your events carbon footprint. Please select which emissions you want to calculate as part of your carbon impact report.</p>
                   <Button 
                     variant="outline" 
                     onClick={handleTickAll}
@@ -205,7 +200,6 @@ const EventSuccess = () => {
                         />
                         <div className="flex-1">
                           <h4 className="font-medium text-foreground text-sm">{category.label}</h4>
-                          <p className="text-xs text-muted-foreground">{category.description}</p>
                         </div>
                       </div>
                       
