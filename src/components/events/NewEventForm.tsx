@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -7,13 +7,16 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 
 export function NewEventForm() {
   const navigate = useNavigate();
+  const location = useLocation();
+  const savedData = location.state || {};
+  
   const [formData, setFormData] = useState({
-    eventName: "",
-    client: "",
-    venueName: "",
-    eventType: "",
-    country: "",
-    city: ""
+    eventName: savedData.eventName || "",
+    client: savedData.client || "",
+    venueName: savedData.venueName || "",
+    eventType: savedData.eventType || "",
+    country: savedData.country || "",
+    city: savedData.city || ""
   });
 
   const handleInputChange = (field: string, value: string) => {
