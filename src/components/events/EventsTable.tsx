@@ -15,7 +15,8 @@ import {
   QrCode,
   Pause,
   Trash2,
-  DollarSign
+  DollarSign,
+  BarChart3
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -142,10 +143,6 @@ const EventActions = ({ event }: { event: typeof eventData[0] }) => {
               Copy Event
             </DropdownMenuItem>
             <DropdownMenuItem>
-              <FileText className="mr-2 h-4 w-4" />
-              Emissions Report
-            </DropdownMenuItem>
-            <DropdownMenuItem>
               <CreditCard className="mr-2 h-4 w-4" />
               {hasInvoice ? "View Invoice" : "Create Invoice"}
             </DropdownMenuItem>
@@ -159,8 +156,12 @@ const EventActions = ({ event }: { event: typeof eventData[0] }) => {
               </DropdownMenuItem>
             )}
             <DropdownMenuItem>
-              <DollarSign className="mr-2 h-4 w-4" />
-              Quote
+              <FileText className="mr-2 h-4 w-4" />
+              Final Emissions Report
+            </DropdownMenuItem>
+            <DropdownMenuItem>
+              <BarChart3 className="mr-2 h-4 w-4" />
+              Pre-event Emissions Report
             </DropdownMenuItem>
             <DropdownMenuItem>
               <QrCode className="mr-2 h-4 w-4" />
@@ -265,9 +266,6 @@ export function EventsTable() {
       {/* Bottom Actions */}
       <div className="p-6 bg-muted/25 border-t border-border">
         <div className="flex gap-4">
-          <Button variant="outline" className="bg-sidebar-dark text-white hover:bg-sidebar-item">
-            <Edit className="w-4 h-4 mr-2" />
-          </Button>
           <Button className="bg-sidebar-dark hover:bg-sidebar-item text-white">
             <Download className="w-4 h-4 mr-2" />
             DOWNLOAD REPORT
