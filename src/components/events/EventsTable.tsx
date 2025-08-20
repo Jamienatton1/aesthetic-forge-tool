@@ -144,7 +144,11 @@ const EventActions = ({ event }: { event: typeof eventData[0] }) => {
             </DropdownMenuItem>
             <DropdownMenuItem>
               <CreditCard className="mr-2 h-4 w-4" />
-              {hasInvoice ? "View Invoice" : "Create Invoice"}
+              Create Invoice
+            </DropdownMenuItem>
+            <DropdownMenuItem>
+              <CreditCard className="mr-2 h-4 w-4" />
+              View Invoice
             </DropdownMenuItem>
             
             <DropdownMenuSeparator />
