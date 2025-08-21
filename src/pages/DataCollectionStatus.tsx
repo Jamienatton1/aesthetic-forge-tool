@@ -39,24 +39,42 @@ const mockSuppliers: Supplier[] = [
   }
 ];
 
-const categoriesRequiringInput: Category[] = [
+const allCategories: Category[] = [
   {
     id: "venue",
-    name: "Venue",
+    name: "Venue Information",
     icon: Building,
-    description: "No supplier assigned - requires direct data entry"
+    description: "Location and facility details"
+  },
+  {
+    id: "food-drink",
+    name: "Food & Drink",
+    icon: Utensils,
+    description: "Catering and beverage services"
+  },
+  {
+    id: "travel",
+    name: "Travel",
+    icon: Car,
+    description: "Transportation arrangements"
   },
   {
     id: "accommodations",
-    name: "Accommodation", 
+    name: "Accommodations", 
     icon: Bed,
-    description: "No supplier assigned - requires direct data entry"
+    description: "Hotel and lodging information"
   },
   {
     id: "promotion-items",
-    name: "Event Space",
+    name: "Promotion Items",
     icon: Gift,
-    description: "No supplier assigned - requires direct data entry"
+    description: "Marketing materials and giveaways"
+  },
+  {
+    id: "questionnaire",
+    name: "Questionnaire",
+    icon: HelpCircle,
+    description: "Additional event details and requirements"
   }
 ];
 
@@ -66,36 +84,58 @@ export default function DataCollectionStatus() {
   const eventData = location.state?.eventData;
   const selectedCategories = location.state?.selectedCategories || [];
 
-  const handleEnterInformation = (supplierId?: string, categoryId?: string) => {
-    if (categoryId) {
-      // Navigate to specific category form
-      const categoryRoutes = {
-        'venue': '/venue-information',
-        'accommodations': '/accommodations', 
-        'promotion-items': '/promotion-items'
-      };
-      
-      const route = categoryRoutes[categoryId as keyof typeof categoryRoutes];
-      if (route) {
-        navigate(route, { 
-          state: { 
-            eventData,
-            selectedCategories,
-            fromDataCollection: true
-          } 
-        });
-      }
-    } else if (supplierId) {
-      // Handle supplier-specific information entry
-      console.log('Enter information for supplier:', supplierId);
+  const handleEditSupplier = (supplierId: string) => {
+    // Handle supplier editing
+    console.log('Edit supplier:', supplierId);
+  };
+
+  const handleAddSupplier = () => {
+    // Handle adding new supplier
+    console.log('Add new supplier');
+  };
+
+  const handleEditCategory = (categoryId: string) => {
+    // Navigate to specific category form
+    const categoryRoutes = {
+      'venue': '/venue-information',
+      'food-drink': '/food-drink',
+      'travel': '/travel',
+      'accommodations': '/accommodations', 
+      'promotion-items': '/promotion-items',
+      'questionnaire': '/questionnaire'
+    };
+    
+    const route = categoryRoutes[categoryId as keyof typeof categoryRoutes];
+    if (route) {
+      navigate(route, { 
+        state: { 
+          eventData,
+          selectedCategories,
+          fromDataCollection: true
+        } 
+      });
     }
   };
 
-  const handleCompleteSetup = () => {
+  const handleSave = () => {
+    // Handle saving data
+    console.log('Save data collection status');
+  };
+
+  const handleContinue = () => {
     navigate('/questionnaire', { 
       state: { 
         eventData,
         selectedCategories
+      } 
+    });
+  };
+
+  const handleBackToSuppliers = () => {
+    navigate('/events/suppliers', { 
+      state: { 
+        eventData, 
+        selectedCategories 
       } 
     });
   };
@@ -154,68 +194,85 @@ export default function DataCollectionStatus() {
                           </div>
                         </div>
                       </div>
-                      <Button 
-                        onClick={() => handleEnterInformation(supplier.id)}
-                        className="bg-gradient-hero hover:opacity-90"
-                      >
-                        Enter Information
-                      </Button>
+                      <div className="flex gap-2">
+                        <Button 
+                          onClick={() => handleEditSupplier(supplier.id)}
+                          variant="outline"
+                          size="sm"
+                        >
+                          Edit
+                        </Button>
+                      </div>
                     </div>
                   ))}
+                  <div className="flex justify-end pt-4">
+                    <Button 
+                      onClick={handleAddSupplier}
+                      className="bg-gradient-hero hover:opacity-90"
+                    >
+                      Add New Supplier
+                    </Button>
+                  </div>
                 </CardContent>
               </Card>
             )}
 
-            {/* Categories Requiring Direct Input */}
-            {categoriesRequiringInput.length > 0 && (
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <HelpCircle className="w-5 h-5" />
-                    Categories Requiring Direct Input
-                  </CardTitle>
-                  <CardDescription>
-                    These categories don't have suppliers assigned and need direct data entry
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  {categoriesRequiringInput.map((category) => (
-                    <div key={category.id} className="flex items-center justify-between p-4 border rounded-lg bg-card">
-                      <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 bg-muted rounded-lg flex items-center justify-center">
-                          <category.icon className="w-5 h-5" />
-                        </div>
-                        <div>
-                          <h3 className="font-semibold text-foreground">{category.name}</h3>
-                          <p className="text-sm text-muted-foreground">{category.description}</p>
-                        </div>
+            {/* All Event Categories */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <HelpCircle className="w-5 h-5" />
+                  Event Categories
+                </CardTitle>
+                <CardDescription>
+                  Review and complete information for all event categories
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                {allCategories.map((category) => (
+                  <div key={category.id} className="flex items-center justify-between p-4 border rounded-lg bg-card">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 bg-muted rounded-lg flex items-center justify-center">
+                        <category.icon className="w-5 h-5" />
                       </div>
-                      <Button 
-                        onClick={() => handleEnterInformation(undefined, category.id)}
-                        className="bg-gradient-hero hover:opacity-90"
-                      >
-                        Enter Information
-                      </Button>
+                      <div>
+                        <h3 className="font-semibold text-foreground">{category.name}</h3>
+                        <p className="text-sm text-muted-foreground">{category.description}</p>
+                      </div>
                     </div>
-                  ))}
-                </CardContent>
-              </Card>
-            )}
+                    <Button 
+                      onClick={() => handleEditCategory(category.id)}
+                      variant="outline"
+                      size="sm"
+                    >
+                      Edit
+                    </Button>
+                  </div>
+                ))}
+              </CardContent>
+            </Card>
 
             {/* Action Buttons */}
             <div className="flex justify-center gap-4 pt-8">
               <Button 
                 variant="outline" 
-                onClick={() => navigate('/events/suppliers', { state: { eventData, selectedCategories } })}
+                onClick={handleBackToSuppliers}
                 className="px-8"
               >
                 Back to Suppliers
               </Button>
               <Button 
-                onClick={handleCompleteSetup}
+                variant="outline"
+                onClick={handleSave}
+                className="px-8"
+              >
+                Save
+              </Button>
+              <Button 
+                onClick={handleContinue}
                 className="bg-gradient-hero hover:opacity-90 px-8"
               >
-                Complete Setup
+                Continue
               </Button>
             </div>
           </div>
