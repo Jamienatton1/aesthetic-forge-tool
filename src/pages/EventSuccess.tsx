@@ -1,11 +1,13 @@
 import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { CheckCircle, Edit3, Calendar, MapPin, Users, Building2, ChevronDown, ChevronUp } from "lucide-react";
+import { CheckCircle, Edit3, Calendar, MapPin, Users, Building2, ChevronDown, ChevronUp, Hotel, Utensils, Car, Gift, Info, ArrowRight, Check } from "lucide-react";
 import { Sidebar } from "@/components/dashboard/Sidebar";
 import { EventsHeader } from "@/components/events/EventsHeader";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { Progress } from "@/components/ui/progress";
 import { cn } from "@/lib/utils";
 
 const EventSuccess = () => {
@@ -22,27 +24,32 @@ const EventSuccess = () => {
     { 
       id: "venue", 
       label: "Venue", 
-      details: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
+      icon: Building2,
+      details: "Calculate emissions from venue energy consumption, heating, cooling, and infrastructure usage during your event."
     },
     { 
       id: "food", 
       label: "Food & Drink", 
-      details: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
+      icon: Utensils,
+      details: "Track carbon footprint from catering, including food production, transportation, and waste from meals and beverages."
     },
     { 
       id: "travel", 
       label: "Travel", 
-      details: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
+      icon: Car,
+      details: "Measure emissions from attendee transportation including flights, trains, cars, and local transport to reach the venue."
     },
     { 
       id: "accommodations", 
       label: "Accommodations", 
-      details: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
+      icon: Hotel,
+      details: "Account for hotel stays, energy usage, and related services for out-of-town attendees and event staff."
     },
     { 
       id: "promotion", 
       label: "Promotion Items", 
-      details: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
+      icon: Gift,
+      details: "Include promotional materials, swag, signage, and marketing materials production and distribution emissions."
     }
   ];
 
@@ -88,241 +95,289 @@ const EventSuccess = () => {
   const allSelected = selectedCategories.length === calculationCategories.length;
 
   return (
-    <div className="flex h-screen bg-background">
-      <Sidebar />
-      
-      <div className="flex-1 flex flex-col overflow-hidden">
-        <EventsHeader 
-          title="Event Management" 
-          subtitle="Event created successfully - choose your calculations" 
-        />
+    <TooltipProvider>
+      <div className="flex h-screen bg-background">
+        <Sidebar />
         
-        <main className="flex-1 overflow-auto p-8">
-          <div className="bg-metric-card rounded-xl shadow-card border border-border overflow-hidden">
-            {/* Header */}
-            <div className="bg-gradient-hero p-8 text-white">
-              <div className="flex items-center gap-4 mb-4">
-                <CheckCircle className="w-8 h-8 animate-scale-in" />
-                <div>
-                  <h2 className="text-3xl font-bold">Event Created Successfully!</h2>
-                  <p className="text-lg opacity-90">Choose what to calculate for your environmental impact assessment</p>
-                </div>
-              </div>
-            </div>
-
-            {/* Form Content */}
-            <div className="p-8">
-              {/* Event Summary */}
-              <div className="mb-8 p-6 bg-accent/10 border border-accent/20 rounded-lg">
-                <div className="flex items-center justify-between mb-4">
-                  <div>
-                    <h3 className="text-xl font-semibold text-foreground">{eventData.eventName || "Untitled Event"}</h3>
-                    <p className="text-muted-foreground">{eventData.client || "No client specified"}</p>
+        <div className="flex-1 flex flex-col overflow-hidden">
+          <EventsHeader 
+            title="Event Management" 
+            subtitle="Event created successfully - choose your calculations" 
+          />
+          
+          <main className="flex-1 overflow-auto p-8">
+            <div className="bg-metric-card rounded-xl shadow-card border border-border overflow-hidden">
+              
+              {/* Progress UI */}
+              <div className="px-8 pt-6 pb-4">
+                <div className="flex items-center justify-between text-sm">
+                  <div className="flex items-center gap-2 text-accent">
+                    <Check className="w-4 h-4" />
+                    <span className="font-medium">Step 1: Event Details</span>
                   </div>
-                  <Button 
-                    variant="outline" 
-                    size="sm" 
-                    onClick={handleEdit}
-                  >
-                    <Edit3 className="w-4 h-4 mr-2" />
-                    Edit Details
-                  </Button>
-                </div>
-                
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                  <div className="flex items-center gap-3">
-                    <Calendar className="w-4 h-4 text-muted-foreground" />
-                    <div>
-                      <p className="text-xs text-muted-foreground">Event Type</p>
-                      <p className="text-sm font-medium text-foreground capitalize">{eventData.eventType || "Not specified"}</p>
+                  <ArrowRight className="w-4 h-4 text-muted-foreground" />
+                  <div className="flex items-center gap-2 text-foreground">
+                    <div className="w-4 h-4 rounded-full border-2 border-primary flex items-center justify-center">
+                      <div className="w-2 h-2 rounded-full bg-primary"></div>
                     </div>
+                    <span className="font-medium">Step 2: Select Emission Categories</span>
                   </div>
-                  
-                  <div className="flex items-center gap-3">
-                    <MapPin className="w-4 h-4 text-muted-foreground" />
-                    <div>
-                      <p className="text-xs text-muted-foreground">Location</p>
-                      <p className="text-sm font-medium text-foreground">{eventData.city || "Not specified"}, {eventData.country || ""}</p>
-                    </div>
-                  </div>
-                  
-                  <div className="flex items-center gap-3">
-                    <Building2 className="w-4 h-4 text-muted-foreground" />
-                    <div>
-                      <p className="text-xs text-muted-foreground">Venue</p>
-                      <p className="text-sm font-medium text-foreground">{eventData.venueName || "Not specified"}</p>
-                    </div>
-                  </div>
-                  
-                  <div className="flex items-center gap-3">
-                    <Users className="w-4 h-4 text-muted-foreground" />
-                    <div>
-                      <p className="text-xs text-muted-foreground">Attendees</p>
-                      <p className="text-sm font-medium text-foreground">{eventData.physicalAttendees || eventData.attendees || "Not specified"}</p>
-                    </div>
+                  <ArrowRight className="w-4 h-4 text-muted-foreground" />
+                  <div className="flex items-center gap-2 text-muted-foreground">
+                    <div className="w-4 h-4 rounded-full border-2 border-muted-foreground/30"></div>
+                    <span>Step 3: Generate Report</span>
                   </div>
                 </div>
+                <Progress value={33} className="mt-3" />
               </div>
 
-              {/* Calculation Categories */}
-              <div className="space-y-6 mb-8">
-                <div>
-                  <h3 className="text-xl font-semibold text-foreground">Choose Which Emissions to Calculate</h3>
-                  <p className="text-muted-foreground mb-4">Empower your meetings and events sustainability; accurately track and reduce your events carbon footprint. Please select which emissions you want to calculate as part of your carbon impact report.</p>
-                  <Button 
-                    variant="outline" 
-                    onClick={handleTickAll}
-                    className="text-sm mb-4"
-                    size="sm"
-                  >
-                    {allSelected ? "Untick All" : "Tick All"}
-                  </Button>
-                </div>
-                
-                <div className="space-y-3">
-                  {calculationCategories.map((category) => (
-                    <div 
-                      key={category.id}
-                      className={cn(
-                        "rounded-lg border transition-colors",
-                        selectedCategories.includes(category.id) 
-                          ? "border-accent bg-accent/10" 
-                          : "border-border bg-card"
-                      )}
-                    >
-                      <div 
-                        className="flex items-center gap-3 p-3 cursor-pointer hover:bg-accent/5"
-                        onClick={() => handleCategoryToggle(category.id)}
-                      >
-                        <Checkbox 
-                          checked={selectedCategories.includes(category.id)}
-                          onCheckedChange={() => handleCategoryToggle(category.id)}
-                        />
-                        <div className="flex-1">
-                          <h4 className="font-medium text-foreground text-sm">{category.label}</h4>
-                        </div>
-                      </div>
-                      
-                      <Collapsible 
-                        open={expandedCategories.includes(category.id)}
-                        onOpenChange={() => toggleCategoryExpansion(category.id)}
-                      >
-                        <CollapsibleTrigger asChild>
-                          <Button 
-                            variant="ghost" 
-                            size="sm" 
-                            className="w-full justify-between text-xs h-8 px-3"
-                          >
-                            More information
-                            {expandedCategories.includes(category.id) ? 
-                              <ChevronUp className="h-3 w-3" /> : 
-                              <ChevronDown className="h-3 w-3" />
-                            }
-                          </Button>
-                        </CollapsibleTrigger>
-                        <CollapsibleContent className="px-3 pb-3">
-                          <p className="text-xs text-muted-foreground bg-accent/5 p-2 rounded">
-                            {category.details}
-                          </p>
-                        </CollapsibleContent>
-                      </Collapsible>
+              {/* Success Header */}
+              <div className="bg-gradient-to-r from-primary via-primary/90 to-primary/80 p-8 text-primary-foreground">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-6">
+                    <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center">
+                      <CheckCircle className="w-10 h-10 animate-pulse" />
                     </div>
-                  ))}
-                </div>
-                
-                <div className="flex justify-between items-center pt-4 border-t border-border">
-                  <p className="text-sm text-muted-foreground">
-                    {selectedCategories.length} of {calculationCategories.length} categories selected
-                  </p>
-                </div>
-              </div>
-
-              {/* Questionnaire Section */}
-              <div className="space-y-4 mb-8">
-                <div>
-                  <h3 className="text-xl font-semibold text-foreground">Create Questionnaire</h3>
-                  <p className="text-muted-foreground">Would you like to create a questionnaire for your suppliers?</p>
-                </div>
-                
-                <div className={cn(
-                  "rounded-lg border transition-colors",
-                  createQuestionnaire 
-                    ? "border-accent bg-accent/10" 
-                    : "border-border bg-card"
-                )}>
-                  <div 
-                    className="flex items-center gap-3 p-4 cursor-pointer hover:bg-accent/5"
-                    onClick={() => setCreateQuestionnaire(!createQuestionnaire)}
-                  >
-                    <Checkbox 
-                      checked={createQuestionnaire}
-                      onCheckedChange={(checked) => setCreateQuestionnaire(checked === true)}
-                    />
-                    <div className="flex-1">
-                      <h4 className="font-medium text-foreground">Create Custom Questionnaire</h4>
-                      <p className="text-sm text-muted-foreground">Generate tailored questions for your suppliers and stakeholders</p>
+                    <div>
+                      <h1 className="text-4xl font-bold mb-2">Event Created Successfully!</h1>
+                      <p className="text-xl opacity-90 mb-4">
+                        Your event "{eventData.eventName || "Untitled Event"}" has been created. Start calculating your environmental impact.
+                      </p>
                     </div>
                   </div>
-                  
-                  <Collapsible 
-                    open={expandedQuestionnaire}
-                    onOpenChange={setExpandedQuestionnaire}
-                  >
-                    <CollapsibleTrigger asChild>
-                      <Button 
-                        variant="ghost" 
-                        size="sm" 
-                        className="w-full justify-between h-10 px-4"
-                      >
-                        More information
-                        {expandedQuestionnaire ? 
-                          <ChevronUp className="h-4 w-4" /> : 
-                          <ChevronDown className="h-4 w-4" />
-                        }
-                      </Button>
-                    </CollapsibleTrigger>
-                    <CollapsibleContent className="px-4 pb-4">
-                      <div className="bg-accent/5 p-4 rounded space-y-2">
-                        <p className="text-sm text-muted-foreground">
-                          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation.
-                        </p>
-                        <p className="text-sm text-muted-foreground">
-                          Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-                        </p>
-                      </div>
-                    </CollapsibleContent>
-                  </Collapsible>
-                </div>
-              </div>
-
-              {/* Action Buttons */}
-              <div className="flex justify-between items-center pt-6 border-t border-border">
-                <div className="text-sm text-muted-foreground">
-                  {createQuestionnaire && <span className="text-accent">• Questionnaire will be created</span>}
-                </div>
-                
-                <div className="flex gap-4">
-                  <Button 
-                    variant="outline" 
-                    onClick={handleCancel}
-                    className="px-8"
-                  >
-                    Cancel
-                  </Button>
                   <Button 
                     onClick={handleContinue}
                     disabled={selectedCategories.length === 0}
-                    className="px-8"
+                    size="lg"
+                    className="bg-white text-primary hover:bg-white/90 font-semibold text-lg px-8 py-4 h-auto"
                   >
-                    Choose What to Calculate
+                    START EMISSION SELECTION
+                    <ArrowRight className="w-5 h-5 ml-2" />
                   </Button>
                 </div>
               </div>
+
+              {/* Event Info Card */}
+              <div className="p-8">
+                <div className="bg-white rounded-xl border border-border shadow-sm p-8 mb-8">
+                  <div className="flex items-center justify-between mb-6">
+                    <div>
+                      <h2 className="text-2xl font-bold text-foreground flex items-center gap-3">
+                        <Calendar className="w-6 h-6 text-primary" />
+                        {eventData.eventName || "Untitled Event"} - {eventData.client || "No client specified"}
+                      </h2>
+                    </div>
+                    <Button 
+                      variant="outline" 
+                      onClick={handleEdit}
+                      className="flex items-center gap-2 text-base font-medium px-6 py-3 h-auto hover:bg-accent"
+                    >
+                      <Edit3 className="w-5 h-5" />
+                      Edit Details
+                    </Button>
+                  </div>
+                  
+                  <div className="grid grid-cols-2 gap-8">
+                    <div className="space-y-4">
+                      <div className="flex items-center gap-4">
+                        <MapPin className="w-6 h-6 text-primary" />
+                        <div>
+                          <p className="text-base font-semibold text-foreground">
+                            {eventData.city || "Not specified"}, {eventData.country || ""}
+                          </p>
+                          <p className="text-sm text-muted-foreground">Location</p>
+                        </div>
+                      </div>
+                      
+                      <div className="flex items-center gap-4">
+                        <Building2 className="w-6 h-6 text-primary" />
+                        <div>
+                          <p className="text-base font-semibold text-foreground">{eventData.venueName || "Not specified"}</p>
+                          <p className="text-sm text-muted-foreground">Venue</p>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div className="space-y-4">
+                      <div className="flex items-center gap-4">
+                        <Users className="w-6 h-6 text-primary" />
+                        <div>
+                          <p className="text-base font-semibold text-foreground">{eventData.physicalAttendees || eventData.attendees || "Not specified"}</p>
+                          <p className="text-sm text-muted-foreground">Attendees</p>
+                        </div>
+                      </div>
+                      
+                      <div className="flex items-center gap-4">
+                        <CheckCircle className="w-6 h-6 text-primary" />
+                        <div>
+                          <p className="text-base font-semibold text-foreground capitalize">{eventData.eventType || "Not specified"}</p>
+                          <p className="text-sm text-muted-foreground">Event Type</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Choose Emission Categories */}
+                <div className="space-y-6 mb-8">
+                  <div>
+                    <h2 className="text-2xl font-bold text-foreground mb-2">Choose Emission Categories</h2>
+                    <p className="text-base text-muted-foreground mb-6">
+                      Empower your meetings and events sustainability; accurately track and reduce your events carbon footprint. 
+                      Please select which emissions you want to calculate as part of your carbon impact report.
+                    </p>
+                    <Button 
+                      variant="outline" 
+                      onClick={handleTickAll}
+                      className="text-sm font-semibold uppercase tracking-wide px-4 py-2"
+                      size="sm"
+                    >
+                      {allSelected ? "UNTICK ALL" : "TICK ALL"}
+                    </Button>
+                  </div>
+                  
+                  <div className="grid gap-4">
+                    {calculationCategories.map((category) => {
+                      const IconComponent = category.icon;
+                      return (
+                        <div 
+                          key={category.id}
+                          className={cn(
+                            "rounded-xl border-2 transition-all duration-200 hover:shadow-md",
+                            selectedCategories.includes(category.id) 
+                              ? "border-primary bg-primary/5 shadow-sm" 
+                              : "border-border bg-card hover:border-primary/30"
+                          )}
+                        >
+                          <div 
+                            className="flex items-center gap-4 p-6 cursor-pointer"
+                            onClick={() => handleCategoryToggle(category.id)}
+                          >
+                            <Checkbox 
+                              checked={selectedCategories.includes(category.id)}
+                              onCheckedChange={() => handleCategoryToggle(category.id)}
+                              className="w-5 h-5"
+                            />
+                            <IconComponent className="w-8 h-8 text-primary" />
+                            <div className="flex-1">
+                              <h3 className="text-lg font-semibold text-foreground">{category.label}</h3>
+                            </div>
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <Button 
+                                  variant="ghost" 
+                                  size="sm"
+                                  className="text-muted-foreground hover:text-foreground"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    toggleCategoryExpansion(category.id);
+                                  }}
+                                >
+                                  <Info className="w-4 h-4" />
+                                  More info
+                                </Button>
+                              </TooltipTrigger>
+                              <TooltipContent side="top" className="max-w-xs">
+                                <p className="text-sm">{category.details}</p>
+                              </TooltipContent>
+                            </Tooltip>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                  
+                  <div className="flex justify-between items-center pt-6 border-t border-border">
+                    <p className="text-base text-muted-foreground">
+                      {selectedCategories.length} of {calculationCategories.length} categories selected
+                    </p>
+                  </div>
+                </div>
+
+                {/* Create Custom Questionnaire */}
+                <div className="space-y-6 mb-8">
+                  <div>
+                    <h2 className="text-2xl font-bold text-foreground mb-2">Create Custom Questionnaire</h2>
+                    <p className="text-base text-muted-foreground">Would you like to create a questionnaire for your suppliers?</p>
+                  </div>
+                  
+                  <div className={cn(
+                    "rounded-xl border-2 transition-all duration-200",
+                    createQuestionnaire 
+                      ? "border-primary bg-primary/5 shadow-sm" 
+                      : "border-border bg-card hover:border-primary/30"
+                  )}>
+                    <div 
+                      className="flex items-center gap-4 p-6 cursor-pointer"
+                      onClick={() => setCreateQuestionnaire(!createQuestionnaire)}
+                    >
+                      <Checkbox 
+                        checked={createQuestionnaire}
+                        onCheckedChange={(checked) => setCreateQuestionnaire(checked === true)}
+                        className="w-5 h-5"
+                      />
+                      <Gift className="w-8 h-8 text-primary" />
+                      <div className="flex-1">
+                        <h3 className="text-lg font-semibold text-foreground">Create Custom Questionnaire</h3>
+                        <p className="text-base text-muted-foreground">Generate tailored questions for your suppliers and stakeholders</p>
+                      </div>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <Button 
+                            variant="ghost" 
+                            size="sm"
+                            className="text-muted-foreground hover:text-foreground"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setExpandedQuestionnaire(!expandedQuestionnaire);
+                            }}
+                          >
+                            <Info className="w-4 h-4" />
+                            More info
+                          </Button>
+                        </TooltipTrigger>
+                        <TooltipContent side="top" className="max-w-xs">
+                          <p className="text-sm">Create customized questionnaires to gather specific sustainability data from your suppliers and stakeholders for more accurate carbon footprint calculations.</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Action Buttons */}
+                <div className="flex justify-between items-center pt-8 border-t border-border">
+                  <div className="text-base text-muted-foreground">
+                    {createQuestionnaire && (
+                      <span className="text-primary font-medium">• Custom questionnaire will be created</span>
+                    )}
+                  </div>
+                  
+                  <div className="flex gap-4">
+                    <Button 
+                      variant="outline" 
+                      onClick={handleCancel}
+                      className="px-8 py-3 text-base font-medium h-auto"
+                      size="lg"
+                    >
+                      CANCEL
+                    </Button>
+                    <Button 
+                      onClick={handleContinue}
+                      disabled={selectedCategories.length === 0}
+                      className="px-8 py-3 text-base font-semibold h-auto uppercase tracking-wide"
+                      size="lg"
+                    >
+                      CONTINUE
+                      <ArrowRight className="w-5 h-5 ml-2" />
+                    </Button>
+                  </div>
+                </div>
+              </div>
             </div>
-          </div>
-        </main>
+          </main>
+        </div>
       </div>
-    </div>
+    </TooltipProvider>
   );
 };
 
