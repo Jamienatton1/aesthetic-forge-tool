@@ -298,6 +298,37 @@ const VenueInformation = () => {
                         )}
                       </div>
 
+                      {/* Basic Info - Always shown */}
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                        <div className="space-y-2">
+                          <Label className="text-sm font-medium">Space Name</Label>
+                          <Input
+                            value={space.name}
+                            onChange={(e) => updateSpace(space.id, "name", e.target.value)}
+                            placeholder="Enter space name"
+                          />
+                        </div>
+
+                        <div className="space-y-2">
+                          <Label className="text-sm font-medium">Usage Times</Label>
+                          <div className="flex items-center gap-2">
+                            <Input
+                              type="time"
+                              value={space.startTime}
+                              onChange={(e) => updateSpace(space.id, "startTime", e.target.value)}
+                              className="flex-1"
+                            />
+                            <span className="text-muted-foreground">to</span>
+                            <Input
+                              type="time"
+                              value={space.endTime}
+                              onChange={(e) => updateSpace(space.id, "endTime", e.target.value)}
+                              className="flex-1"
+                            />
+                          </div>
+                        </div>
+                      </div>
+
                       {space.useAverages ? (
                         <div className="bg-muted/30 rounded-lg p-4">
                           <div className="flex items-center gap-2 mb-2">
@@ -306,20 +337,11 @@ const VenueInformation = () => {
                             </Badge>
                           </div>
                           <p className="text-sm text-muted-foreground">
-                            Average size will be used to calculate CO₂ emissions.
+                            Average size will be used to calculate CO₂ emissions based on industry standards.
                           </p>
                         </div>
                       ) : (
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                          <div className="space-y-2">
-                            <Label className="text-sm font-medium">Space Name</Label>
-                            <Input
-                              value={space.name}
-                              onChange={(e) => updateSpace(space.id, "name", e.target.value)}
-                              placeholder="Enter space name"
-                            />
-                          </div>
-                          
                           <div className="space-y-2">
                             <Label className="text-sm font-medium">Type</Label>
                             <Select 
@@ -349,25 +371,6 @@ const VenueInformation = () => {
                               onChange={(e) => updateSpace(space.id, "size", parseInt(e.target.value) || 0)}
                               placeholder="Enter size"
                             />
-                          </div>
-
-                          <div className="space-y-2">
-                            <Label className="text-sm font-medium">Duration</Label>
-                            <div className="flex items-center gap-2">
-                              <Input
-                                type="time"
-                                value={space.startTime}
-                                onChange={(e) => updateSpace(space.id, "startTime", e.target.value)}
-                                className="flex-1"
-                              />
-                              <span className="text-muted-foreground">to</span>
-                              <Input
-                                type="time"
-                                value={space.endTime}
-                                onChange={(e) => updateSpace(space.id, "endTime", e.target.value)}
-                                className="flex-1"
-                              />
-                            </div>
                           </div>
 
                           <div className="space-y-2">
