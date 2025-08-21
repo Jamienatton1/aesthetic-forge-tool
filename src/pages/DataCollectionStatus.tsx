@@ -69,12 +69,6 @@ const allCategories: Category[] = [
     name: "Promotion Items",
     icon: Gift,
     description: "Marketing materials and giveaways"
-  },
-  {
-    id: "questionnaire",
-    name: "Questionnaire",
-    icon: HelpCircle,
-    description: "Additional event details and requirements"
   }
 ];
 
@@ -221,7 +215,7 @@ export default function DataCollectionStatus() {
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                  <HelpCircle className="w-5 h-5" />
+                  <Building className="w-5 h-5" />
                   Event Categories
                 </CardTitle>
                 <CardDescription>
@@ -248,6 +242,38 @@ export default function DataCollectionStatus() {
                     </Button>
                   </div>
                 ))}
+              </CardContent>
+            </Card>
+
+            {/* Questionnaire Section */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <HelpCircle className="w-5 h-5" />
+                  Questionnaire
+                </CardTitle>
+                <CardDescription>
+                  Additional event details and requirements
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="flex items-center justify-between p-4 border rounded-lg bg-card">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 bg-muted rounded-lg flex items-center justify-center">
+                      <HelpCircle className="w-5 h-5" />
+                    </div>
+                    <div>
+                      <h3 className="font-semibold text-foreground">Event Questionnaire</h3>
+                      <p className="text-sm text-muted-foreground">Additional event details and requirements</p>
+                    </div>
+                  </div>
+                  <Button 
+                    onClick={() => handleEditCategory('questionnaire')}
+                    variant="outline"
+                  >
+                    View
+                  </Button>
+                </div>
               </CardContent>
             </Card>
 
