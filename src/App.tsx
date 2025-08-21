@@ -16,6 +16,7 @@ import Travel from "./pages/Travel";
 import Accommodations from "./pages/Accommodations";
 import PromotionItems from "./pages/PromotionItems";
 import Questionnaire from "./pages/Questionnaire";
+import DataCollectionStatus from "./pages/DataCollectionStatus";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -40,6 +41,7 @@ const App = () => (
           <Route path="/events/accommodations" element={<Accommodations />} />
           <Route path="/events/promotion-items" element={<PromotionItems />} />
           <Route path="/events/questionnaire" element={<Questionnaire />} />
+          <Route path="/events/data-collection-status" element={<DataCollectionStatus />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
