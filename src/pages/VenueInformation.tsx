@@ -17,6 +17,7 @@ import { Badge } from "@/components/ui/badge";
 interface Space {
   id: string;
   name: string;
+  type: string;
   startTime: string;
   endTime: string;
   attendees: number;
@@ -38,6 +39,7 @@ const VenueInformation = () => {
     {
       id: "1",
       name: "Main Hall",
+      type: "meeting-room",
       startTime: "",
       endTime: "",
       attendees: 0,
@@ -66,6 +68,7 @@ const VenueInformation = () => {
     const newSpace: Space = {
       id: Date.now().toString(),
       name: "",
+      type: "meeting-room",
       startTime: "",
       endTime: "",
       attendees: 0,
@@ -233,133 +236,161 @@ const VenueInformation = () => {
                 
                 <div className="space-y-2">
                   <Label className="text-sm font-medium">Address</Label>
-                  <Textarea 
+                  <Input 
                     value={venueAddress}
                     onChange={(e) => setVenueAddress(e.target.value)}
                     placeholder="Enter venue address"
-                    className="resize-none"
-                    rows={3}
+                    className="text-sm"
                   />
                 </div>
               </CardContent>
             </Card>
 
-            {/* Spaces Table */}
+            {/* Spaces Section */}
             <Card>
               <CardHeader className="flex flex-row items-center justify-between">
                 <CardTitle className="flex items-center gap-2">
                   <Ruler className="w-5 h-5" />
                   Spaces
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Button variant="ghost" size="sm" className="p-1 h-auto">
+                          <Info className="w-4 h-4 text-muted-foreground" />
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent side="right" className="max-w-xs">
+                        <p className="text-sm">
+                          If you don't know the size of your spaces, we'll calculate based on standard values. You can manually enter exact dimensions too.
+                        </p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
                 </CardTitle>
-                <div className="flex gap-2">
-                  <Button onClick={addSpace} size="sm" className="bg-gradient-hero hover:opacity-90">
-                    <Plus className="w-4 h-4 mr-2" />
-                    Space
-                  </Button>
-                  <Button variant="outline" size="sm">
-                    <Plus className="w-4 h-4 mr-2" />
-                    Venue
-                  </Button>
-                </div>
+                <Button onClick={addSpace} size="sm" className="bg-gradient-hero hover:opacity-90">
+                  <Plus className="w-4 h-4 mr-2" />
+                  Add Space
+                </Button>
               </CardHeader>
-              <CardContent>
-                <div className="overflow-x-auto">
-                  <table className="w-full">
-                    <thead>
-                      <tr className="border-b">
-                        <th className="text-left py-3 px-2 font-medium text-sm">NAME</th>
-                        <th className="text-left py-3 px-2 font-medium text-sm">TIMES</th>
-                        <th className="text-left py-3 px-2 font-medium text-sm">ATTENDEES</th>
-                        <th className="text-left py-3 px-2 font-medium text-sm">SIZE</th>
-                        <th className="text-left py-3 px-2 font-medium text-sm">HEIGHT</th>
-                        <th className="text-left py-3 px-2 font-medium text-sm">CO2</th>
-                        <th className="text-left py-3 px-2 font-medium text-sm">USE AVERAGE</th>
-                        <th className="w-10"></th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {spaces.map((space) => (
-                        <tr key={space.id} className="border-b">
-                          <td className="py-3 px-2">
+              <CardContent className="space-y-4">
+                {spaces.map((space) => (
+                  <Card key={space.id} className="border-l-4 border-primary/20">
+                    <CardContent className="p-4">
+                      <div className="flex items-start justify-between mb-4">
+                        <div className="flex items-center gap-3">
+                          <Switch
+                            checked={space.useAverages}
+                            onCheckedChange={(checked) => updateSpace(space.id, "useAverages", checked)}
+                          />
+                          <div className="text-sm">
+                            <span className="font-medium">Use industry average space size for CO₂ calculation.</span>
+                          </div>
+                        </div>
+                        {spaces.length > 1 && (
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => removeSpace(space.id)}
+                            className="text-destructive hover:text-destructive"
+                          >
+                            ×
+                          </Button>
+                        )}
+                      </div>
+
+                      {space.useAverages ? (
+                        <div className="bg-muted/30 rounded-lg p-4">
+                          <div className="flex items-center gap-2 mb-2">
+                            <Badge variant="secondary" className="text-xs">
+                              CO₂: {space.co2.toFixed(2)} kg
+                            </Badge>
+                          </div>
+                          <p className="text-sm text-muted-foreground">
+                            Average size will be used to calculate CO₂ emissions.
+                          </p>
+                        </div>
+                      ) : (
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                          <div className="space-y-2">
+                            <Label className="text-sm font-medium">Space Name</Label>
                             <Input
                               value={space.name}
                               onChange={(e) => updateSpace(space.id, "name", e.target.value)}
-                              placeholder="Space name"
-                              className="border-0 bg-transparent p-0 h-auto focus-visible:ring-0"
+                              placeholder="Enter space name"
                             />
-                          </td>
-                          <td className="py-3 px-2">
-                            <div className="flex gap-1 text-sm">
-                              <Input
-                                type="time"
-                                value={space.startTime}
-                                onChange={(e) => updateSpace(space.id, "startTime", e.target.value)}
-                                className="border-0 bg-transparent p-0 h-auto focus-visible:ring-0 w-20"
-                              />
-                              <span>-</span>
-                              <Input
-                                type="time"
-                                value={space.endTime}
-                                onChange={(e) => updateSpace(space.id, "endTime", e.target.value)}
-                                className="border-0 bg-transparent p-0 h-auto focus-visible:ring-0 w-20"
-                              />
-                            </div>
-                          </td>
-                          <td className="py-3 px-2">
-                            <Input
-                              type="number"
-                              value={space.attendees || ""}
-                              onChange={(e) => updateSpace(space.id, "attendees", parseInt(e.target.value) || 0)}
-                              placeholder="0"
-                              className="border-0 bg-transparent p-0 h-auto focus-visible:ring-0 w-16"
-                            />
-                          </td>
-                          <td className="py-3 px-2">
+                          </div>
+                          
+                          <div className="space-y-2">
+                            <Label className="text-sm font-medium">Type</Label>
+                            <Select 
+                              value={space.type} 
+                              onValueChange={(value) => updateSpace(space.id, "type", value)}
+                            >
+                              <SelectTrigger>
+                                <SelectValue placeholder="Select type" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="meeting-room">Meeting Room</SelectItem>
+                                <SelectItem value="expo">Expo Hall</SelectItem>
+                                <SelectItem value="auditorium">Auditorium</SelectItem>
+                                <SelectItem value="conference">Conference Room</SelectItem>
+                                <SelectItem value="ballroom">Ballroom</SelectItem>
+                                <SelectItem value="workshop">Workshop Space</SelectItem>
+                                <SelectItem value="breakout">Breakout Room</SelectItem>
+                              </SelectContent>
+                            </Select>
+                          </div>
+
+                          <div className="space-y-2">
+                            <Label className="text-sm font-medium">Size (m²)</Label>
                             <Input
                               type="number"
                               value={space.size || ""}
                               onChange={(e) => updateSpace(space.id, "size", parseInt(e.target.value) || 0)}
-                              placeholder="sq ft"
-                              className="border-0 bg-transparent p-0 h-auto focus-visible:ring-0 w-20"
+                              placeholder="Enter size"
                             />
-                          </td>
-                          <td className="py-3 px-2">
+                          </div>
+
+                          <div className="space-y-2">
+                            <Label className="text-sm font-medium">Duration</Label>
+                            <div className="flex items-center gap-2">
+                              <Input
+                                type="time"
+                                value={space.startTime}
+                                onChange={(e) => updateSpace(space.id, "startTime", e.target.value)}
+                                className="flex-1"
+                              />
+                              <span className="text-muted-foreground">to</span>
+                              <Input
+                                type="time"
+                                value={space.endTime}
+                                onChange={(e) => updateSpace(space.id, "endTime", e.target.value)}
+                                className="flex-1"
+                              />
+                            </div>
+                          </div>
+
+                          <div className="space-y-2">
+                            <Label className="text-sm font-medium">Attendees</Label>
                             <Input
                               type="number"
-                              value={space.height || ""}
-                              onChange={(e) => updateSpace(space.id, "height", parseInt(e.target.value) || 0)}
-                              placeholder="ft"
-                              className="border-0 bg-transparent p-0 h-auto focus-visible:ring-0 w-16"
+                              value={space.attendees || ""}
+                              onChange={(e) => updateSpace(space.id, "attendees", parseInt(e.target.value) || 0)}
+                              placeholder="Number of attendees"
                             />
-                          </td>
-                          <td className="py-3 px-2">
-                            <Badge variant="secondary" className="text-xs">
-                              {space.co2.toFixed(2)}
+                          </div>
+
+                          <div className="space-y-2">
+                            <Label className="text-sm font-medium">CO₂ Emissions</Label>
+                            <Badge variant="secondary" className="w-fit">
+                              {space.co2.toFixed(2)} kg CO₂
                             </Badge>
-                          </td>
-                          <td className="py-3 px-2">
-                            <Switch
-                              checked={space.useAverages}
-                              onCheckedChange={(checked) => updateSpace(space.id, "useAverages", checked)}
-                            />
-                          </td>
-                          <td className="py-3 px-2">
-                            {spaces.length > 1 && (
-                              <Button
-                                variant="ghost"
-                                size="sm"
-                                onClick={() => removeSpace(space.id)}
-                                className="h-auto p-1 text-destructive hover:text-destructive"
-                              >
-                                ×
-                              </Button>
-                            )}
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
+                          </div>
+                        </div>
+                      )}
+                    </CardContent>
+                  </Card>
+                ))}
               </CardContent>
             </Card>
 
