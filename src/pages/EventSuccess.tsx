@@ -77,27 +77,14 @@ const EventSuccess = () => {
   const handleContinue = () => {
     if (selectedCategories.length === 0) return;
     
-    // Navigate to first selected category in priority order
-    if (selectedCategories.includes("venue")) {
-      navigate("/events/venue-information");
-    } else if (selectedCategories.includes("food")) {
-      navigate("/events/food-drink");
-    } else if (selectedCategories.includes("travel")) {
-      navigate("/events/travel");
-    } else if (selectedCategories.includes("accommodations")) {
-      navigate("/events/accommodations");
-    } else if (selectedCategories.includes("promotion")) {
-      navigate("/events/promotion-items");
-    } else if (createQuestionnaire) {
-      navigate("/events/questionnaire");
-    } else {
-      navigate("/events/suppliers", { 
-        state: { 
-          eventData, 
-          selectedCategories 
-        } 
-      });
-    }
+    // Always go to suppliers first for user assignment
+    navigate("/events/suppliers", { 
+      state: { 
+        eventData, 
+        selectedCategories,
+        createQuestionnaire
+      } 
+    });
   };
 
   const handleEdit = () => {

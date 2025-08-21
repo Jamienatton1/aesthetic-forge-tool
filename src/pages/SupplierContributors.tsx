@@ -68,26 +68,66 @@ const SupplierContributors = () => {
     navigate("/events/success", { state: { eventData } });
   };
 
-  const handleSkip = () => {
-    navigate("/events/status", { 
-      state: { 
-        eventData, 
-        selectedCategories,
-        suppliers: []
-      } 
-    });
-  };
-
   const handleSaveAndContinue = () => {
     const validSuppliers = suppliers.filter(s => s.name && s.email && s.category);
     console.log("Valid suppliers:", validSuppliers);
-    navigate("/events/status", { 
-      state: { 
-        eventData, 
-        selectedCategories,
-        suppliers: validSuppliers
-      } 
-    });
+    
+    // Navigate to first selected category in priority order
+    if (selectedCategories.includes("venue")) {
+      navigate("/events/venue-information", { 
+        state: { eventData, selectedCategories, suppliers: validSuppliers } 
+      });
+    } else if (selectedCategories.includes("food")) {
+      navigate("/events/food-drink", { 
+        state: { eventData, selectedCategories, suppliers: validSuppliers } 
+      });
+    } else if (selectedCategories.includes("travel")) {
+      navigate("/events/travel", { 
+        state: { eventData, selectedCategories, suppliers: validSuppliers } 
+      });
+    } else if (selectedCategories.includes("accommodations")) {
+      navigate("/events/accommodations", { 
+        state: { eventData, selectedCategories, suppliers: validSuppliers } 
+      });
+    } else if (selectedCategories.includes("promotion")) {
+      navigate("/events/promotion-items", { 
+        state: { eventData, selectedCategories, suppliers: validSuppliers } 
+      });
+    } else {
+      // Fallback to questionnaire or status
+      navigate("/events/questionnaire", { 
+        state: { eventData, selectedCategories, suppliers: validSuppliers } 
+      });
+    }
+  };
+
+  const handleSkip = () => {
+    // Same navigation logic as save and continue but with empty suppliers
+    if (selectedCategories.includes("venue")) {
+      navigate("/events/venue-information", { 
+        state: { eventData, selectedCategories, suppliers: [] } 
+      });
+    } else if (selectedCategories.includes("food")) {
+      navigate("/events/food-drink", { 
+        state: { eventData, selectedCategories, suppliers: [] } 
+      });
+    } else if (selectedCategories.includes("travel")) {
+      navigate("/events/travel", { 
+        state: { eventData, selectedCategories, suppliers: [] } 
+      });
+    } else if (selectedCategories.includes("accommodations")) {
+      navigate("/events/accommodations", { 
+        state: { eventData, selectedCategories, suppliers: [] } 
+      });
+    } else if (selectedCategories.includes("promotion")) {
+      navigate("/events/promotion-items", { 
+        state: { eventData, selectedCategories, suppliers: [] } 
+      });
+    } else {
+      navigate("/events/questionnaire", { 
+        state: { eventData, selectedCategories, suppliers: [] } 
+      });
+    }
   };
 
   return (

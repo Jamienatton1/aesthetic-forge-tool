@@ -295,7 +295,28 @@ const FoodDrink = () => {
                     </Button>
                     <div className="flex gap-3">
                       <Button variant="outline">Save Draft</Button>
-                      <Button onClick={() => navigate('/events/success')}>
+                      <Button onClick={() => {
+                        console.log("Food & Drink data:", foodDrinkData);
+                        
+                        // Get the remaining categories to navigate through
+                        const categoryOrder = ["venue", "food", "travel", "accommodations", "promotion"];
+                        const { selectedCategories = [] } = location.state || {};
+                        const currentIndex = categoryOrder.indexOf("food");
+                        
+                        // Find next selected category
+                        for (let i = currentIndex + 1; i < categoryOrder.length; i++) {
+                          if (selectedCategories.includes(categoryOrder[i])) {
+                            const nextCategory = categoryOrder[i];
+                            if (nextCategory === "travel") navigate("/events/travel");
+                            else if (nextCategory === "accommodations") navigate("/events/accommodations");
+                            else if (nextCategory === "promotion") navigate("/events/promotion-items");
+                            return;
+                          }
+                        }
+                        
+                        // If no more categories, go to questionnaire
+                        navigate("/events/questionnaire");
+                      }}>
                         Continue to Next Step
                       </Button>
                     </div>

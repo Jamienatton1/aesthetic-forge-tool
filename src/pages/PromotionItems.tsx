@@ -19,6 +19,8 @@ export default function PromotionItems() {
 
   const handleSubmit = () => {
     console.log("Promotion items data:", promotionData);
+    
+    // Always go to questionnaire after promotion items (last category)
     navigate("/events/questionnaire");
   };
 

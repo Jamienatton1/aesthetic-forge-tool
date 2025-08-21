@@ -4,11 +4,12 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { ArrowLeft, ArrowRight, Car, Plane, Train } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { Sidebar } from "@/components/dashboard/Sidebar";
 
 export default function Travel() {
   const navigate = useNavigate();
+  const location = useLocation();
   const [travelData, setTravelData] = useState({
     airTravel: 0,
     carTravel: 0,
@@ -18,7 +19,24 @@ export default function Travel() {
 
   const handleSubmit = () => {
     console.log("Travel data:", travelData);
-    navigate("/events/accommodations");
+    
+    // Get the remaining categories to navigate through
+    const categoryOrder = ["venue", "food", "travel", "accommodations", "promotion"];
+    const { selectedCategories = [] } = location.state || {};
+    const currentIndex = categoryOrder.indexOf("travel");
+    
+    // Find next selected category
+    for (let i = currentIndex + 1; i < categoryOrder.length; i++) {
+      if (selectedCategories.includes(categoryOrder[i])) {
+        const nextCategory = categoryOrder[i];
+        if (nextCategory === "accommodations") navigate("/events/accommodations");
+        else if (nextCategory === "promotion") navigate("/events/promotion-items");
+        return;
+      }
+    }
+    
+    // If no more categories, go to questionnaire
+    navigate("/events/questionnaire");
   };
 
   return (

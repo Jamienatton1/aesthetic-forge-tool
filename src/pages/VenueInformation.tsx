@@ -72,9 +72,27 @@ const VenueInformation = () => {
   };
 
   const handleSubmit = () => {
-    // Handle form submission
     console.log("Venue Information:", { venueRating, rooms });
-    navigate("/events/status");
+    
+    // Get the remaining categories to navigate through
+    const categoryOrder = ["venue", "food", "travel", "accommodations", "promotion"];
+    const { selectedCategories = [] } = location.state || {};
+    const currentIndex = categoryOrder.indexOf("venue");
+    
+    // Find next selected category
+    for (let i = currentIndex + 1; i < categoryOrder.length; i++) {
+      if (selectedCategories.includes(categoryOrder[i])) {
+        const nextCategory = categoryOrder[i];
+        if (nextCategory === "food") navigate("/events/food-drink");
+        else if (nextCategory === "travel") navigate("/events/travel");
+        else if (nextCategory === "accommodations") navigate("/events/accommodations");
+        else if (nextCategory === "promotion") navigate("/events/promotion-items");
+        return;
+      }
+    }
+    
+    // If no more categories, go to questionnaire
+    navigate("/events/questionnaire");
   };
 
   const renderStarRating = () => {
