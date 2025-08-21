@@ -153,11 +153,11 @@ const FoodDrink = () => {
 
   const getMealIcon = (mealType: string) => {
     switch(mealType) {
-      case "Breakfast": return "🍳";
-      case "Lunch": return "🍽️";
-      case "Dinner": return "🍷";
-      case "Coffee Break": return "☕";
-      default: return "🍴";
+      case "Breakfast": return <Coffee className="h-4 w-4" />;
+      case "Lunch": return <Utensils className="h-4 w-4" />;
+      case "Dinner": return <Wine className="h-4 w-4" />;
+      case "Coffee Break": return <Coffee className="h-4 w-4" />;
+      default: return <Utensils className="h-4 w-4" />;
     }
   };
 
@@ -419,15 +419,17 @@ const FoodDrink = () => {
                       {mealTypes.map(mealType => (
                         <Card key={mealType} className="relative">
                           <CardHeader className="pb-4">
-                            <CardTitle className="flex items-center gap-3 text-lg">
-                              <span className="text-2xl">{getMealIcon(mealType)}</span>
-                              <div>
-                                <div>{mealType}</div>
-                                <div className="text-sm font-normal text-muted-foreground">
-                                  Total: {getMealTotal(selectedDate, mealType)} meals
-                                </div>
+                            <div className="flex items-center gap-3 mb-4">
+                              <div className="w-8 h-8 bg-primary/10 rounded-lg flex items-center justify-center">
+                                {getMealIcon(mealType)}
                               </div>
-                            </CardTitle>
+                              <div>
+                                <h3 className="text-lg font-semibold">{mealType}</h3>
+                                <p className="text-sm text-muted-foreground">
+                                  Total: {getMealTotal(selectedDate, mealType)} meals
+                                </p>
+                              </div>
+                            </div>
                           </CardHeader>
                           <CardContent>
                             <div className="grid grid-cols-2 gap-3">
@@ -562,11 +564,11 @@ const FoodDrink = () => {
                               <div className="flex items-center gap-3">
                                 <Wine className="h-5 w-5" />
                                 <div>
-                                  <h3 className="font-semibold">🔽 Beverages – {new Date(selectedDate).toLocaleDateString('en-US', { 
-                                    weekday: 'long',
-                                    month: 'long', 
-                                    day: 'numeric' 
-                                  })}</h3>
+                                   <h3 className="font-semibold">Beverages – {new Date(selectedDate).toLocaleDateString('en-US', { 
+                                     weekday: 'long',
+                                     month: 'long', 
+                                     day: 'numeric' 
+                                   })}</h3>
                                   <p className="text-sm text-muted-foreground">
                                     Total: {getDrinkTotal(selectedDate)} drinks
                                   </p>

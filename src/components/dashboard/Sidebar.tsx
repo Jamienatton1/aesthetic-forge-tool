@@ -35,7 +35,7 @@ export function Sidebar() {
   const currentPath = location.pathname;
 
   return (
-    <div className="w-64 bg-sidebar-dark h-screen flex flex-col">
+    <div className="w-64 bg-sidebar-dark min-h-screen flex flex-col">
       {/* Logo */}
       <div className="p-6 border-b border-sidebar-item">
         <div className="flex items-center gap-3">
