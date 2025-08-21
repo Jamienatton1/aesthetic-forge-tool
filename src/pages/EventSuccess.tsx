@@ -133,7 +133,7 @@ const EventSuccess = () => {
 
               {/* Success Header */}
               <div className="bg-gradient-to-r from-primary via-primary/90 to-primary/80 p-8 text-primary-foreground">
-                <div className="flex items-center justify-between">
+                <div className="flex items-center">
                   <div className="flex items-center gap-6">
                     <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center">
                       <CheckCircle className="w-10 h-10 animate-pulse" />
@@ -145,15 +145,6 @@ const EventSuccess = () => {
                       </p>
                     </div>
                   </div>
-                  <Button 
-                    onClick={handleContinue}
-                    disabled={selectedCategories.length === 0}
-                    size="lg"
-                    className="bg-white text-primary hover:bg-white/90 font-semibold text-lg px-8 py-4 h-auto"
-                  >
-                    START EMISSION SELECTION
-                    <ArrowRight className="w-5 h-5 ml-2" />
-                  </Button>
                 </div>
               </div>
 
