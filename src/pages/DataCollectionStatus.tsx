@@ -91,12 +91,12 @@ export default function DataCollectionStatus() {
   const handleEditCategory = (categoryId: string) => {
     // Navigate to specific category form
     const categoryRoutes = {
-      'venue': '/venue-information',
-      'food-drink': '/food-drink',
-      'travel': '/travel',
-      'accommodations': '/accommodations', 
-      'promotion-items': '/promotion-items',
-      'questionnaire': '/questionnaire'
+      'venue': '/events/venue-information',
+      'food-drink': '/events/food-drink',
+      'travel': '/events/travel',
+      'accommodations': '/events/accommodations', 
+      'promotion-items': '/events/promotion-items',
+      'questionnaire': '/events/questionnaire'
     };
     
     const route = categoryRoutes[categoryId as keyof typeof categoryRoutes];
