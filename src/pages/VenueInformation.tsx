@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { MapPin, Clock, Ruler, Plus, Star, ArrowLeft, Save } from "lucide-react";
+import { MapPin, Clock, Ruler, Plus, Star, ArrowLeft, Save, Info, HelpCircle } from "lucide-react";
 import { Sidebar } from "@/components/dashboard/Sidebar";
 import { EventsHeader } from "@/components/events/EventsHeader";
 import { Button } from "@/components/ui/button";
@@ -11,107 +11,161 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
 import { Switch } from "@/components/ui/switch";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { Badge } from "@/components/ui/badge";
 
-interface Room {
+interface Space {
   id: string;
   name: string;
   startTime: string;
   endTime: string;
-  size: string;
-  customSize: string;
+  attendees: number;
+  size: number;
+  height: number;
+  co2: number;
   useAverages: boolean;
 }
 
 const VenueInformation = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const { eventData, categoryType, venueData } = location.state || {};
+  const { eventData, selectedCategories } = location.state || {};
 
+  const [venueName, setVenueName] = useState(eventData?.venue || "");
+  const [venueAddress, setVenueAddress] = useState(eventData?.address || "");
   const [venueRating, setVenueRating] = useState<number>(0);
-  const [rooms, setRooms] = useState<Room[]>([
+  const [spaces, setSpaces] = useState<Space[]>([
     {
       id: "1",
-      name: "",
+      name: "Main Hall",
       startTime: "",
       endTime: "",
-      size: "average",
-      customSize: "",
+      attendees: 0,
+      size: 0,
+      height: 0,
+      co2: 0,
       useAverages: true
     }
   ]);
 
-  const roomSizeOptions = [
-    { value: "small", label: "Small (up to 50 people)" },
-    { value: "medium", label: "Medium (50-150 people)" },
-    { value: "large", label: "Large (150-500 people)" },
-    { value: "extra-large", label: "Extra Large (500+ people)" },
-    { value: "custom", label: "Custom Size" }
-  ];
+  const calculateCO2 = (attendees: number, size: number, rating: number, useAverages: boolean): number => {
+    if (useAverages) {
+      // Base calculation with star rating multiplier
+      const baseEmission = attendees * 2.5; // kg CO2 per person base
+      const ratingMultiplier = rating > 0 ? (6 - rating) * 0.2 : 1; // Higher star rating = lower emissions
+      return Math.round(baseEmission * ratingMultiplier * 100) / 100;
+    }
+    // Custom calculation based on size and other factors
+    const sizeEmission = size * 0.1; // kg CO2 per sq ft
+    const attendeeEmission = attendees * 2.0;
+    const ratingMultiplier = rating > 0 ? (6 - rating) * 0.15 : 1;
+    return Math.round((sizeEmission + attendeeEmission) * ratingMultiplier * 100) / 100;
+  };
 
-  const addRoom = () => {
-    const newRoom: Room = {
+  const addSpace = () => {
+    const newSpace: Space = {
       id: Date.now().toString(),
       name: "",
       startTime: "",
       endTime: "",
-      size: "average",
-      customSize: "",
+      attendees: 0,
+      size: 0,
+      height: 0,
+      co2: 0,
       useAverages: true
     };
-    setRooms([...rooms, newRoom]);
+    setSpaces([...spaces, newSpace]);
   };
 
-  const removeRoom = (id: string) => {
-    setRooms(rooms.filter(room => room.id !== id));
+  const removeSpace = (id: string) => {
+    setSpaces(spaces.filter(space => space.id !== id));
   };
 
-  const updateRoom = (id: string, field: keyof Room, value: string | boolean) => {
-    setRooms(rooms.map(room => 
-      room.id === id ? { ...room, [field]: value } : room
-    ));
+  const updateSpace = (id: string, field: keyof Space, value: string | number | boolean) => {
+    setSpaces(spaces.map(space => {
+      if (space.id === id) {
+        const updatedSpace = { ...space, [field]: value };
+        // Recalculate CO2 when relevant fields change
+        if (['attendees', 'size', 'useAverages'].includes(field)) {
+          updatedSpace.co2 = calculateCO2(
+            updatedSpace.attendees, 
+            updatedSpace.size, 
+            venueRating, 
+            updatedSpace.useAverages
+          );
+        }
+        return updatedSpace;
+      }
+      return space;
+    }));
+  };
+
+  // Recalculate CO2 for all spaces when venue rating changes
+  const updateVenueRating = (rating: number) => {
+    setVenueRating(rating);
+    setSpaces(spaces.map(space => ({
+      ...space,
+      co2: calculateCO2(space.attendees, space.size, rating, space.useAverages)
+    })));
   };
 
   const handleSubmit = () => {
-    console.log("Venue Information:", { venueRating, rooms });
+    console.log("Venue Information:", { venueName, venueAddress, venueRating, spaces });
     
-    // Get the remaining categories to navigate through
-    const categoryOrder = ["venue", "food", "travel", "accommodations", "promotion"];
-    const { selectedCategories = [] } = location.state || {};
+    // Navigate to next category in the flow
+    const categoryOrder = ["venue", "food-drink", "travel", "accommodations", "promotion-items"];
     const currentIndex = categoryOrder.indexOf("venue");
     
     // Find next selected category
     for (let i = currentIndex + 1; i < categoryOrder.length; i++) {
-      if (selectedCategories.includes(categoryOrder[i])) {
+      if (selectedCategories?.includes(categoryOrder[i])) {
         const nextCategory = categoryOrder[i];
-        if (nextCategory === "food") navigate("/events/food-drink");
-        else if (nextCategory === "travel") navigate("/events/travel");
-        else if (nextCategory === "accommodations") navigate("/events/accommodations");
-        else if (nextCategory === "promotion") navigate("/events/promotion-items");
+        if (nextCategory === "food-drink") navigate("/food-drink", { state: { eventData, selectedCategories } });
+        else if (nextCategory === "travel") navigate("/travel", { state: { eventData, selectedCategories } });
+        else if (nextCategory === "accommodations") navigate("/accommodations", { state: { eventData, selectedCategories } });
+        else if (nextCategory === "promotion-items") navigate("/promotion-items", { state: { eventData, selectedCategories } });
         return;
       }
     }
     
     // If no more categories, go to questionnaire
-    navigate("/events/questionnaire");
+    navigate("/questionnaire", { state: { eventData, selectedCategories } });
   };
 
   const renderStarRating = () => {
     return (
-      <div className="flex items-center gap-1">
-        {[1, 2, 3, 4, 5].map((star) => (
-          <button
-            key={star}
-            type="button"
-            onClick={() => setVenueRating(star)}
-            className={`p-1 transition-colors ${
-              star <= venueRating
-                ? "text-accent"
-                : "text-muted-foreground hover:text-accent/70"
-            }`}
-          >
-            <Star className="w-6 h-6 fill-current" />
-          </button>
-        ))}
+      <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1">
+          {[1, 2, 3, 4, 5].map((star) => (
+            <button
+              key={star}
+              type="button"
+              onClick={() => updateVenueRating(star)}
+              className={`p-1 transition-colors ${
+                star <= venueRating
+                  ? "text-yellow-400"
+                  : "text-muted-foreground hover:text-yellow-400/70"
+              }`}
+            >
+              <Star className="w-5 h-5 fill-current" />
+            </button>
+          ))}
+        </div>
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button variant="ghost" size="sm" className="p-1 h-auto">
+                <Info className="w-4 h-4" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent side="right" className="max-w-xs">
+              <p className="text-sm">
+                Star rating affects CO2 calculations. Higher rated venues (4-5 stars) typically have better 
+                energy efficiency and lower emissions. Lower rated venues may have higher carbon footprints.
+              </p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
       </div>
     );
   };
@@ -123,18 +177,28 @@ const VenueInformation = () => {
       <div className="flex-1 flex flex-col overflow-hidden">
         <EventsHeader 
           title="Venue Information" 
-          subtitle="Enter detailed information about the venue and rooms" 
+          subtitle="Enter detailed information about the venue and spaces" 
         />
         
-        <div className="flex-1 overflow-auto p-8">
-          <div className="max-w-4xl mx-auto space-y-8">
-            
-            {/* Venue Details Card */}
+        <div className="flex-1 overflow-auto">
+          {/* Hero Section */}
+          <div className="bg-gradient-hero text-white px-8 py-12">
+            <div className="max-w-4xl">
+              <h1 className="text-4xl font-bold mb-4">Spaces</h1>
+              <p className="text-xl opacity-90">
+                Event: {eventData?.eventName || "Event Name"} • Physical Attendees: {eventData?.physicalAttendees || 100} • Virtual Attendees: {eventData?.virtualAttendees || 50} • Staff: {eventData?.staff || 10}
+              </p>
+            </div>
+          </div>
+
+          {/* Content */}
+          <div className="px-8 py-8 space-y-8">
+            {/* Main Venue Information */}
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <MapPin className="w-5 h-5" />
-                  Venue Details
+                  Main Venue
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-6">
@@ -142,153 +206,160 @@ const VenueInformation = () => {
                   <div className="space-y-2">
                     <Label className="text-sm font-medium">Venue Name</Label>
                     <Input 
-                      value={venueData?.name || eventData?.venue || ""} 
-                      readOnly
-                      className="bg-muted"
+                      value={venueName}
+                      onChange={(e) => setVenueName(e.target.value)}
+                      placeholder="Enter venue name"
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label className="text-sm font-medium">Venue Rating</Label>
-                    <div className="flex items-center gap-3">
-                      {renderStarRating()}
-                      <span className="text-sm text-muted-foreground">
-                        {venueRating > 0 ? `${venueRating} star${venueRating > 1 ? 's' : ''}` : "No rating"}
-                      </span>
-                    </div>
+                    <Label className="text-sm font-medium flex items-center gap-2">
+                      Venue Rating
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <HelpCircle className="w-4 h-4 text-muted-foreground cursor-help" />
+                          </TooltipTrigger>
+                          <TooltipContent side="top" className="max-w-xs">
+                            <p className="text-sm">
+                              Rate the venue's sustainability features and energy efficiency. This affects carbon emission calculations.
+                            </p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+                    </Label>
+                    {renderStarRating()}
                   </div>
                 </div>
                 
                 <div className="space-y-2">
                   <Label className="text-sm font-medium">Address</Label>
                   <Textarea 
-                    value={venueData?.address || eventData?.address || ""} 
-                    readOnly
-                    className="bg-muted resize-none"
+                    value={venueAddress}
+                    onChange={(e) => setVenueAddress(e.target.value)}
+                    placeholder="Enter venue address"
+                    className="resize-none"
                     rows={3}
                   />
                 </div>
               </CardContent>
             </Card>
 
-            {/* Rooms Information Card */}
+            {/* Spaces Table */}
             <Card>
-              <CardHeader>
+              <CardHeader className="flex flex-row items-center justify-between">
                 <CardTitle className="flex items-center gap-2">
                   <Ruler className="w-5 h-5" />
-                  Room Information
+                  Spaces
                 </CardTitle>
+                <div className="flex gap-2">
+                  <Button onClick={addSpace} size="sm" className="bg-gradient-hero hover:opacity-90">
+                    <Plus className="w-4 h-4 mr-2" />
+                    Space
+                  </Button>
+                  <Button variant="outline" size="sm">
+                    <Plus className="w-4 h-4 mr-2" />
+                    Venue
+                  </Button>
+                </div>
               </CardHeader>
-              <CardContent className="space-y-6">
-                {rooms.map((room, index) => (
-                  <div key={room.id} className="space-y-4 p-4 border border-border rounded-lg">
-                    <div className="flex items-center justify-between">
-                      <h4 className="font-medium">Room {index + 1}</h4>
-                      {rooms.length > 1 && (
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => removeRoom(room.id)}
-                          className="text-destructive hover:text-destructive"
-                        >
-                          Remove
-                        </Button>
-                      )}
-                    </div>
-                    
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                      <div className="space-y-2">
-                        <Label className="text-sm font-medium">Room Name/Description</Label>
-                        <Input
-                          placeholder="e.g., Main Hall, Conference Room A"
-                          value={room.name}
-                          onChange={(e) => updateRoom(room.id, "name", e.target.value)}
-                        />
-                      </div>
-                      
-                      <div className="space-y-2">
-                        <Label className="text-sm font-medium">Start Time</Label>
-                        <Input
-                          type="time"
-                          value={room.startTime}
-                          onChange={(e) => updateRoom(room.id, "startTime", e.target.value)}
-                        />
-                      </div>
-                      
-                      <div className="space-y-2">
-                        <Label className="text-sm font-medium">End Time</Label>
-                        <Input
-                          type="time"
-                          value={room.endTime}
-                          onChange={(e) => updateRoom(room.id, "endTime", e.target.value)}
-                        />
-                      </div>
-                    </div>
-                    
-                    <div className="space-y-4">
-                      <div className="flex items-center justify-between">
-                        <Label className="text-sm font-medium">Use Average Carbon Calculations</Label>
-                        <Switch
-                          checked={room.useAverages}
-                          onCheckedChange={(checked) => updateRoom(room.id, "useAverages", checked)}
-                        />
-                      </div>
-                      
-                      {!room.useAverages && (
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                          <div className="space-y-2">
-                            <Label className="text-sm font-medium">Room Size</Label>
-                            <Select
-                              value={room.size}
-                              onValueChange={(value) => updateRoom(room.id, "size", value)}
-                            >
-                              <SelectTrigger>
-                                <SelectValue placeholder="Select room size" />
-                              </SelectTrigger>
-                              <SelectContent>
-                                {roomSizeOptions.map((option) => (
-                                  <SelectItem key={option.value} value={option.value}>
-                                    {option.label}
-                                  </SelectItem>
-                                ))}
-                              </SelectContent>
-                            </Select>
-                          </div>
-                          
-                          {room.size === "custom" && (
-                            <div className="space-y-2">
-                              <Label className="text-sm font-medium">Custom Size (sq ft)</Label>
+              <CardContent>
+                <div className="overflow-x-auto">
+                  <table className="w-full">
+                    <thead>
+                      <tr className="border-b">
+                        <th className="text-left py-3 px-2 font-medium text-sm">NAME</th>
+                        <th className="text-left py-3 px-2 font-medium text-sm">TIMES</th>
+                        <th className="text-left py-3 px-2 font-medium text-sm">ATTENDEES</th>
+                        <th className="text-left py-3 px-2 font-medium text-sm">SIZE</th>
+                        <th className="text-left py-3 px-2 font-medium text-sm">HEIGHT</th>
+                        <th className="text-left py-3 px-2 font-medium text-sm">CO2</th>
+                        <th className="text-left py-3 px-2 font-medium text-sm">USE AVERAGE</th>
+                        <th className="w-10"></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {spaces.map((space) => (
+                        <tr key={space.id} className="border-b">
+                          <td className="py-3 px-2">
+                            <Input
+                              value={space.name}
+                              onChange={(e) => updateSpace(space.id, "name", e.target.value)}
+                              placeholder="Space name"
+                              className="border-0 bg-transparent p-0 h-auto focus-visible:ring-0"
+                            />
+                          </td>
+                          <td className="py-3 px-2">
+                            <div className="flex gap-1 text-sm">
                               <Input
-                                type="number"
-                                placeholder="Enter square footage"
-                                value={room.customSize}
-                                onChange={(e) => updateRoom(room.id, "customSize", e.target.value)}
+                                type="time"
+                                value={space.startTime}
+                                onChange={(e) => updateSpace(space.id, "startTime", e.target.value)}
+                                className="border-0 bg-transparent p-0 h-auto focus-visible:ring-0 w-20"
+                              />
+                              <span>-</span>
+                              <Input
+                                type="time"
+                                value={space.endTime}
+                                onChange={(e) => updateSpace(space.id, "endTime", e.target.value)}
+                                className="border-0 bg-transparent p-0 h-auto focus-visible:ring-0 w-20"
                               />
                             </div>
-                          )}
-                        </div>
-                      )}
-                      
-                      {room.useAverages && (
-                        <div className="p-3 bg-muted rounded-md">
-                          <p className="text-sm text-muted-foreground">
-                            Carbon calculations will use industry averages based on venue type and event duration.
-                          </p>
-                        </div>
-                      )}
-                    </div>
-                    
-                    {index < rooms.length - 1 && <Separator />}
-                  </div>
-                ))}
-                
-                <Button
-                  variant="outline"
-                  onClick={addRoom}
-                  className="w-full"
-                >
-                  <Plus className="w-4 h-4 mr-2" />
-                  Add Another Room
-                </Button>
+                          </td>
+                          <td className="py-3 px-2">
+                            <Input
+                              type="number"
+                              value={space.attendees || ""}
+                              onChange={(e) => updateSpace(space.id, "attendees", parseInt(e.target.value) || 0)}
+                              placeholder="0"
+                              className="border-0 bg-transparent p-0 h-auto focus-visible:ring-0 w-16"
+                            />
+                          </td>
+                          <td className="py-3 px-2">
+                            <Input
+                              type="number"
+                              value={space.size || ""}
+                              onChange={(e) => updateSpace(space.id, "size", parseInt(e.target.value) || 0)}
+                              placeholder="sq ft"
+                              className="border-0 bg-transparent p-0 h-auto focus-visible:ring-0 w-20"
+                            />
+                          </td>
+                          <td className="py-3 px-2">
+                            <Input
+                              type="number"
+                              value={space.height || ""}
+                              onChange={(e) => updateSpace(space.id, "height", parseInt(e.target.value) || 0)}
+                              placeholder="ft"
+                              className="border-0 bg-transparent p-0 h-auto focus-visible:ring-0 w-16"
+                            />
+                          </td>
+                          <td className="py-3 px-2">
+                            <Badge variant="secondary" className="text-xs">
+                              {space.co2.toFixed(2)}
+                            </Badge>
+                          </td>
+                          <td className="py-3 px-2">
+                            <Switch
+                              checked={space.useAverages}
+                              onCheckedChange={(checked) => updateSpace(space.id, "useAverages", checked)}
+                            />
+                          </td>
+                          <td className="py-3 px-2">
+                            {spaces.length > 1 && (
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => removeSpace(space.id)}
+                                className="h-auto p-1 text-destructive hover:text-destructive"
+                              >
+                                ×
+                              </Button>
+                            )}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
               </CardContent>
             </Card>
 
@@ -299,17 +370,24 @@ const VenueInformation = () => {
                 onClick={() => navigate(-1)}
                 className="flex items-center gap-2"
               >
-                <ArrowLeft className="w-4 h-4" />
-                Back
+                ← Back
               </Button>
               
-              <Button 
-                onClick={handleSubmit}
-                className="flex items-center gap-2"
-              >
-                <Save className="w-4 h-4" />
-                Save Information
-              </Button>
+              <div className="flex gap-4">
+                <Button 
+                  variant="outline"
+                  onClick={() => console.log("Save venue information")}
+                  className="flex items-center gap-2"
+                >
+                  Save
+                </Button>
+                <Button 
+                  onClick={handleSubmit}
+                  className="bg-gradient-hero hover:opacity-90 flex items-center gap-2"
+                >
+                  Next →
+                </Button>
+              </div>
             </div>
           </div>
         </div>
