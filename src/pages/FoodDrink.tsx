@@ -9,7 +9,8 @@ import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { ChevronLeft, Plus, Minus, Coffee, Utensils, Wine, Copy, Eye } from "lucide-react";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import { ChevronLeft, Plus, Minus, Coffee, Utensils, Wine, Copy, Eye, ChevronDown, ChevronUp } from "lucide-react";
 import { Header } from "@/components/dashboard/Header";
 import { Sidebar } from "@/components/dashboard/Sidebar";
 
@@ -32,9 +33,10 @@ const FoodDrink = () => {
   const eventData = location.state?.eventData || {};
   
   const [foodDrinkData, setFoodDrinkData] = useState<FoodDrinkData>({});
-  const [selectedDate, setSelectedDate] = useState<string>("");
+  const [selectedDate, setSelectedDate] = useState<string>("2024-08-20");
   const [copyFromDate, setCopyFromDate] = useState<string>("");
   const [activeTab, setActiveTab] = useState("overview");
+  const [beveragesExpanded, setBeveragesExpanded] = useState(false);
 
   // Sample event dates - in real app, this would come from eventData
   const eventDates = ["2024-08-20", "2024-08-21", "2024-08-22"];
@@ -116,6 +118,49 @@ const FoodDrink = () => {
     }));
   };
 
+  const setAllMeals = (value: number) => {
+    if (!selectedDate) return;
+    const newMeals: any = {};
+    mealTypes.forEach(mealType => {
+      newMeals[mealType] = {};
+      foodCategories.forEach(category => {
+        newMeals[mealType][category] = value;
+      });
+    });
+    setFoodDrinkData(prev => ({
+      ...prev,
+      [selectedDate]: {
+        ...prev[selectedDate],
+        meals: newMeals
+      }
+    }));
+  };
+
+  const setAllDrinks = (value: number) => {
+    if (!selectedDate) return;
+    const newDrinks: any = {};
+    drinkTypes.forEach(drinkType => {
+      newDrinks[drinkType] = value;
+    });
+    setFoodDrinkData(prev => ({
+      ...prev,
+      [selectedDate]: {
+        ...prev[selectedDate],
+        drinks: newDrinks
+      }
+    }));
+  };
+
+  const getMealIcon = (mealType: string) => {
+    switch(mealType) {
+      case "Breakfast": return "🍳";
+      case "Lunch": return "🍽️";
+      case "Dinner": return "🍷";
+      case "Coffee Break": return "☕";
+      default: return "🍴";
+    }
+  };
+
   return (
     <div className="min-h-screen bg-background">
       <div className="flex w-full">
@@ -165,14 +210,18 @@ const FoodDrink = () => {
 
               {/* Main Content with Tabs */}
               <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-                <TabsList className="grid w-full grid-cols-2">
+                <TabsList className="grid w-full grid-cols-3">
                   <TabsTrigger value="overview" className="flex items-center gap-2">
                     <Eye className="h-4 w-4" />
                     Overview
                   </TabsTrigger>
-                  <TabsTrigger value="entry" className="flex items-center gap-2">
+                  <TabsTrigger value="meals" className="flex items-center gap-2">
                     <Utensils className="h-4 w-4" />
-                    Enter Data
+                    Meals
+                  </TabsTrigger>
+                  <TabsTrigger value="beverages" className="flex items-center gap-2">
+                    <Wine className="h-4 w-4" />
+                    Beverages
                   </TabsTrigger>
                 </TabsList>
 
@@ -286,255 +335,322 @@ const FoodDrink = () => {
                   </Card>
                 </TabsContent>
 
-                {/* Data Entry Tab */}
-                <TabsContent value="entry" className="mt-6">
-                  <Card>
-                    <CardHeader>
-                      <CardTitle className="flex items-center gap-2">
-                        <Utensils className="h-5 w-5" />
-                        Enter Food & Beverages
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent className="space-y-6">
-                      {/* Date Selection */}
-                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <div className="space-y-2">
-                          <Label className="text-sm font-medium">Select Date</Label>
-                          <Select value={selectedDate} onValueChange={setSelectedDate}>
-                            <SelectTrigger>
-                              <SelectValue placeholder="Choose event date" />
-                            </SelectTrigger>
-                            <SelectContent>
-                              {eventDates.map(date => (
-                                <SelectItem key={date} value={date}>
-                                  {new Date(date).toLocaleDateString('en-US', { 
+                {/* Meals Tab */}
+                <TabsContent value="meals" className="mt-6">
+                  <div className="space-y-6">
+                    {/* Date Selection and Controls */}
+                    <Card>
+                      <CardContent className="pt-6">
+                        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                          <div className="space-y-2">
+                            <Label className="text-sm font-medium">Select Date</Label>
+                            <Select value={selectedDate} onValueChange={setSelectedDate}>
+                              <SelectTrigger>
+                                <SelectValue placeholder="Choose event date" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                {eventDates.map(date => (
+                                  <SelectItem key={date} value={date}>
+                                    {new Date(date).toLocaleDateString('en-US', { 
+                                      weekday: 'long',
+                                      month: 'long', 
+                                      day: 'numeric' 
+                                    })}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                          </div>
+
+                          <div className="space-y-2">
+                            <Label className="text-sm font-medium">Copy From Previous Day</Label>
+                            <Select value={copyFromDate} onValueChange={setCopyFromDate}>
+                              <SelectTrigger>
+                                <SelectValue placeholder="Select source date" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                {eventDates.filter(date => date !== selectedDate).map(date => (
+                                  <SelectItem key={date} value={date}>
+                                    {new Date(date).toLocaleDateString('en-US', { 
+                                      weekday: 'short',
+                                      month: 'short', 
+                                      day: 'numeric' 
+                                    })}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                          </div>
+
+                          <div className="flex gap-2 items-end">
+                            <Button 
+                              variant="outline" 
+                              onClick={copyFromAnotherDay}
+                              disabled={!copyFromDate}
+                              className="flex items-center gap-2"
+                            >
+                              <Copy className="h-4 w-4" />
+                              Copy
+                            </Button>
+                          </div>
+
+                          <div className="flex gap-2 items-end">
+                            <Button 
+                              variant="outline" 
+                              onClick={() => setAllMeals(50)}
+                              className="flex-1"
+                            >
+                              Set All 50
+                            </Button>
+                            <Button 
+                              variant="outline" 
+                              onClick={() => setAllMeals(0)}
+                              className="flex-1 text-destructive"
+                            >
+                              Clear All
+                            </Button>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+
+                    {/* Meal Cards */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      {mealTypes.map(mealType => (
+                        <Card key={mealType} className="relative">
+                          <CardHeader className="pb-4">
+                            <CardTitle className="flex items-center gap-3 text-lg">
+                              <span className="text-2xl">{getMealIcon(mealType)}</span>
+                              <div>
+                                <div>{mealType}</div>
+                                <div className="text-sm font-normal text-muted-foreground">
+                                  Total: {getMealTotal(selectedDate, mealType)} meals
+                                </div>
+                              </div>
+                            </CardTitle>
+                          </CardHeader>
+                          <CardContent>
+                            <div className="grid grid-cols-2 gap-3">
+                              {foodCategories.map(category => (
+                                <div key={category} className="space-y-2">
+                                  <Label className="text-xs font-medium text-muted-foreground">
+                                    {category}
+                                  </Label>
+                                  <div className="flex items-center gap-1">
+                                    <Button
+                                      variant="outline"
+                                      size="sm"
+                                      className="h-8 w-8 p-0"
+                                      onClick={() => updateMealData(selectedDate, mealType, category, 
+                                        (foodDrinkData[selectedDate]?.meals?.[mealType]?.[category] || 0) - 1)}
+                                    >
+                                      <Minus className="h-3 w-3" />
+                                    </Button>
+                                    <Input
+                                      type="number"
+                                      value={foodDrinkData[selectedDate]?.meals?.[mealType]?.[category] || 0}
+                                      onChange={(e) => updateMealData(selectedDate, mealType, category, 
+                                        parseInt(e.target.value) || 0)}
+                                      className="h-8 text-center text-xs"
+                                      min="0"
+                                    />
+                                    <Button
+                                      variant="outline"
+                                      size="sm"
+                                      className="h-8 w-8 p-0"
+                                      onClick={() => updateMealData(selectedDate, mealType, category, 
+                                        (foodDrinkData[selectedDate]?.meals?.[mealType]?.[category] || 0) + 1)}
+                                    >
+                                      <Plus className="h-3 w-3" />
+                                    </Button>
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
+                          </CardContent>
+                        </Card>
+                      ))}
+                    </div>
+                  </div>
+                </TabsContent>
+
+                {/* Beverages Tab */}
+                <TabsContent value="beverages" className="mt-6">
+                  <div className="space-y-6">
+                    {/* Date Selection and Controls */}
+                    <Card>
+                      <CardContent className="pt-6">
+                        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                          <div className="space-y-2">
+                            <Label className="text-sm font-medium">Select Date</Label>
+                            <Select value={selectedDate} onValueChange={setSelectedDate}>
+                              <SelectTrigger>
+                                <SelectValue placeholder="Choose event date" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                {eventDates.map(date => (
+                                  <SelectItem key={date} value={date}>
+                                    {new Date(date).toLocaleDateString('en-US', { 
+                                      weekday: 'long',
+                                      month: 'long', 
+                                      day: 'numeric' 
+                                    })}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                          </div>
+
+                          <div className="space-y-2">
+                            <Label className="text-sm font-medium">Copy From Previous Day</Label>
+                            <Select value={copyFromDate} onValueChange={setCopyFromDate}>
+                              <SelectTrigger>
+                                <SelectValue placeholder="Select source date" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                {eventDates.filter(date => date !== selectedDate).map(date => (
+                                  <SelectItem key={date} value={date}>
+                                    {new Date(date).toLocaleDateString('en-US', { 
+                                      weekday: 'short',
+                                      month: 'short', 
+                                      day: 'numeric' 
+                                    })}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                          </div>
+
+                          <div className="flex gap-2 items-end">
+                            <Button 
+                              variant="outline" 
+                              onClick={copyFromAnotherDay}
+                              disabled={!copyFromDate}
+                              className="flex items-center gap-2"
+                            >
+                              <Copy className="h-4 w-4" />
+                              Copy
+                            </Button>
+                          </div>
+
+                          <div className="flex gap-2 items-end">
+                            <Button 
+                              variant="outline" 
+                              onClick={() => setAllDrinks(50)}
+                              className="flex-1"
+                            >
+                              Set All 50
+                            </Button>
+                            <Button 
+                              variant="outline" 
+                              onClick={() => setAllDrinks(0)}
+                              className="flex-1 text-destructive"
+                            >
+                              Clear All
+                            </Button>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+
+                    {/* Beverages Collapsible */}
+                    <Collapsible open={beveragesExpanded} onOpenChange={setBeveragesExpanded}>
+                      <CollapsibleTrigger asChild>
+                        <Card className="cursor-pointer hover:bg-muted/50 transition-colors">
+                          <CardContent className="pt-6">
+                            <div className="flex items-center justify-between">
+                              <div className="flex items-center gap-3">
+                                <Wine className="h-5 w-5" />
+                                <div>
+                                  <h3 className="font-semibold">🔽 Beverages – {new Date(selectedDate).toLocaleDateString('en-US', { 
                                     weekday: 'long',
                                     month: 'long', 
                                     day: 'numeric' 
-                                  })}
-                                </SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
-                        </div>
-
-                        {selectedDate && (
-                          <>
-                            <div className="space-y-2">
-                              <Label className="text-sm font-medium">Copy From Another Day</Label>
-                              <Select value={copyFromDate} onValueChange={setCopyFromDate}>
-                                <SelectTrigger>
-                                  <SelectValue placeholder="Select source date" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                  {eventDates.filter(date => date !== selectedDate).map(date => (
-                                    <SelectItem key={date} value={date}>
-                                      {new Date(date).toLocaleDateString('en-US', { 
-                                        weekday: 'short',
-                                        month: 'short', 
-                                        day: 'numeric' 
-                                      })}
-                                    </SelectItem>
-                                  ))}
-                                </SelectContent>
-                              </Select>
+                                  })}</h3>
+                                  <p className="text-sm text-muted-foreground">
+                                    Total: {getDrinkTotal(selectedDate)} drinks
+                                  </p>
+                                </div>
+                              </div>
+                              {beveragesExpanded ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
                             </div>
-
-                            <div className="flex gap-2 items-end">
-                              <Button 
-                                variant="outline" 
-                                onClick={copyFromAnotherDay}
-                                disabled={!copyFromDate}
-                                className="flex items-center gap-2"
-                              >
-                                <Copy className="h-4 w-4" />
-                                Copy Data
-                              </Button>
-                              <Button 
-                                variant="outline" 
-                                onClick={clearValues}
-                                className="text-destructive"
-                              >
-                                Clear All
-                              </Button>
-                            </div>
-                          </>
-                        )}
-                      </div>
-
-                      {selectedDate && (
-                        <>
-                          {/* Meals Entry */}
-                          <Card>
-                            <CardHeader>
-                              <CardTitle className="text-lg flex items-center gap-2">
-                                <Utensils className="h-4 w-4" />
-                                Meals - {new Date(selectedDate).toLocaleDateString('en-US', { 
-                                  weekday: 'long',
-                                  month: 'long', 
-                                  day: 'numeric' 
-                                })}
-                              </CardTitle>
-                            </CardHeader>
-                            <CardContent className="space-y-6">
-                              {mealTypes.map(mealType => (
-                                <div key={mealType} className="space-y-4">
-                                  <div className="flex items-center justify-between">
-                                    <h4 className="font-semibold text-base">{mealType}</h4>
-                                    <Badge variant="outline">
-                                      Total: {getMealTotal(selectedDate, mealType)}
-                                    </Badge>
+                          </CardContent>
+                        </Card>
+                      </CollapsibleTrigger>
+                      <CollapsibleContent>
+                        <Card className="mt-4">
+                          <CardContent className="pt-6">
+                            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-4">
+                              {drinkTypes.map(drinkType => (
+                                <div key={drinkType} className="space-y-2">
+                                  <Label className="text-xs font-medium text-muted-foreground">
+                                    {drinkType}
+                                  </Label>
+                                  <div className="flex items-center gap-1">
+                                    <Button
+                                      variant="outline"
+                                      size="sm"
+                                      className="h-8 w-8 p-0"
+                                      onClick={() => updateDrinkData(selectedDate, drinkType, 
+                                        (foodDrinkData[selectedDate]?.drinks?.[drinkType] || 0) - 1)}
+                                    >
+                                      <Minus className="h-3 w-3" />
+                                    </Button>
+                                    <Input
+                                      type="number"
+                                      value={foodDrinkData[selectedDate]?.drinks?.[drinkType] || 0}
+                                      onChange={(e) => updateDrinkData(selectedDate, drinkType, 
+                                        parseInt(e.target.value) || 0)}
+                                      className="h-8 text-center"
+                                      min="0"
+                                    />
+                                    <Button
+                                      variant="outline"
+                                      size="sm"
+                                      className="h-8 w-8 p-0"
+                                      onClick={() => updateDrinkData(selectedDate, drinkType, 
+                                        (foodDrinkData[selectedDate]?.drinks?.[drinkType] || 0) + 1)}
+                                    >
+                                      <Plus className="h-3 w-3" />
+                                    </Button>
                                   </div>
-                                  
-                                  <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-3">
-                                    {foodCategories.map(category => (
-                                      <div key={category} className="space-y-2">
-                                        <Label className="text-xs font-medium text-muted-foreground">
-                                          {category}
-                                        </Label>
-                                        <div className="flex items-center gap-1">
-                                          <Button
-                                            variant="outline"
-                                            size="icon"
-                                            className="h-7 w-7"
-                                            onClick={() => updateMealData(
-                                              selectedDate, 
-                                              mealType, 
-                                              category, 
-                                              (foodDrinkData[selectedDate]?.meals?.[mealType]?.[category] || 0) - 1
-                                            )}
-                                          >
-                                            <Minus className="h-3 w-3" />
-                                          </Button>
-                                          <Input
-                                            type="number"
-                                            min="0"
-                                            className="h-7 text-center text-sm"
-                                            value={foodDrinkData[selectedDate]?.meals?.[mealType]?.[category] || 0}
-                                            onChange={(e) => updateMealData(
-                                              selectedDate, 
-                                              mealType, 
-                                              category, 
-                                              parseInt(e.target.value) || 0
-                                            )}
-                                          />
-                                          <Button
-                                            variant="outline"
-                                            size="icon"
-                                            className="h-7 w-7"
-                                            onClick={() => updateMealData(
-                                              selectedDate, 
-                                              mealType, 
-                                              category, 
-                                              (foodDrinkData[selectedDate]?.meals?.[mealType]?.[category] || 0) + 1
-                                            )}
-                                          >
-                                            <Plus className="h-3 w-3" />
-                                          </Button>
-                                        </div>
-                                      </div>
-                                    ))}
-                                  </div>
-                                  {mealType !== mealTypes[mealTypes.length - 1] && <Separator />}
                                 </div>
                               ))}
-                            </CardContent>
-                          </Card>
-
-                          {/* Drinks Entry */}
-                          <Card>
-                            <CardHeader>
-                              <CardTitle className="text-lg flex items-center gap-2">
-                                <Wine className="h-4 w-4" />
-                                Beverages - {new Date(selectedDate).toLocaleDateString('en-US', { 
-                                  weekday: 'long',
-                                  month: 'long', 
-                                  day: 'numeric' 
-                                })}
-                              </CardTitle>
-                            </CardHeader>
-                            <CardContent>
-                              <div className="flex items-center justify-between mb-4">
-                                <h4 className="font-semibold text-base">All Beverages</h4>
-                                <Badge variant="outline">
-                                  Total: {getDrinkTotal(selectedDate)}
-                                </Badge>
-                              </div>
-                              
-                              <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-3">
-                                {drinkTypes.map(drinkType => (
-                                  <div key={drinkType} className="space-y-2">
-                                    <Label className="text-xs font-medium text-muted-foreground">
-                                      {drinkType}
-                                    </Label>
-                                    <div className="flex items-center gap-1">
-                                      <Button
-                                        variant="outline"
-                                        size="icon"
-                                        className="h-7 w-7"
-                                        onClick={() => updateDrinkData(
-                                          selectedDate, 
-                                          drinkType, 
-                                          (foodDrinkData[selectedDate]?.drinks?.[drinkType] || 0) - 1
-                                        )}
-                                      >
-                                        <Minus className="h-3 w-3" />
-                                      </Button>
-                                      <Input
-                                        type="number"
-                                        min="0"
-                                        className="h-7 text-center text-sm"
-                                        value={foodDrinkData[selectedDate]?.drinks?.[drinkType] || 0}
-                                        onChange={(e) => updateDrinkData(
-                                          selectedDate, 
-                                          drinkType, 
-                                          parseInt(e.target.value) || 0
-                                        )}
-                                      />
-                                      <Button
-                                        variant="outline"
-                                        size="icon"
-                                        className="h-7 w-7"
-                                        onClick={() => updateDrinkData(
-                                          selectedDate, 
-                                          drinkType, 
-                                          (foodDrinkData[selectedDate]?.drinks?.[drinkType] || 0) + 1
-                                        )}
-                                      >
-                                        <Plus className="h-3 w-3" />
-                                      </Button>
-                                    </div>
-                                  </div>
-                                ))}
-                              </div>
-                            </CardContent>
-                          </Card>
-
-                          {/* Summary for selected date */}
-                          <Card className="bg-muted/20">
-                            <CardContent className="pt-6">
-                              <div className="grid grid-cols-2 gap-4 text-center">
-                                <div>
-                                  <div className="text-2xl font-bold text-primary">
-                                    {getAllMealsTotal(selectedDate)}
-                                  </div>
-                                  <div className="text-sm text-muted-foreground">Total Meals</div>
-                                </div>
-                                <div>
-                                  <div className="text-2xl font-bold text-primary">
-                                    {getDrinkTotal(selectedDate)}
-                                  </div>
-                                  <div className="text-sm text-muted-foreground">Total Drinks</div>
-                                </div>
-                              </div>
-                            </CardContent>
-                          </Card>
-                        </>
-                      )}
-                    </CardContent>
-                  </Card>
+                            </div>
+                          </CardContent>
+                        </Card>
+                      </CollapsibleContent>
+                    </Collapsible>
+                  </div>
                 </TabsContent>
               </Tabs>
+
+              {/* Sticky Summary Footer */}
+              {(activeTab === "meals" || activeTab === "beverages") && (
+                <div className="fixed bottom-0 left-0 right-0 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-t border-border p-4 z-50">
+                  <div className="max-w-7xl mx-auto flex items-center justify-between">
+                    <div className="flex gap-6 text-sm">
+                      <div className="flex items-center gap-2">
+                        <Utensils className="h-4 w-4" />
+                        <span className="font-medium">Total Meals:</span>
+                        <Badge variant="secondary">{getAllMealsTotal(selectedDate)}</Badge>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Wine className="h-4 w-4" />
+                        <span className="font-medium">Total Drinks:</span>
+                        <Badge variant="secondary">{getDrinkTotal(selectedDate)}</Badge>
+                      </div>
+                    </div>
+                    <div className="text-sm text-muted-foreground">
+                      {new Date(selectedDate).toLocaleDateString('en-US', { 
+                        weekday: 'long',
+                        month: 'long', 
+                        day: 'numeric' 
+                      })}
+                    </div>
+                  </div>
+                </div>
+              )}
 
               {/* Action Buttons */}
               <div className="flex justify-between pt-4">
