@@ -36,11 +36,15 @@ export function NewEventForm() {
   return (
     <div className="bg-metric-card rounded-xl shadow-card border border-border overflow-hidden">
       {/* Header */}
-      <div className="bg-gradient-hero p-8 text-white">
-        <h2 className="text-3xl font-bold mb-2">CREATE NEW EVENT</h2>
-        <p className="text-lg opacity-90">
-          Set up a new environmental event for tracking
-        </p>
+      <div className="bg-gradient-to-r from-primary via-primary/90 to-primary/80 p-8 text-primary-foreground">
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-4xl font-bold mb-2">CREATE NEW EVENT</h1>
+            <p className="text-xl opacity-90">
+              Set up a new environmental event for tracking
+            </p>
+          </div>
+        </div>
       </div>
 
       {/* Form */}
@@ -48,8 +52,8 @@ export function NewEventForm() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Left Column */}
           <div className="space-y-6">
-            <div className="space-y-2">
-              <Label htmlFor="eventName" className="text-sm font-medium text-foreground">
+            <div className="space-y-3">
+              <Label htmlFor="eventName" className="text-lg font-semibold text-foreground">
                 Event Name
               </Label>
               <Input
@@ -57,13 +61,13 @@ export function NewEventForm() {
                 placeholder="Enter event name"
                 value={formData.eventName}
                 onChange={(e) => handleInputChange("eventName", e.target.value)}
-                className="w-full"
+                className="h-12 text-base"
                 required
               />
             </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="client" className="text-sm font-medium text-foreground">
+            <div className="space-y-3">
+              <Label htmlFor="client" className="text-lg font-semibold text-foreground">
                 Client
               </Label>
               <Input
@@ -71,13 +75,13 @@ export function NewEventForm() {
                 placeholder="Enter client name"
                 value={formData.client}
                 onChange={(e) => handleInputChange("client", e.target.value)}
-                className="w-full"
+                className="h-12 text-base"
                 required
               />
             </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="venueName" className="text-sm font-medium text-foreground">
+            <div className="space-y-3">
+              <Label htmlFor="venueName" className="text-lg font-semibold text-foreground">
                 Venue Name
               </Label>
               <Input
@@ -85,7 +89,7 @@ export function NewEventForm() {
                 placeholder="Enter venue name"
                 value={formData.venueName}
                 onChange={(e) => handleInputChange("venueName", e.target.value)}
-                className="w-full"
+                className="h-12 text-base"
                 required
               />
             </div>
@@ -93,12 +97,12 @@ export function NewEventForm() {
 
           {/* Right Column */}
           <div className="space-y-6">
-            <div className="space-y-2">
-              <Label htmlFor="eventType" className="text-sm font-medium text-foreground">
+            <div className="space-y-3">
+              <Label htmlFor="eventType" className="text-lg font-semibold text-foreground">
                 Event Type
               </Label>
               <Select value={formData.eventType} onValueChange={(value) => handleInputChange("eventType", value)}>
-                <SelectTrigger>
+                <SelectTrigger className="h-12 text-base">
                   <SelectValue placeholder="Select event type" />
                 </SelectTrigger>
                 <SelectContent>
@@ -112,12 +116,12 @@ export function NewEventForm() {
               </Select>
             </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="country" className="text-sm font-medium text-foreground">
+            <div className="space-y-3">
+              <Label htmlFor="country" className="text-lg font-semibold text-foreground">
                 Country
               </Label>
               <Select value={formData.country} onValueChange={(value) => handleInputChange("country", value)}>
-                <SelectTrigger>
+                <SelectTrigger className="h-12 text-base">
                   <SelectValue placeholder="Select country" />
                 </SelectTrigger>
                 <SelectContent>
@@ -136,8 +140,8 @@ export function NewEventForm() {
               </Select>
             </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="city" className="text-sm font-medium text-foreground">
+            <div className="space-y-3">
+              <Label htmlFor="city" className="text-lg font-semibold text-foreground">
                 City
               </Label>
               <Input
@@ -145,7 +149,7 @@ export function NewEventForm() {
                 placeholder="Enter city"
                 value={formData.city}
                 onChange={(e) => handleInputChange("city", e.target.value)}
-                className="w-full"
+                className="h-12 text-base"
                 required
               />
             </div>
@@ -153,20 +157,22 @@ export function NewEventForm() {
         </div>
 
         {/* Form Actions */}
-        <div className="flex justify-end gap-4 mt-8 pt-6 border-t border-border">
+        <div className="flex justify-end gap-4 mt-12 pt-8 border-t border-border">
           <Button
             type="button"
             variant="outline"
             onClick={handleCancel}
-            className="px-8"
+            className="px-8 py-3 text-base font-medium h-auto uppercase tracking-wide"
+            size="lg"
           >
-            Cancel
+            CANCEL
           </Button>
           <Button
             type="submit"
-            className="px-8"
+            className="px-8 py-3 text-base font-semibold h-auto uppercase tracking-wide"
+            size="lg"
           >
-            Save and Continue
+            SAVE AND CONTINUE
           </Button>
         </div>
       </form>

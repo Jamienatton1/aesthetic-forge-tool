@@ -60,23 +60,27 @@ export function EventDetailsForm({ initialEventType = "" }: EventDetailsFormProp
   return (
     <div className="bg-metric-card rounded-xl shadow-card border border-border overflow-hidden">
       {/* Header */}
-      <div className="bg-gradient-hero p-8 text-white">
-        <h2 className="text-3xl font-bold mb-2">CREATE EVENT</h2>
-        <p className="text-lg opacity-90">
-          Complete your event details and schedule
-        </p>
+      <div className="bg-gradient-to-r from-primary via-primary/90 to-primary/80 p-8 text-primary-foreground">
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-4xl font-bold mb-2">CREATE EVENT</h1>
+            <p className="text-xl opacity-90">
+              Complete your event details and schedule
+            </p>
+          </div>
+        </div>
       </div>
 
       {/* Form */}
       <form onSubmit={handleSubmit} className="p-8">
-        <div className="space-y-6">
+        <div className="space-y-8">
           {/* Event Type */}
-          <div className="space-y-2">
-            <Label htmlFor="eventType" className="text-sm font-medium text-foreground">
+          <div className="space-y-3">
+            <Label htmlFor="eventType" className="text-lg font-semibold text-foreground">
               Event Type
             </Label>
             <Select value={formData.eventType} onValueChange={(value) => handleInputChange("eventType", value)}>
-              <SelectTrigger>
+              <SelectTrigger className="h-12 text-base">
                 <SelectValue placeholder="Select event type" />
               </SelectTrigger>
               <SelectContent>
@@ -91,12 +95,12 @@ export function EventDetailsForm({ initialEventType = "" }: EventDetailsFormProp
           </div>
 
           {/* Industry */}
-          <div className="space-y-2">
-            <Label htmlFor="industry" className="text-sm font-medium text-foreground">
+          <div className="space-y-3">
+            <Label htmlFor="industry" className="text-lg font-semibold text-foreground">
               Industry
             </Label>
             <Select value={formData.industry} onValueChange={(value) => handleInputChange("industry", value)}>
-              <SelectTrigger>
+              <SelectTrigger className="h-12 text-base">
                 <SelectValue placeholder="Select industry" />
               </SelectTrigger>
               <SelectContent>
@@ -116,131 +120,134 @@ export function EventDetailsForm({ initialEventType = "" }: EventDetailsFormProp
           </div>
 
           {/* Date Fields - Four columns */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <div className="space-y-2">
-              <Label className="text-sm font-medium text-foreground">
-                Event Build Start Date
-              </Label>
-              <Popover>
-                <PopoverTrigger asChild>
-                  <Button
-                    variant="outline"
-                    className={cn(
-                      "w-full justify-start text-left font-normal",
-                      !formData.buildStartDate && "text-muted-foreground"
-                    )}
-                  >
-                    <CalendarIcon className="mr-2 h-4 w-4" />
-                    {formData.buildStartDate ? format(formData.buildStartDate, "PPP") : <span>Pick a date</span>}
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent className="w-auto p-0" align="start">
-                  <Calendar
-                    mode="single"
-                    selected={formData.buildStartDate}
-                    onSelect={(date) => handleInputChange("buildStartDate", date)}
-                    initialFocus
-                    className="p-3 pointer-events-auto"
-                  />
-                </PopoverContent>
-              </Popover>
-            </div>
+          <div className="space-y-3">
+            <h2 className="text-xl font-semibold text-foreground">Event Schedule</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              <div className="space-y-3">
+                <Label className="text-base font-medium text-foreground">
+                  Event Build Start Date
+                </Label>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button
+                      variant="outline"
+                      className={cn(
+                        "w-full justify-start text-left font-normal h-12 text-base",
+                        !formData.buildStartDate && "text-muted-foreground"
+                      )}
+                    >
+                      <CalendarIcon className="mr-2 h-5 w-5" />
+                      {formData.buildStartDate ? format(formData.buildStartDate, "PPP") : <span>Pick a date</span>}
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0" align="start">
+                    <Calendar
+                      mode="single"
+                      selected={formData.buildStartDate}
+                      onSelect={(date) => handleInputChange("buildStartDate", date)}
+                      initialFocus
+                      className="p-3 pointer-events-auto"
+                    />
+                  </PopoverContent>
+                </Popover>
+              </div>
 
-            <div className="space-y-2">
-              <Label className="text-sm font-medium text-foreground">
-                Event Live Start Date
-              </Label>
-              <Popover>
-                <PopoverTrigger asChild>
-                  <Button
-                    variant="outline"
-                    className={cn(
-                      "w-full justify-start text-left font-normal",
-                      !formData.startDate && "text-muted-foreground"
-                    )}
-                  >
-                    <CalendarIcon className="mr-2 h-4 w-4" />
-                    {formData.startDate ? format(formData.startDate, "PPP") : <span>Pick a date</span>}
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent className="w-auto p-0" align="start">
-                  <Calendar
-                    mode="single"
-                    selected={formData.startDate}
-                    onSelect={(date) => handleInputChange("startDate", date)}
-                    initialFocus
-                    className="p-3 pointer-events-auto"
-                    disabled={(date) => formData.buildStartDate ? date < formData.buildStartDate : false}
-                  />
-                </PopoverContent>
-              </Popover>
-            </div>
+              <div className="space-y-3">
+                <Label className="text-base font-medium text-foreground">
+                  Event Live Start Date
+                </Label>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button
+                      variant="outline"
+                      className={cn(
+                        "w-full justify-start text-left font-normal h-12 text-base",
+                        !formData.startDate && "text-muted-foreground"
+                      )}
+                    >
+                      <CalendarIcon className="mr-2 h-5 w-5" />
+                      {formData.startDate ? format(formData.startDate, "PPP") : <span>Pick a date</span>}
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0" align="start">
+                    <Calendar
+                      mode="single"
+                      selected={formData.startDate}
+                      onSelect={(date) => handleInputChange("startDate", date)}
+                      initialFocus
+                      className="p-3 pointer-events-auto"
+                      disabled={(date) => formData.buildStartDate ? date < formData.buildStartDate : false}
+                    />
+                  </PopoverContent>
+                </Popover>
+              </div>
 
-            <div className="space-y-2">
-              <Label className="text-sm font-medium text-foreground">
-                Event End Date
-              </Label>
-              <Popover>
-                <PopoverTrigger asChild>
-                  <Button
-                    variant="outline"
-                    className={cn(
-                      "w-full justify-start text-left font-normal",
-                      !formData.endDate && "text-muted-foreground"
-                    )}
-                  >
-                    <CalendarIcon className="mr-2 h-4 w-4" />
-                    {formData.endDate ? format(formData.endDate, "PPP") : <span>Pick a date</span>}
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent className="w-auto p-0" align="start">
-                  <Calendar
-                    mode="single"
-                    selected={formData.endDate}
-                    onSelect={(date) => handleInputChange("endDate", date)}
-                    initialFocus
-                    className="p-3 pointer-events-auto"
-                    disabled={(date) => formData.startDate ? date < formData.startDate : false}
-                  />
-                </PopoverContent>
-              </Popover>
-            </div>
+              <div className="space-y-3">
+                <Label className="text-base font-medium text-foreground">
+                  Event End Date
+                </Label>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button
+                      variant="outline"
+                      className={cn(
+                        "w-full justify-start text-left font-normal h-12 text-base",
+                        !formData.endDate && "text-muted-foreground"
+                      )}
+                    >
+                      <CalendarIcon className="mr-2 h-5 w-5" />
+                      {formData.endDate ? format(formData.endDate, "PPP") : <span>Pick a date</span>}
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0" align="start">
+                    <Calendar
+                      mode="single"
+                      selected={formData.endDate}
+                      onSelect={(date) => handleInputChange("endDate", date)}
+                      initialFocus
+                      className="p-3 pointer-events-auto"
+                      disabled={(date) => formData.startDate ? date < formData.startDate : false}
+                    />
+                  </PopoverContent>
+                </Popover>
+              </div>
 
-            <div className="space-y-2">
-              <Label className="text-sm font-medium text-foreground">
-                Event Degrid End Date
-              </Label>
-              <Popover>
-                <PopoverTrigger asChild>
-                  <Button
-                    variant="outline"
-                    className={cn(
-                      "w-full justify-start text-left font-normal",
-                      !formData.degridEndDate && "text-muted-foreground"
-                    )}
-                  >
-                    <CalendarIcon className="mr-2 h-4 w-4" />
-                    {formData.degridEndDate ? format(formData.degridEndDate, "PPP") : <span>Pick a date</span>}
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent className="w-auto p-0" align="start">
-                  <Calendar
-                    mode="single"
-                    selected={formData.degridEndDate}
-                    onSelect={(date) => handleInputChange("degridEndDate", date)}
-                    initialFocus
-                    className="p-3 pointer-events-auto"
-                    disabled={(date) => formData.endDate ? date < formData.endDate : false}
-                  />
-                </PopoverContent>
-              </Popover>
+              <div className="space-y-3">
+                <Label className="text-base font-medium text-foreground">
+                  Event Degrid End Date
+                </Label>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button
+                      variant="outline"
+                      className={cn(
+                        "w-full justify-start text-left font-normal h-12 text-base",
+                        !formData.degridEndDate && "text-muted-foreground"
+                      )}
+                    >
+                      <CalendarIcon className="mr-2 h-5 w-5" />
+                      {formData.degridEndDate ? format(formData.degridEndDate, "PPP") : <span>Pick a date</span>}
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0" align="start">
+                    <Calendar
+                      mode="single"
+                      selected={formData.degridEndDate}
+                      onSelect={(date) => handleInputChange("degridEndDate", date)}
+                      initialFocus
+                      className="p-3 pointer-events-auto"
+                      disabled={(date) => formData.endDate ? date < formData.endDate : false}
+                    />
+                  </PopoverContent>
+                </Popover>
+              </div>
             </div>
           </div>
 
           {/* Duration Display */}
           {daysDifference !== null && (
-            <div className="p-4 bg-accent/50 rounded-lg border border-border">
-              <p className="text-sm font-medium text-foreground">
+            <div className="p-6 bg-primary/10 rounded-xl border border-primary/20">
+              <p className="text-lg font-semibold text-foreground">
                 Event Duration: <span className="text-primary font-bold">{daysDifference} day{daysDifference !== 1 ? 's' : ''}</span>
               </p>
             </div>
@@ -248,68 +255,74 @@ export function EventDetailsForm({ initialEventType = "" }: EventDetailsFormProp
 
           {/* Attendees Section */}
           <div className="space-y-6">
-            <div className="space-y-2">
-              <Label htmlFor="physicalAttendees" className="text-sm font-medium text-foreground">
-                Physical Attendees
-              </Label>
-              <Input
-                id="physicalAttendees"
-                type="number"
-                placeholder="Number of physical attendees"
-                value={formData.physicalAttendees}
-                onChange={(e) => handleInputChange("physicalAttendees", e.target.value)}
-                className="w-full"
-                min="0"
-              />
-            </div>
+            <h2 className="text-xl font-semibold text-foreground">Attendance Information</h2>
+            
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="space-y-3">
+                <Label htmlFor="physicalAttendees" className="text-base font-medium text-foreground">
+                  Physical Attendees
+                </Label>
+                <Input
+                  id="physicalAttendees"
+                  type="number"
+                  placeholder="Number of physical attendees"
+                  value={formData.physicalAttendees}
+                  onChange={(e) => handleInputChange("physicalAttendees", e.target.value)}
+                  className="h-12 text-base"
+                  min="0"
+                />
+              </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="virtualAttendees" className="text-sm font-medium text-foreground">
-                Virtual Attendees
-              </Label>
-              <Input
-                id="virtualAttendees"
-                type="number"
-                placeholder="Number of virtual attendees"
-                value={formData.virtualAttendees}
-                onChange={(e) => handleInputChange("virtualAttendees", e.target.value)}
-                className="w-full"
-                min="0"
-              />
-            </div>
+              <div className="space-y-3">
+                <Label htmlFor="virtualAttendees" className="text-base font-medium text-foreground">
+                  Virtual Attendees
+                </Label>
+                <Input
+                  id="virtualAttendees"
+                  type="number"
+                  placeholder="Number of virtual attendees"
+                  value={formData.virtualAttendees}
+                  onChange={(e) => handleInputChange("virtualAttendees", e.target.value)}
+                  className="h-12 text-base"
+                  min="0"
+                />
+              </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="eventStaff" className="text-sm font-medium text-foreground">
-                Event Staff
-              </Label>
-              <Input
-                id="eventStaff"
-                type="number"
-                placeholder="Number of event staff"
-                value={formData.eventStaff}
-                onChange={(e) => handleInputChange("eventStaff", e.target.value)}
-                className="w-full"
-                min="0"
-              />
+              <div className="space-y-3">
+                <Label htmlFor="eventStaff" className="text-base font-medium text-foreground">
+                  Event Staff
+                </Label>
+                <Input
+                  id="eventStaff"
+                  type="number"
+                  placeholder="Number of event staff"
+                  value={formData.eventStaff}
+                  onChange={(e) => handleInputChange("eventStaff", e.target.value)}
+                  className="h-12 text-base"
+                  min="0"
+                />
+              </div>
             </div>
           </div>
         </div>
 
         {/* Form Actions */}
-        <div className="flex justify-between gap-4 mt-8 pt-6 border-t border-border">
+        <div className="flex justify-between gap-4 mt-12 pt-8 border-t border-border">
           <Button
             type="button"
             variant="outline"
             onClick={handleBack}
-            className="px-8"
+            className="px-8 py-3 text-base font-medium h-auto uppercase tracking-wide"
+            size="lg"
           >
-            Back
+            BACK
           </Button>
           <Button
             type="submit"
-            className="px-8"
+            className="px-8 py-3 text-base font-semibold h-auto uppercase tracking-wide"
+            size="lg"
           >
-            Create Event
+            CREATE EVENT
           </Button>
         </div>
       </form>
