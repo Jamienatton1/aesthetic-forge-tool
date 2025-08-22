@@ -30,6 +30,13 @@ export default function Travel() {
     { id: "3", transportType: "car", from: "Edinburgh, UK", to: "Manchester", distance: 559, passengers: 15, class: "" },
   ]);
 
+  const [averageTravel, setAverageTravel] = useState({
+    flight: { economy: 0, premium: 0, business: 0, first: 0 },
+    rail: { trips: 0 },
+    car: { cars: 0 },
+    taxi: { trips: 0 }
+  });
+
   const [accommodations, setAccommodations] = useState([
     { id: "1", type: "Hotel 4 Star", city: "Manchester", nights: 2, passengers: 65 }
   ]);
@@ -63,6 +70,7 @@ export default function Travel() {
       case "train": return <Train className="h-4 w-4" />;
       case "bus": return <Bus className="h-4 w-4" />;
       case "car": return <Car className="h-4 w-4" />;
+      case "taxi": return <Car className="h-4 w-4" />;
       default: return <Car className="h-4 w-4" />;
     }
   };
@@ -72,6 +80,7 @@ export default function Travel() {
     const factors = {
       flight: 0.255,
       car: 0.171,
+      taxi: 0.171,
       train: 0.041,
       bus: 0.089
     };
@@ -108,7 +117,7 @@ export default function Travel() {
           <div className="bg-gradient-to-r from-primary via-primary/90 to-primary/80 p-8 text-primary-foreground">
             <div className="flex items-center gap-6">
               <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center">
-                <Car className="w-10 h-10" />
+                <Plane className="w-10 h-10" />
               </div>
               <div>
                 <h1 className="text-3xl font-bold mb-2">Travel Information</h1>
@@ -130,19 +139,173 @@ export default function Travel() {
                 </CardHeader>
               </Card>
 
-              <Tabs defaultValue="travel" className="w-full">
+              <Tabs defaultValue="average" className="w-full">
                 <TabsList className="grid w-full grid-cols-2">
-                  <TabsTrigger value="travel">Travel Routes</TabsTrigger>
-                  <TabsTrigger value="accommodation">Accommodation</TabsTrigger>
+                  <TabsTrigger value="average">Average Travel</TabsTrigger>
+                  <TabsTrigger value="accurate">Accurate Travel</TabsTrigger>
                 </TabsList>
                 
-                <TabsContent value="travel" className="space-y-6">
+                <TabsContent value="average" className="space-y-6">
+                  <Card className="border-2">
+                    <CardHeader>
+                      <CardTitle className="text-2xl flex items-center gap-3">
+                        Average Travel Estimate
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-8">
+                      {/* Flight Section */}
+                      <div className="space-y-4">
+                        <h3 className="text-lg font-semibold flex items-center gap-2">
+                          <Plane className="h-5 w-5" />
+                          Flight
+                        </h3>
+                        <div className="overflow-x-auto">
+                          <Table>
+                            <TableHeader>
+                              <TableRow>
+                                <TableHead>Attendees</TableHead>
+                                <TableHead className="text-center">Economy</TableHead>
+                                <TableHead className="text-center">Premium</TableHead>
+                                <TableHead className="text-center">Business</TableHead>
+                                <TableHead className="text-center">First</TableHead>
+                                <TableHead className="text-center">Total</TableHead>
+                              </TableRow>
+                            </TableHeader>
+                            <TableBody>
+                              <TableRow>
+                                <TableCell className="font-medium">Return Domestic (UK to UK)</TableCell>
+                                <TableCell>
+                                  <Input 
+                                    type="number" 
+                                    placeholder="0" 
+                                    className="text-center"
+                                    value={averageTravel.flight.economy}
+                                    onChange={(e) => setAverageTravel(prev => ({
+                                      ...prev,
+                                      flight: { ...prev.flight, economy: Number(e.target.value) }
+                                    }))}
+                                  />
+                                </TableCell>
+                                <TableCell>
+                                  <Input 
+                                    type="number" 
+                                    placeholder="0" 
+                                    className="text-center"
+                                    value={averageTravel.flight.premium}
+                                    onChange={(e) => setAverageTravel(prev => ({
+                                      ...prev,
+                                      flight: { ...prev.flight, premium: Number(e.target.value) }
+                                    }))}
+                                  />
+                                </TableCell>
+                                <TableCell>
+                                  <Input 
+                                    type="number" 
+                                    placeholder="0" 
+                                    className="text-center"
+                                    value={averageTravel.flight.business}
+                                    onChange={(e) => setAverageTravel(prev => ({
+                                      ...prev,
+                                      flight: { ...prev.flight, business: Number(e.target.value) }
+                                    }))}
+                                  />
+                                </TableCell>
+                                <TableCell>
+                                  <Input 
+                                    type="number" 
+                                    placeholder="0" 
+                                    className="text-center"
+                                    value={averageTravel.flight.first}
+                                    onChange={(e) => setAverageTravel(prev => ({
+                                      ...prev,
+                                      flight: { ...prev.flight, first: Number(e.target.value) }
+                                    }))}
+                                  />
+                                </TableCell>
+                                <TableCell className="text-center font-medium">
+                                  {averageTravel.flight.economy + averageTravel.flight.premium + averageTravel.flight.business + averageTravel.flight.first}
+                                </TableCell>
+                              </TableRow>
+                            </TableBody>
+                          </Table>
+                        </div>
+                      </div>
+
+                      {/* Rail/Bus Section */}
+                      <div className="space-y-4">
+                        <h3 className="text-lg font-semibold flex items-center gap-2">
+                          <Train className="h-5 w-5" />
+                          Rail / Bus
+                        </h3>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <div className="space-y-2">
+                            <Label>No. of Trips</Label>
+                            <Input 
+                              type="number" 
+                              placeholder="0"
+                              value={averageTravel.rail.trips}
+                              onChange={(e) => setAverageTravel(prev => ({
+                                ...prev,
+                                rail: { trips: Number(e.target.value) }
+                              }))}
+                            />
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Car Section */}
+                      <div className="space-y-4">
+                        <h3 className="text-lg font-semibold flex items-center gap-2">
+                          <Car className="h-5 w-5" />
+                          Car
+                        </h3>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <div className="space-y-2">
+                            <Label>No. of Cars</Label>
+                            <Input 
+                              type="number" 
+                              placeholder="0"
+                              value={averageTravel.car.cars}
+                              onChange={(e) => setAverageTravel(prev => ({
+                                ...prev,
+                                car: { cars: Number(e.target.value) }
+                              }))}
+                            />
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Taxi Section */}
+                      <div className="space-y-4">
+                        <h3 className="text-lg font-semibold flex items-center gap-2">
+                          <Car className="h-5 w-5" />
+                          Taxi
+                        </h3>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <div className="space-y-2">
+                            <Label>No. of Trips</Label>
+                            <Input 
+                              type="number" 
+                              placeholder="0"
+                              value={averageTravel.taxi.trips}
+                              onChange={(e) => setAverageTravel(prev => ({
+                                ...prev,
+                                taxi: { trips: Number(e.target.value) }
+                              }))}
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </TabsContent>
+
+                <TabsContent value="accurate" className="space-y-6">
                   <Card className="border-2">
                     <CardHeader>
                       <div className="flex items-center justify-between">
-                        <CardTitle className="text-2xl flex items-center gap-3">
-                          <Plane className="w-8 h-8" />
-                          Travel Routes
+                        <CardTitle className="text-2xl">
+                          Accurate Travel Data
                         </CardTitle>
                         <Button onClick={addRoute} className="flex items-center gap-2">
                           <Plus className="h-4 w-4" />
@@ -201,7 +364,13 @@ export default function Travel() {
                                       <SelectItem value="car">
                                         <div className="flex items-center gap-2">
                                           <Car className="h-4 w-4" />
-                                          Car/Taxi
+                                          Car
+                                        </div>
+                                      </SelectItem>
+                                      <SelectItem value="taxi">
+                                        <div className="flex items-center gap-2">
+                                          <Car className="h-4 w-4" />
+                                          Taxi
                                         </div>
                                       </SelectItem>
                                     </SelectContent>
@@ -310,62 +479,6 @@ export default function Travel() {
                           </div>
                         </div>
                       </div>
-                    </CardContent>
-                  </Card>
-                </TabsContent>
-
-                <TabsContent value="accommodation" className="space-y-6">
-                  <Card className="border-2">
-                    <CardHeader>
-                      <CardTitle className="text-2xl flex items-center gap-3">
-                        <Bus className="w-8 h-8" />
-                        Accommodation Details
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <Table>
-                        <TableHeader>
-                          <TableRow>
-                            <TableHead>Accommodation Type</TableHead>
-                            <TableHead>City Name</TableHead>
-                            <TableHead className="w-[100px]">Nights</TableHead>
-                            <TableHead className="w-[100px]">Passengers</TableHead>
-                            <TableHead className="w-[120px]">CO2 Impact</TableHead>
-                          </TableRow>
-                        </TableHeader>
-                        <TableBody>
-                          {accommodations.map((acc) => (
-                            <TableRow key={acc.id}>
-                              <TableCell>
-                                <Select defaultValue="hotel4star">
-                                  <SelectTrigger>
-                                    <SelectValue />
-                                  </SelectTrigger>
-                                  <SelectContent>
-                                    <SelectItem value="hotel4star">Hotel 4 Star</SelectItem>
-                                    <SelectItem value="hotel5star">Hotel 5 Star</SelectItem>
-                                    <SelectItem value="apartment">Apartment</SelectItem>
-                                  </SelectContent>
-                                </Select>
-                              </TableCell>
-                              <TableCell>
-                                <Input defaultValue={acc.city} placeholder="City name" />
-                              </TableCell>
-                              <TableCell>
-                                <Input type="number" defaultValue={acc.nights} />
-                              </TableCell>
-                              <TableCell>
-                                <Input type="number" defaultValue={acc.passengers} />
-                              </TableCell>
-                              <TableCell>
-                                <div className="text-right font-mono">
-                                  {(acc.nights * acc.passengers * 12.5).toFixed(1)} kg
-                                </div>
-                              </TableCell>
-                            </TableRow>
-                          ))}
-                        </TableBody>
-                      </Table>
                     </CardContent>
                   </Card>
                 </TabsContent>
