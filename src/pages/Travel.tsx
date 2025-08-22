@@ -57,10 +57,15 @@ export default function Travel() {
       national: { cars: 0 },
       international: { cars: 0 }
     },
-    taxi: { 
-      local: { trips: 0 } 
-    }
-  });
+        taxi: { 
+          local: { trips: 0 }
+        },
+        accommodation: {
+          local: { nights: 5 },
+          national: { nights: 10 },
+          international: { nights: 8 }
+        }
+      });
 
   const [accommodations, setAccommodations] = useState<AccommodationData[]>([
     { id: "1", type: "Hotel 4 Star", city: "Manchester", nights: 2, guests: 65 }
@@ -72,6 +77,7 @@ export default function Travel() {
   const [carSectionOpen, setCarSectionOpen] = useState(false);
   const [taxiSectionOpen, setTaxiSectionOpen] = useState(false);
   const [accommodationSectionOpen, setAccommodationSectionOpen] = useState(false);
+  const [averageAccommodationSectionOpen, setAverageAccommodationSectionOpen] = useState(false);
 
   const addRoute = () => {
     const newRoute: TravelRoute = {
@@ -144,6 +150,11 @@ export default function Travel() {
         },
         taxi: { 
           local: { trips: 15 }
+        },
+        accommodation: {
+          local: { nights: 5 },
+          national: { nights: 10 },
+          international: { nights: 8 }
         }
       });
     } else {
@@ -164,7 +175,12 @@ export default function Travel() {
           international: { cars: 0 }
         },
         taxi: { 
-          local: { trips: 0 }
+          local: { trips: 0 } 
+        },
+        accommodation: {
+          local: { nights: 0 },
+          national: { nights: 0 },
+          international: { nights: 0 }
         }
       });
     }
@@ -247,15 +263,15 @@ export default function Travel() {
 
               <Tabs defaultValue="average" className="w-full">
                 <TabsList className="grid w-full grid-cols-2">
-                  <TabsTrigger value="average">Average Travel</TabsTrigger>
-                  <TabsTrigger value="accurate">Accurate Travel</TabsTrigger>
+                  <TabsTrigger value="average">Travel Estimate</TabsTrigger>
+                  <TabsTrigger value="accurate">Accurate Travel Data</TabsTrigger>
                 </TabsList>
                 
                 <TabsContent value="average" className="space-y-6">
                   <Card className="border-2">
                     <CardHeader>
                       <CardTitle className="text-2xl flex items-center gap-3">
-                        Average Travel Estimate
+                        Travel Estimate
                       </CardTitle>
                       <div className="flex items-center space-x-2 pt-4">
                         <Checkbox 
@@ -705,6 +721,97 @@ export default function Travel() {
                                     </TableCell>
                                     <TableCell className="text-center font-medium">
                                       {averageTravel.taxi.local.trips}
+                                    </TableCell>
+                                  </TableRow>
+                                </TableBody>
+                              </Table>
+                            </div>
+                          </CollapsibleContent>
+                        </Collapsible>
+                        {/* Accommodation Section */}
+                        <Collapsible open={averageAccommodationSectionOpen} onOpenChange={setAverageAccommodationSectionOpen}>
+                          <CollapsibleTrigger asChild>
+                            <Button variant="ghost" className="w-full justify-between p-0 h-auto">
+                              <div className="flex items-center gap-3">
+                                <h3 className="text-lg font-semibold flex items-center gap-2">
+                                  <Hotel className="h-5 w-5" />
+                                  Accommodation
+                                </h3>
+                                <Tooltip>
+                                  <TooltipTrigger asChild>
+                                    <Info className="h-4 w-4 text-muted-foreground cursor-help" />
+                                  </TooltipTrigger>
+                                  <TooltipContent>
+                                    <p className="max-w-xs">Hotel and accommodation nights based on event location and attendee travel distances.</p>
+                                  </TooltipContent>
+                                </Tooltip>
+                              </div>
+                              <ChevronDown className={`h-4 w-4 transition-transform duration-200 ${averageAccommodationSectionOpen ? 'transform rotate-180' : ''}`} />
+                            </Button>
+                          </CollapsibleTrigger>
+                          <CollapsibleContent className="space-y-4 pt-4">
+                            <div className="overflow-x-auto">
+                              <Table>
+                                <TableHeader>
+                                  <TableRow>
+                                    <TableHead>Distance Type</TableHead>
+                                    <TableHead className="text-center">Number of Nights</TableHead>
+                                    <TableHead className="text-center">Total</TableHead>
+                                  </TableRow>
+                                </TableHeader>
+                                <TableBody>
+                                  <TableRow>
+                                    <TableCell className="font-medium">Local (≤50 KM)</TableCell>
+                                    <TableCell>
+                                      <Input 
+                                        type="number" 
+                                        placeholder="0" 
+                                        className="text-center"
+                                        value={averageTravel.accommodation.local.nights}
+                                        onChange={(e) => setAverageTravel(prev => ({
+                                          ...prev,
+                                          accommodation: { ...prev.accommodation, local: { nights: Number(e.target.value) } }
+                                        }))}
+                                      />
+                                    </TableCell>
+                                    <TableCell className="text-center font-medium">
+                                      {averageTravel.accommodation.local.nights}
+                                    </TableCell>
+                                  </TableRow>
+                                  <TableRow>
+                                    <TableCell className="font-medium">National (51-500 KM)</TableCell>
+                                    <TableCell>
+                                      <Input 
+                                        type="number" 
+                                        placeholder="0" 
+                                        className="text-center"
+                                        value={averageTravel.accommodation.national.nights}
+                                        onChange={(e) => setAverageTravel(prev => ({
+                                          ...prev,
+                                          accommodation: { ...prev.accommodation, national: { nights: Number(e.target.value) } }
+                                        }))}
+                                      />
+                                    </TableCell>
+                                    <TableCell className="text-center font-medium">
+                                      {averageTravel.accommodation.national.nights}
+                                    </TableCell>
+                                  </TableRow>
+                                  <TableRow>
+                                    <TableCell className="font-medium">International (500+ KM)</TableCell>
+                                    <TableCell>
+                                      <Input 
+                                        type="number" 
+                                        placeholder="0" 
+                                        className="text-center"
+                                        value={averageTravel.accommodation.international.nights}
+                                        onChange={(e) => setAverageTravel(prev => ({
+                                          ...prev,
+                                          accommodation: { ...prev.accommodation, international: { nights: Number(e.target.value) } }
+                                        }))}
+                                      />
+                                    </TableCell>
+                                    <TableCell className="text-center font-medium">
+                                      {averageTravel.accommodation.international.nights}
                                     </TableCell>
                                   </TableRow>
                                 </TableBody>
