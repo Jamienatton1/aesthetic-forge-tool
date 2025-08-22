@@ -42,10 +42,24 @@ export default function Travel() {
   ]);
 
   const [averageTravel, setAverageTravel] = useState({
-    flight: { economy: 0, premium: 0, business: 0, first: 0 },
-    rail: { trips: 0 },
-    car: { cars: 0 },
-    taxi: { trips: 0 }
+    flight: {
+      local: { economy: 0, premium: 0, business: 0, first: 0 },
+      national: { economy: 0, premium: 0, business: 0, first: 0 },
+      international: { economy: 0, premium: 0, business: 0, first: 0 }
+    },
+    rail: {
+      local: { trips: 0 },
+      national: { trips: 0 },
+      international: { trips: 0 }
+    },
+    car: {
+      local: { cars: 0 },
+      national: { cars: 0 },
+      international: { cars: 0 }
+    },
+    taxi: { 
+      local: { trips: 0 } 
+    }
   });
 
   const [accommodations, setAccommodations] = useState<AccommodationData[]>([
@@ -113,17 +127,45 @@ export default function Travel() {
     if (checked) {
       // Pre-fill with estimated values based on 100 attendees
       setAverageTravel({
-        flight: { economy: 50, premium: 20, business: 10, first: 5 },
-        rail: { trips: 10 },
-        car: { cars: 8 },
-        taxi: { trips: 15 }
+        flight: {
+          local: { economy: 10, premium: 5, business: 2, first: 1 },
+          national: { economy: 25, premium: 10, business: 5, first: 2 },
+          international: { economy: 15, premium: 5, business: 3, first: 2 }
+        },
+        rail: {
+          local: { trips: 5 },
+          national: { trips: 10 },
+          international: { trips: 2 }
+        },
+        car: {
+          local: { cars: 8 },
+          national: { cars: 5 },
+          international: { cars: 0 }
+        },
+        taxi: { 
+          local: { trips: 15 }
+        }
       });
     } else {
       setAverageTravel({
-        flight: { economy: 0, premium: 0, business: 0, first: 0 },
-        rail: { trips: 0 },
-        car: { cars: 0 },
-        taxi: { trips: 0 }
+        flight: {
+          local: { economy: 0, premium: 0, business: 0, first: 0 },
+          national: { economy: 0, premium: 0, business: 0, first: 0 },
+          international: { economy: 0, premium: 0, business: 0, first: 0 }
+        },
+        rail: {
+          local: { trips: 0 },
+          national: { trips: 0 },
+          international: { trips: 0 }
+        },
+        car: {
+          local: { cars: 0 },
+          national: { cars: 0 },
+          international: { cars: 0 }
+        },
+        taxi: { 
+          local: { trips: 0 }
+        }
       });
     }
   };
@@ -264,16 +306,16 @@ export default function Travel() {
                                 </TableHeader>
                                 <TableBody>
                                   <TableRow>
-                                    <TableCell className="font-medium">Return Domestic (UK)</TableCell>
+                                    <TableCell className="font-medium">Local (Short haul)</TableCell>
                                     <TableCell>
                                       <Input 
                                         type="number" 
                                         placeholder="0" 
                                         className="text-center"
-                                        value={averageTravel.flight.economy}
+                                        value={averageTravel.flight.local.economy}
                                         onChange={(e) => setAverageTravel(prev => ({
                                           ...prev,
-                                          flight: { ...prev.flight, economy: Number(e.target.value) }
+                                          flight: { ...prev.flight, local: { ...prev.flight.local, economy: Number(e.target.value) } }
                                         }))}
                                       />
                                     </TableCell>
@@ -282,10 +324,10 @@ export default function Travel() {
                                         type="number" 
                                         placeholder="0" 
                                         className="text-center"
-                                        value={averageTravel.flight.premium}
+                                        value={averageTravel.flight.local.premium}
                                         onChange={(e) => setAverageTravel(prev => ({
                                           ...prev,
-                                          flight: { ...prev.flight, premium: Number(e.target.value) }
+                                          flight: { ...prev.flight, local: { ...prev.flight.local, premium: Number(e.target.value) } }
                                         }))}
                                       />
                                     </TableCell>
@@ -294,10 +336,10 @@ export default function Travel() {
                                         type="number" 
                                         placeholder="0" 
                                         className="text-center"
-                                        value={averageTravel.flight.business}
+                                        value={averageTravel.flight.local.business}
                                         onChange={(e) => setAverageTravel(prev => ({
                                           ...prev,
-                                          flight: { ...prev.flight, business: Number(e.target.value) }
+                                          flight: { ...prev.flight, local: { ...prev.flight.local, business: Number(e.target.value) } }
                                         }))}
                                       />
                                     </TableCell>
@@ -306,15 +348,123 @@ export default function Travel() {
                                         type="number" 
                                         placeholder="0" 
                                         className="text-center"
-                                        value={averageTravel.flight.first}
+                                        value={averageTravel.flight.local.first}
                                         onChange={(e) => setAverageTravel(prev => ({
                                           ...prev,
-                                          flight: { ...prev.flight, first: Number(e.target.value) }
+                                          flight: { ...prev.flight, local: { ...prev.flight.local, first: Number(e.target.value) } }
                                         }))}
                                       />
                                     </TableCell>
                                     <TableCell className="text-center font-medium">
-                                      {averageTravel.flight.economy + averageTravel.flight.premium + averageTravel.flight.business + averageTravel.flight.first}
+                                      {averageTravel.flight.local.economy + averageTravel.flight.local.premium + averageTravel.flight.local.business + averageTravel.flight.local.first}
+                                    </TableCell>
+                                  </TableRow>
+                                  <TableRow>
+                                    <TableCell className="font-medium">National (Domestic)</TableCell>
+                                    <TableCell>
+                                      <Input 
+                                        type="number" 
+                                        placeholder="0" 
+                                        className="text-center"
+                                        value={averageTravel.flight.national.economy}
+                                        onChange={(e) => setAverageTravel(prev => ({
+                                          ...prev,
+                                          flight: { ...prev.flight, national: { ...prev.flight.national, economy: Number(e.target.value) } }
+                                        }))}
+                                      />
+                                    </TableCell>
+                                    <TableCell>
+                                      <Input 
+                                        type="number" 
+                                        placeholder="0" 
+                                        className="text-center"
+                                        value={averageTravel.flight.national.premium}
+                                        onChange={(e) => setAverageTravel(prev => ({
+                                          ...prev,
+                                          flight: { ...prev.flight, national: { ...prev.flight.national, premium: Number(e.target.value) } }
+                                        }))}
+                                      />
+                                    </TableCell>
+                                    <TableCell>
+                                      <Input 
+                                        type="number" 
+                                        placeholder="0" 
+                                        className="text-center"
+                                        value={averageTravel.flight.national.business}
+                                        onChange={(e) => setAverageTravel(prev => ({
+                                          ...prev,
+                                          flight: { ...prev.flight, national: { ...prev.flight.national, business: Number(e.target.value) } }
+                                        }))}
+                                      />
+                                    </TableCell>
+                                    <TableCell>
+                                      <Input 
+                                        type="number" 
+                                        placeholder="0" 
+                                        className="text-center"
+                                        value={averageTravel.flight.national.first}
+                                        onChange={(e) => setAverageTravel(prev => ({
+                                          ...prev,
+                                          flight: { ...prev.flight, national: { ...prev.flight.national, first: Number(e.target.value) } }
+                                        }))}
+                                      />
+                                    </TableCell>
+                                    <TableCell className="text-center font-medium">
+                                      {averageTravel.flight.national.economy + averageTravel.flight.national.premium + averageTravel.flight.national.business + averageTravel.flight.national.first}
+                                    </TableCell>
+                                  </TableRow>
+                                  <TableRow>
+                                    <TableCell className="font-medium">International (Long haul)</TableCell>
+                                    <TableCell>
+                                      <Input 
+                                        type="number" 
+                                        placeholder="0" 
+                                        className="text-center"
+                                        value={averageTravel.flight.international.economy}
+                                        onChange={(e) => setAverageTravel(prev => ({
+                                          ...prev,
+                                          flight: { ...prev.flight, international: { ...prev.flight.international, economy: Number(e.target.value) } }
+                                        }))}
+                                      />
+                                    </TableCell>
+                                    <TableCell>
+                                      <Input 
+                                        type="number" 
+                                        placeholder="0" 
+                                        className="text-center"
+                                        value={averageTravel.flight.international.premium}
+                                        onChange={(e) => setAverageTravel(prev => ({
+                                          ...prev,
+                                          flight: { ...prev.flight, international: { ...prev.flight.international, premium: Number(e.target.value) } }
+                                        }))}
+                                      />
+                                    </TableCell>
+                                    <TableCell>
+                                      <Input 
+                                        type="number" 
+                                        placeholder="0" 
+                                        className="text-center"
+                                        value={averageTravel.flight.international.business}
+                                        onChange={(e) => setAverageTravel(prev => ({
+                                          ...prev,
+                                          flight: { ...prev.flight, international: { ...prev.flight.international, business: Number(e.target.value) } }
+                                        }))}
+                                      />
+                                    </TableCell>
+                                    <TableCell>
+                                      <Input 
+                                        type="number" 
+                                        placeholder="0" 
+                                        className="text-center"
+                                        value={averageTravel.flight.international.first}
+                                        onChange={(e) => setAverageTravel(prev => ({
+                                          ...prev,
+                                          flight: { ...prev.flight, international: { ...prev.flight.international, first: Number(e.target.value) } }
+                                        }))}
+                                      />
+                                    </TableCell>
+                                    <TableCell className="text-center font-medium">
+                                      {averageTravel.flight.international.economy + averageTravel.flight.international.premium + averageTravel.flight.international.business + averageTravel.flight.international.first}
                                     </TableCell>
                                   </TableRow>
                                 </TableBody>
@@ -345,19 +495,72 @@ export default function Travel() {
                             </Button>
                           </CollapsibleTrigger>
                           <CollapsibleContent className="space-y-4 pt-4">
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                              <div className="space-y-2">
-                                <Label>Number of Return Trips</Label>
-                                <Input 
-                                  type="number" 
-                                  placeholder="0"
-                                  value={averageTravel.rail.trips}
-                                  onChange={(e) => setAverageTravel(prev => ({
-                                    ...prev,
-                                    rail: { trips: Number(e.target.value) }
-                                  }))}
-                                />
-                              </div>
+                            <div className="overflow-x-auto">
+                              <Table>
+                                <TableHeader>
+                                  <TableRow>
+                                    <TableHead>Route Type</TableHead>
+                                    <TableHead className="text-center">Number of Trips</TableHead>
+                                    <TableHead className="text-center">Total</TableHead>
+                                  </TableRow>
+                                </TableHeader>
+                                <TableBody>
+                                  <TableRow>
+                                    <TableCell className="font-medium">Local (≤100 KM)</TableCell>
+                                    <TableCell>
+                                      <Input 
+                                        type="number" 
+                                        placeholder="0" 
+                                        className="text-center"
+                                        value={averageTravel.rail.local.trips}
+                                        onChange={(e) => setAverageTravel(prev => ({
+                                          ...prev,
+                                          rail: { ...prev.rail, local: { trips: Number(e.target.value) } }
+                                        }))}
+                                      />
+                                    </TableCell>
+                                    <TableCell className="text-center font-medium">
+                                      {averageTravel.rail.local.trips}
+                                    </TableCell>
+                                  </TableRow>
+                                  <TableRow>
+                                    <TableCell className="font-medium">National (100-500 KM)</TableCell>
+                                    <TableCell>
+                                      <Input 
+                                        type="number" 
+                                        placeholder="0" 
+                                        className="text-center"
+                                        value={averageTravel.rail.national.trips}
+                                        onChange={(e) => setAverageTravel(prev => ({
+                                          ...prev,
+                                          rail: { ...prev.rail, national: { trips: Number(e.target.value) } }
+                                        }))}
+                                      />
+                                    </TableCell>
+                                    <TableCell className="text-center font-medium">
+                                      {averageTravel.rail.national.trips}
+                                    </TableCell>
+                                  </TableRow>
+                                  <TableRow>
+                                    <TableCell className="font-medium">International (&gt;500 KM)</TableCell>
+                                    <TableCell>
+                                      <Input 
+                                        type="number" 
+                                        placeholder="0" 
+                                        className="text-center"
+                                        value={averageTravel.rail.international.trips}
+                                        onChange={(e) => setAverageTravel(prev => ({
+                                          ...prev,
+                                          rail: { ...prev.rail, international: { trips: Number(e.target.value) } }
+                                        }))}
+                                      />
+                                    </TableCell>
+                                    <TableCell className="text-center font-medium">
+                                      {averageTravel.rail.international.trips}
+                                    </TableCell>
+                                  </TableRow>
+                                </TableBody>
+                              </Table>
                             </div>
                           </CollapsibleContent>
                         </Collapsible>
@@ -384,19 +587,72 @@ export default function Travel() {
                             </Button>
                           </CollapsibleTrigger>
                           <CollapsibleContent className="space-y-4 pt-4">
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                              <div className="space-y-2">
-                                <Label>Number of Cars</Label>
-                                <Input 
-                                  type="number" 
-                                  placeholder="0"
-                                  value={averageTravel.car.cars}
-                                  onChange={(e) => setAverageTravel(prev => ({
-                                    ...prev,
-                                    car: { cars: Number(e.target.value) }
-                                  }))}
-                                />
-                              </div>
+                            <div className="overflow-x-auto">
+                              <Table>
+                                <TableHeader>
+                                  <TableRow>
+                                    <TableHead>Route Type</TableHead>
+                                    <TableHead className="text-center">Number of Cars</TableHead>
+                                    <TableHead className="text-center">Total</TableHead>
+                                  </TableRow>
+                                </TableHeader>
+                                <TableBody>
+                                  <TableRow>
+                                    <TableCell className="font-medium">Local (≤100 KM)</TableCell>
+                                    <TableCell>
+                                      <Input 
+                                        type="number" 
+                                        placeholder="0" 
+                                        className="text-center"
+                                        value={averageTravel.car.local.cars}
+                                        onChange={(e) => setAverageTravel(prev => ({
+                                          ...prev,
+                                          car: { ...prev.car, local: { cars: Number(e.target.value) } }
+                                        }))}
+                                      />
+                                    </TableCell>
+                                    <TableCell className="text-center font-medium">
+                                      {averageTravel.car.local.cars}
+                                    </TableCell>
+                                  </TableRow>
+                                  <TableRow>
+                                    <TableCell className="font-medium">National (100-500 KM)</TableCell>
+                                    <TableCell>
+                                      <Input 
+                                        type="number" 
+                                        placeholder="0" 
+                                        className="text-center"
+                                        value={averageTravel.car.national.cars}
+                                        onChange={(e) => setAverageTravel(prev => ({
+                                          ...prev,
+                                          car: { ...prev.car, national: { cars: Number(e.target.value) } }
+                                        }))}
+                                      />
+                                    </TableCell>
+                                    <TableCell className="text-center font-medium">
+                                      {averageTravel.car.national.cars}
+                                    </TableCell>
+                                  </TableRow>
+                                  <TableRow>
+                                    <TableCell className="font-medium">International (&gt;500 KM)</TableCell>
+                                    <TableCell>
+                                      <Input 
+                                        type="number" 
+                                        placeholder="0" 
+                                        className="text-center"
+                                        value={averageTravel.car.international.cars}
+                                        onChange={(e) => setAverageTravel(prev => ({
+                                          ...prev,
+                                          car: { ...prev.car, international: { cars: Number(e.target.value) } }
+                                        }))}
+                                      />
+                                    </TableCell>
+                                    <TableCell className="text-center font-medium">
+                                      {averageTravel.car.international.cars}
+                                    </TableCell>
+                                  </TableRow>
+                                </TableBody>
+                              </Table>
                             </div>
                           </CollapsibleContent>
                         </Collapsible>
@@ -423,19 +679,36 @@ export default function Travel() {
                             </Button>
                           </CollapsibleTrigger>
                           <CollapsibleContent className="space-y-4 pt-4">
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                              <div className="space-y-2">
-                                <Label>Number of Trips</Label>
-                                <Input 
-                                  type="number" 
-                                  placeholder="0"
-                                  value={averageTravel.taxi.trips}
-                                  onChange={(e) => setAverageTravel(prev => ({
-                                    ...prev,
-                                    taxi: { trips: Number(e.target.value) }
-                                  }))}
-                                />
-                              </div>
+                            <div className="overflow-x-auto">
+                              <Table>
+                                <TableHeader>
+                                  <TableRow>
+                                    <TableHead>Route Type</TableHead>
+                                    <TableHead className="text-center">Number of Trips</TableHead>
+                                    <TableHead className="text-center">Total</TableHead>
+                                  </TableRow>
+                                </TableHeader>
+                                <TableBody>
+                                  <TableRow>
+                                    <TableCell className="font-medium">Local (≤50 KM)</TableCell>
+                                    <TableCell>
+                                      <Input 
+                                        type="number" 
+                                        placeholder="0" 
+                                        className="text-center"
+                                        value={averageTravel.taxi.local.trips}
+                                        onChange={(e) => setAverageTravel(prev => ({
+                                          ...prev,
+                                          taxi: { local: { trips: Number(e.target.value) } }
+                                        }))}
+                                      />
+                                    </TableCell>
+                                    <TableCell className="text-center font-medium">
+                                      {averageTravel.taxi.local.trips}
+                                    </TableCell>
+                                  </TableRow>
+                                </TableBody>
+                              </Table>
                             </div>
                           </CollapsibleContent>
                         </Collapsible>
