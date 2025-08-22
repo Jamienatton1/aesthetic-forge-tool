@@ -54,15 +54,9 @@ const allCategories: Category[] = [
   },
   {
     id: "travel",
-    name: "Travel",
+    name: "Travel and Accommodation",
     icon: Car,
-    description: "Transportation arrangements"
-  },
-  {
-    id: "accommodations",
-    name: "Accommodations", 
-    icon: Bed,
-    description: "Hotel and lodging information"
+    description: "Transportation and lodging arrangements"
   },
   {
     id: "promotion-items",
@@ -94,7 +88,6 @@ export default function DataCollectionStatus() {
       'venue': '/events/venue-information',
       'food-drink': '/events/food-drink',
       'travel': '/events/travel',
-      'accommodations': '/events/accommodations', 
       'promotion-items': '/events/promotion-items',
       'questionnaire': '/events/questionnaire'
     };
