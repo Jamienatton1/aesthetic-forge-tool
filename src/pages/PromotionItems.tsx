@@ -1,26 +1,75 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { ArrowLeft, ArrowRight, Gift, ShoppingBag, Shirt } from "lucide-react";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { ArrowLeft, ArrowRight, Gift, ShoppingBag, Shirt, Badge, Droplets } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Sidebar } from "@/components/dashboard/Sidebar";
 
+interface PromotionItem {
+  id: string;
+  name: string;
+  icon: React.ElementType;
+  quantity: number;
+  pricePerUnit: number;
+  co2Factor: number; // kg CO2e per unit
+}
+
 export default function PromotionItems() {
   const navigate = useNavigate();
-  const [promotionData, setPromotionData] = useState({
-    tshirts: 0,
-    bags: 0,
-    pens: 0,
-    brochures: 0,
-    other: 0
-  });
+  
+  const [items, setItems] = useState<PromotionItem[]>([
+    {
+      id: 'lanyards',
+      name: 'Lanyards',
+      icon: Badge,
+      quantity: 0,
+      pricePerUnit: 0,
+      co2Factor: 0.05
+    },
+    {
+      id: 'bags',
+      name: 'Bags',
+      icon: ShoppingBag,
+      quantity: 0,
+      pricePerUnit: 0,
+      co2Factor: 0.2
+    },
+    {
+      id: 'clothes',
+      name: 'Clothes',
+      icon: Shirt,
+      quantity: 0,
+      pricePerUnit: 0,
+      co2Factor: 2.5
+    },
+    {
+      id: 'bottles',
+      name: 'Water Bottles',
+      icon: Droplets,
+      quantity: 0,
+      pricePerUnit: 0,
+      co2Factor: 0.1
+    }
+  ]);
+
+  const updateItem = (id: string, field: 'quantity' | 'pricePerUnit', value: number) => {
+    setItems(prev => prev.map(item => 
+      item.id === id ? { ...item, [field]: value } : item
+    ));
+  };
+
+  const totals = useMemo(() => {
+    return items.reduce((acc, item) => ({
+      totalItems: acc.totalItems + item.quantity,
+      totalCost: acc.totalCost + (item.quantity * item.pricePerUnit),
+      totalCO2e: acc.totalCO2e + (item.quantity * item.co2Factor)
+    }), { totalItems: 0, totalCost: 0, totalCO2e: 0 });
+  }, [items]);
 
   const handleSubmit = () => {
-    console.log("Promotion items data:", promotionData);
-    
-    // Always go to questionnaire after promotion items (last category)
+    console.log("Promotion items data:", items);
     navigate("/events/questionnaire");
   };
 
@@ -47,7 +96,7 @@ export default function PromotionItems() {
 
           {/* Main Content */}
           <div className="flex-1 p-8">
-            <div className="max-w-4xl mx-auto space-y-8">
+            <div className="max-w-6xl mx-auto space-y-8">
               {/* Event Info Card */}
               <Card className="border-2">
                 <CardHeader>
@@ -56,7 +105,7 @@ export default function PromotionItems() {
                 </CardHeader>
               </Card>
 
-              {/* Promotion Items */}
+              {/* Promotion Items Table */}
               <Card className="border-2">
                 <CardHeader>
                   <CardTitle className="text-2xl flex items-center gap-3">
@@ -64,67 +113,87 @@ export default function PromotionItems() {
                     Promotional Materials
                   </CardTitle>
                 </CardHeader>
-                <CardContent className="space-y-6">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div className="space-y-3">
-                      <Label className="text-lg font-medium flex items-center gap-2">
-                        <Shirt className="w-5 h-5" />
-                        T-shirts/Apparel (quantity)
-                      </Label>
-                      <Input
-                        type="number"
-                        value={promotionData.tshirts}
-                        onChange={(e) => setPromotionData({...promotionData, tshirts: Number(e.target.value)})}
-                        className="text-lg h-12"
-                        placeholder="0"
-                      />
-                    </div>
+                <CardContent>
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead className="text-lg font-semibold">Item Type</TableHead>
+                        <TableHead className="text-lg font-semibold">Quantity</TableHead>
+                        <TableHead className="text-lg font-semibold">Price Per Unit (£)</TableHead>
+                        <TableHead className="text-lg font-semibold">Total (£)</TableHead>
+                        <TableHead className="text-lg font-semibold">CO₂e (Kg)</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {items.map((item) => {
+                        const Icon = item.icon;
+                        const total = item.quantity * item.pricePerUnit;
+                        const co2e = item.quantity * item.co2Factor;
+                        
+                        return (
+                          <TableRow key={item.id}>
+                            <TableCell className="font-medium">
+                              <div className="flex items-center gap-3">
+                                <Icon className="w-5 h-5 text-primary" />
+                                <span className="text-lg">{item.name}</span>
+                              </div>
+                            </TableCell>
+                            <TableCell>
+                              <Input
+                                type="number"
+                                value={item.quantity}
+                                onChange={(e) => updateItem(item.id, 'quantity', Number(e.target.value) || 0)}
+                                className="w-24 h-10"
+                                placeholder="0"
+                                min="0"
+                              />
+                            </TableCell>
+                            <TableCell>
+                              <Input
+                                type="number"
+                                step="0.01"
+                                value={item.pricePerUnit}
+                                onChange={(e) => updateItem(item.id, 'pricePerUnit', Number(e.target.value) || 0)}
+                                className="w-28 h-10"
+                                placeholder="0.00"
+                                min="0"
+                              />
+                            </TableCell>
+                            <TableCell className="font-medium text-lg">
+                              £{total.toFixed(2)}
+                            </TableCell>
+                            <TableCell className="font-medium text-lg">
+                              {co2e.toFixed(3)}
+                            </TableCell>
+                          </TableRow>
+                        );
+                      })}
+                    </TableBody>
+                  </Table>
+                </CardContent>
+              </Card>
 
-                    <div className="space-y-3">
-                      <Label className="text-lg font-medium flex items-center gap-2">
-                        <ShoppingBag className="w-5 h-5" />
-                        Bags/Totes (quantity)
-                      </Label>
-                      <Input
-                        type="number"
-                        value={promotionData.bags}
-                        onChange={(e) => setPromotionData({...promotionData, bags: Number(e.target.value)})}
-                        className="text-lg h-12"
-                        placeholder="0"
-                      />
+              {/* Summary Card */}
+              <Card className="border-2 bg-muted/50">
+                <CardContent className="pt-6">
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div className="text-center">
+                      <div className="text-3xl font-bold text-primary mb-2">
+                        {totals.totalItems}
+                      </div>
+                      <div className="text-lg text-muted-foreground">Total Items</div>
                     </div>
-
-                    <div className="space-y-3">
-                      <Label className="text-lg font-medium">Pens/Stationery (quantity)</Label>
-                      <Input
-                        type="number"
-                        value={promotionData.pens}
-                        onChange={(e) => setPromotionData({...promotionData, pens: Number(e.target.value)})}
-                        className="text-lg h-12"
-                        placeholder="0"
-                      />
+                    <div className="text-center">
+                      <div className="text-3xl font-bold text-primary mb-2">
+                        £{totals.totalCost.toFixed(2)}
+                      </div>
+                      <div className="text-lg text-muted-foreground">Total Cost</div>
                     </div>
-
-                    <div className="space-y-3">
-                      <Label className="text-lg font-medium">Brochures/Flyers (quantity)</Label>
-                      <Input
-                        type="number"
-                        value={promotionData.brochures}
-                        onChange={(e) => setPromotionData({...promotionData, brochures: Number(e.target.value)})}
-                        className="text-lg h-12"
-                        placeholder="0"
-                      />
-                    </div>
-
-                    <div className="space-y-3 md:col-span-2">
-                      <Label className="text-lg font-medium">Other Items (quantity)</Label>
-                      <Input
-                        type="number"
-                        value={promotionData.other}
-                        onChange={(e) => setPromotionData({...promotionData, other: Number(e.target.value)})}
-                        className="text-lg h-12"
-                        placeholder="0"
-                      />
+                    <div className="text-center">
+                      <div className="text-3xl font-bold text-primary mb-2">
+                        {totals.totalCO2e.toFixed(3)}
+                      </div>
+                      <div className="text-lg text-muted-foreground">Total CO₂e (Kg)</div>
                     </div>
                   </div>
                 </CardContent>
