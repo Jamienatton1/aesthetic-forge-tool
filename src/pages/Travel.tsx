@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { ArrowLeft, ArrowRight, Car, Plane, Train } from "lucide-react";
+import { ArrowLeft, ArrowRight, Car, Plane, Train, Bus, Car as CarIcon } from "lucide-react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Sidebar } from "@/components/dashboard/Sidebar";
 
@@ -14,6 +14,8 @@ export default function Travel() {
     airTravel: 0,
     carTravel: 0,
     publicTransport: 0,
+    coaches: 0,
+    taxis: 0,
     other: 0
   });
 
@@ -80,7 +82,7 @@ export default function Travel() {
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-6">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     <div className="space-y-3">
                       <Label className="text-lg font-medium flex items-center gap-2">
                         <Plane className="w-5 h-5" />
@@ -118,6 +120,34 @@ export default function Travel() {
                         type="number"
                         value={travelData.publicTransport}
                         onChange={(e) => setTravelData({...travelData, publicTransport: Number(e.target.value)})}
+                        className="text-lg h-12"
+                        placeholder="0"
+                      />
+                    </div>
+
+                    <div className="space-y-3">
+                      <Label className="text-lg font-medium flex items-center gap-2">
+                        <Bus className="w-5 h-5" />
+                        Coaches / Buses (trips)
+                      </Label>
+                      <Input
+                        type="number"
+                        value={travelData.coaches}
+                        onChange={(e) => setTravelData({...travelData, coaches: Number(e.target.value)})}
+                        className="text-lg h-12"
+                        placeholder="0"
+                      />
+                    </div>
+
+                    <div className="space-y-3">
+                      <Label className="text-lg font-medium flex items-center gap-2">
+                        <CarIcon className="w-5 h-5" />
+                        Taxis (trips)
+                      </Label>
+                      <Input
+                        type="number"
+                        value={travelData.taxis}
+                        onChange={(e) => setTravelData({...travelData, taxis: Number(e.target.value)})}
                         className="text-lg h-12"
                         placeholder="0"
                       />
