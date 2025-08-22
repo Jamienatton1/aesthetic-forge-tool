@@ -6,7 +6,10 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ArrowLeft, ArrowRight, Car, Plane, Train, Bus, Plus, Trash2 } from "lucide-react";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import { Checkbox } from "@/components/ui/checkbox";
+import { ArrowLeft, ArrowRight, Car, Plane, Train, Bus, Plus, Trash2, Info, ChevronDown, Upload, Hotel } from "lucide-react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Sidebar } from "@/components/dashboard/Sidebar";
 
@@ -18,6 +21,14 @@ interface TravelRoute {
   distance: number;
   passengers: number;
   class?: string;
+}
+
+interface AccommodationData {
+  id: string;
+  city: string;
+  type: string;
+  nights: number;
+  guests: number;
 }
 
 export default function Travel() {
@@ -37,9 +48,16 @@ export default function Travel() {
     taxi: { trips: 0 }
   });
 
-  const [accommodations, setAccommodations] = useState([
-    { id: "1", type: "Hotel 4 Star", city: "Manchester", nights: 2, passengers: 65 }
+  const [accommodations, setAccommodations] = useState<AccommodationData[]>([
+    { id: "1", type: "Hotel 4 Star", city: "Manchester", nights: 2, guests: 65 }
   ]);
+
+  const [estimateBasedOnAttendees, setEstimateBasedOnAttendees] = useState(false);
+  const [flightSectionOpen, setFlightSectionOpen] = useState(true);
+  const [railSectionOpen, setRailSectionOpen] = useState(false);
+  const [carSectionOpen, setCarSectionOpen] = useState(false);
+  const [taxiSectionOpen, setTaxiSectionOpen] = useState(false);
+  const [accommodationSectionOpen, setAccommodationSectionOpen] = useState(false);
 
   const addRoute = () => {
     const newRoute: TravelRoute = {
@@ -54,6 +72,27 @@ export default function Travel() {
     setRoutes([...routes, newRoute]);
   };
 
+  const addAccommodation = () => {
+    const newAccommodation: AccommodationData = {
+      id: Date.now().toString(),
+      city: "",
+      type: "Hotel 3 Star",
+      nights: 1,
+      guests: 0
+    };
+    setAccommodations([...accommodations, newAccommodation]);
+  };
+
+  const updateAccommodation = (id: string, field: keyof AccommodationData, value: string | number) => {
+    setAccommodations(accommodations.map(acc => 
+      acc.id === id ? { ...acc, [field]: value } : acc
+    ));
+  };
+
+  const deleteAccommodation = (id: string) => {
+    setAccommodations(accommodations.filter(acc => acc.id !== id));
+  };
+
   const updateRoute = (id: string, field: keyof TravelRoute, value: string | number) => {
     setRoutes(routes.map(route => 
       route.id === id ? { ...route, [field]: value } : route
@@ -62,6 +101,31 @@ export default function Travel() {
 
   const deleteRoute = (id: string) => {
     setRoutes(routes.filter(route => route.id !== id));
+  };
+
+  const handleImportData = () => {
+    // Placeholder for import functionality
+    console.log("Import travel data functionality");
+  };
+
+  const handleAttendeeBasedEstimate = (checked: boolean) => {
+    setEstimateBasedOnAttendees(checked);
+    if (checked) {
+      // Pre-fill with estimated values based on 100 attendees
+      setAverageTravel({
+        flight: { economy: 50, premium: 20, business: 10, first: 5 },
+        rail: { trips: 10 },
+        car: { cars: 8 },
+        taxi: { trips: 15 }
+      });
+    } else {
+      setAverageTravel({
+        flight: { economy: 0, premium: 0, business: 0, first: 0 },
+        rail: { trips: 0 },
+        car: { cars: 0 },
+        taxi: { trips: 0 }
+      });
+    }
   };
 
   const getTransportIcon = (type: string) => {
@@ -151,161 +215,250 @@ export default function Travel() {
                       <CardTitle className="text-2xl flex items-center gap-3">
                         Average Travel Estimate
                       </CardTitle>
+                      <div className="flex items-center space-x-2 pt-4">
+                        <Checkbox 
+                          id="attendee-estimate" 
+                          checked={estimateBasedOnAttendees}
+                          onCheckedChange={handleAttendeeBasedEstimate}
+                        />
+                        <Label htmlFor="attendee-estimate" className="text-sm font-medium">
+                          Estimate based on attendee numbers (100 attendees)
+                        </Label>
+                      </div>
                     </CardHeader>
-                    <CardContent className="space-y-8">
-                      {/* Flight Section */}
-                      <div className="space-y-4">
-                        <h3 className="text-lg font-semibold flex items-center gap-2">
-                          <Plane className="h-5 w-5" />
-                          Flight
-                        </h3>
-                        <div className="overflow-x-auto">
-                          <Table>
-                            <TableHeader>
-                              <TableRow>
-                                <TableHead>Attendees</TableHead>
-                                <TableHead className="text-center">Economy</TableHead>
-                                <TableHead className="text-center">Premium</TableHead>
-                                <TableHead className="text-center">Business</TableHead>
-                                <TableHead className="text-center">First</TableHead>
-                                <TableHead className="text-center">Total</TableHead>
-                              </TableRow>
-                            </TableHeader>
-                            <TableBody>
-                              <TableRow>
-                                <TableCell className="font-medium">Return Domestic (UK to UK)</TableCell>
-                                <TableCell>
-                                  <Input 
-                                    type="number" 
-                                    placeholder="0" 
-                                    className="text-center"
-                                    value={averageTravel.flight.economy}
-                                    onChange={(e) => setAverageTravel(prev => ({
-                                      ...prev,
-                                      flight: { ...prev.flight, economy: Number(e.target.value) }
-                                    }))}
-                                  />
-                                </TableCell>
-                                <TableCell>
-                                  <Input 
-                                    type="number" 
-                                    placeholder="0" 
-                                    className="text-center"
-                                    value={averageTravel.flight.premium}
-                                    onChange={(e) => setAverageTravel(prev => ({
-                                      ...prev,
-                                      flight: { ...prev.flight, premium: Number(e.target.value) }
-                                    }))}
-                                  />
-                                </TableCell>
-                                <TableCell>
-                                  <Input 
-                                    type="number" 
-                                    placeholder="0" 
-                                    className="text-center"
-                                    value={averageTravel.flight.business}
-                                    onChange={(e) => setAverageTravel(prev => ({
-                                      ...prev,
-                                      flight: { ...prev.flight, business: Number(e.target.value) }
-                                    }))}
-                                  />
-                                </TableCell>
-                                <TableCell>
-                                  <Input 
-                                    type="number" 
-                                    placeholder="0" 
-                                    className="text-center"
-                                    value={averageTravel.flight.first}
-                                    onChange={(e) => setAverageTravel(prev => ({
-                                      ...prev,
-                                      flight: { ...prev.flight, first: Number(e.target.value) }
-                                    }))}
-                                  />
-                                </TableCell>
-                                <TableCell className="text-center font-medium">
-                                  {averageTravel.flight.economy + averageTravel.flight.premium + averageTravel.flight.business + averageTravel.flight.first}
-                                </TableCell>
-                              </TableRow>
-                            </TableBody>
-                          </Table>
-                        </div>
-                      </div>
+                    <CardContent className="space-y-6">
+                      <TooltipProvider>
+                        {/* Flight Section */}
+                        <Collapsible open={flightSectionOpen} onOpenChange={setFlightSectionOpen}>
+                          <CollapsibleTrigger asChild>
+                            <Button variant="ghost" className="w-full justify-between p-0 h-auto">
+                              <div className="flex items-center gap-3">
+                                <h3 className="text-lg font-semibold flex items-center gap-2">
+                                  <Plane className="h-5 w-5" />
+                                  Flight Travel
+                                </h3>
+                                <Tooltip>
+                                  <TooltipTrigger asChild>
+                                    <Info className="h-4 w-4 text-muted-foreground cursor-help" />
+                                  </TooltipTrigger>
+                                  <TooltipContent>
+                                    <p className="max-w-xs">Based on average UK domestic and international flight distances. Estimates include return journeys with standard CO2 factors per class.</p>
+                                  </TooltipContent>
+                                </Tooltip>
+                              </div>
+                              <ChevronDown className={`h-4 w-4 transition-transform duration-200 ${flightSectionOpen ? 'transform rotate-180' : ''}`} />
+                            </Button>
+                          </CollapsibleTrigger>
+                          <CollapsibleContent className="space-y-4 pt-4">
+                            <div className="overflow-x-auto">
+                              <Table>
+                                <TableHeader>
+                                  <TableRow>
+                                    <TableHead>Route Type</TableHead>
+                                    <TableHead className="text-center">Economy</TableHead>
+                                    <TableHead className="text-center">Premium</TableHead>
+                                    <TableHead className="text-center">Business</TableHead>
+                                    <TableHead className="text-center">First</TableHead>
+                                    <TableHead className="text-center">Total</TableHead>
+                                  </TableRow>
+                                </TableHeader>
+                                <TableBody>
+                                  <TableRow>
+                                    <TableCell className="font-medium">Return Domestic (UK)</TableCell>
+                                    <TableCell>
+                                      <Input 
+                                        type="number" 
+                                        placeholder="0" 
+                                        className="text-center"
+                                        value={averageTravel.flight.economy}
+                                        onChange={(e) => setAverageTravel(prev => ({
+                                          ...prev,
+                                          flight: { ...prev.flight, economy: Number(e.target.value) }
+                                        }))}
+                                      />
+                                    </TableCell>
+                                    <TableCell>
+                                      <Input 
+                                        type="number" 
+                                        placeholder="0" 
+                                        className="text-center"
+                                        value={averageTravel.flight.premium}
+                                        onChange={(e) => setAverageTravel(prev => ({
+                                          ...prev,
+                                          flight: { ...prev.flight, premium: Number(e.target.value) }
+                                        }))}
+                                      />
+                                    </TableCell>
+                                    <TableCell>
+                                      <Input 
+                                        type="number" 
+                                        placeholder="0" 
+                                        className="text-center"
+                                        value={averageTravel.flight.business}
+                                        onChange={(e) => setAverageTravel(prev => ({
+                                          ...prev,
+                                          flight: { ...prev.flight, business: Number(e.target.value) }
+                                        }))}
+                                      />
+                                    </TableCell>
+                                    <TableCell>
+                                      <Input 
+                                        type="number" 
+                                        placeholder="0" 
+                                        className="text-center"
+                                        value={averageTravel.flight.first}
+                                        onChange={(e) => setAverageTravel(prev => ({
+                                          ...prev,
+                                          flight: { ...prev.flight, first: Number(e.target.value) }
+                                        }))}
+                                      />
+                                    </TableCell>
+                                    <TableCell className="text-center font-medium">
+                                      {averageTravel.flight.economy + averageTravel.flight.premium + averageTravel.flight.business + averageTravel.flight.first}
+                                    </TableCell>
+                                  </TableRow>
+                                </TableBody>
+                              </Table>
+                            </div>
+                          </CollapsibleContent>
+                        </Collapsible>
 
-                      {/* Rail/Bus Section */}
-                      <div className="space-y-4">
-                        <h3 className="text-lg font-semibold flex items-center gap-2">
-                          <Train className="h-5 w-5" />
-                          Rail / Bus
-                        </h3>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                          <div className="space-y-2">
-                            <Label>No. of Trips</Label>
-                            <Input 
-                              type="number" 
-                              placeholder="0"
-                              value={averageTravel.rail.trips}
-                              onChange={(e) => setAverageTravel(prev => ({
-                                ...prev,
-                                rail: { trips: Number(e.target.value) }
-                              }))}
-                            />
-                          </div>
-                        </div>
-                      </div>
+                        {/* Rail/Bus Section */}
+                        <Collapsible open={railSectionOpen} onOpenChange={setRailSectionOpen}>
+                          <CollapsibleTrigger asChild>
+                            <Button variant="ghost" className="w-full justify-between p-0 h-auto">
+                              <div className="flex items-center gap-3">
+                                <h3 className="text-lg font-semibold flex items-center gap-2">
+                                  <Train className="h-5 w-5" />
+                                  Rail & Bus Travel
+                                </h3>
+                                <Tooltip>
+                                  <TooltipTrigger asChild>
+                                    <Info className="h-4 w-4 text-muted-foreground cursor-help" />
+                                  </TooltipTrigger>
+                                  <TooltipContent>
+                                    <p className="max-w-xs">Estimates for train and bus journeys based on average UK intercity routes with lower CO2 emissions per passenger.</p>
+                                  </TooltipContent>
+                                </Tooltip>
+                              </div>
+                              <ChevronDown className={`h-4 w-4 transition-transform duration-200 ${railSectionOpen ? 'transform rotate-180' : ''}`} />
+                            </Button>
+                          </CollapsibleTrigger>
+                          <CollapsibleContent className="space-y-4 pt-4">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                              <div className="space-y-2">
+                                <Label>Number of Return Trips</Label>
+                                <Input 
+                                  type="number" 
+                                  placeholder="0"
+                                  value={averageTravel.rail.trips}
+                                  onChange={(e) => setAverageTravel(prev => ({
+                                    ...prev,
+                                    rail: { trips: Number(e.target.value) }
+                                  }))}
+                                />
+                              </div>
+                            </div>
+                          </CollapsibleContent>
+                        </Collapsible>
 
-                      {/* Car Section */}
-                      <div className="space-y-4">
-                        <h3 className="text-lg font-semibold flex items-center gap-2">
-                          <Car className="h-5 w-5" />
-                          Car
-                        </h3>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                          <div className="space-y-2">
-                            <Label>No. of Cars</Label>
-                            <Input 
-                              type="number" 
-                              placeholder="0"
-                              value={averageTravel.car.cars}
-                              onChange={(e) => setAverageTravel(prev => ({
-                                ...prev,
-                                car: { cars: Number(e.target.value) }
-                              }))}
-                            />
-                          </div>
-                        </div>
-                      </div>
+                        {/* Car Section */}
+                        <Collapsible open={carSectionOpen} onOpenChange={setCarSectionOpen}>
+                          <CollapsibleTrigger asChild>
+                            <Button variant="ghost" className="w-full justify-between p-0 h-auto">
+                              <div className="flex items-center gap-3">
+                                <h3 className="text-lg font-semibold flex items-center gap-2">
+                                  <Car className="h-5 w-5" />
+                                  Car Travel
+                                </h3>
+                                <Tooltip>
+                                  <TooltipTrigger asChild>
+                                    <Info className="h-4 w-4 text-muted-foreground cursor-help" />
+                                  </TooltipTrigger>
+                                  <TooltipContent>
+                                    <p className="max-w-xs">Private car journeys calculated using average fuel efficiency and occupancy rates for event travel.</p>
+                                  </TooltipContent>
+                                </Tooltip>
+                              </div>
+                              <ChevronDown className={`h-4 w-4 transition-transform duration-200 ${carSectionOpen ? 'transform rotate-180' : ''}`} />
+                            </Button>
+                          </CollapsibleTrigger>
+                          <CollapsibleContent className="space-y-4 pt-4">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                              <div className="space-y-2">
+                                <Label>Number of Cars</Label>
+                                <Input 
+                                  type="number" 
+                                  placeholder="0"
+                                  value={averageTravel.car.cars}
+                                  onChange={(e) => setAverageTravel(prev => ({
+                                    ...prev,
+                                    car: { cars: Number(e.target.value) }
+                                  }))}
+                                />
+                              </div>
+                            </div>
+                          </CollapsibleContent>
+                        </Collapsible>
 
-                      {/* Taxi Section */}
-                      <div className="space-y-4">
-                        <h3 className="text-lg font-semibold flex items-center gap-2">
-                          <Car className="h-5 w-5" />
-                          Taxi
-                        </h3>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                          <div className="space-y-2">
-                            <Label>No. of Trips</Label>
-                            <Input 
-                              type="number" 
-                              placeholder="0"
-                              value={averageTravel.taxi.trips}
-                              onChange={(e) => setAverageTravel(prev => ({
-                                ...prev,
-                                taxi: { trips: Number(e.target.value) }
-                              }))}
-                            />
-                          </div>
-                        </div>
-                      </div>
+                        {/* Taxi Section */}
+                        <Collapsible open={taxiSectionOpen} onOpenChange={setTaxiSectionOpen}>
+                          <CollapsibleTrigger asChild>
+                            <Button variant="ghost" className="w-full justify-between p-0 h-auto">
+                              <div className="flex items-center gap-3">
+                                <h3 className="text-lg font-semibold flex items-center gap-2">
+                                  <Car className="h-5 w-5" />
+                                  Taxi & Ride-share Travel
+                                </h3>
+                                <Tooltip>
+                                  <TooltipTrigger asChild>
+                                    <Info className="h-4 w-4 text-muted-foreground cursor-help" />
+                                  </TooltipTrigger>
+                                  <TooltipContent>
+                                    <p className="max-w-xs">Taxi and ride-share services including airport transfers and local transport during the event.</p>
+                                  </TooltipContent>
+                                </Tooltip>
+                              </div>
+                              <ChevronDown className={`h-4 w-4 transition-transform duration-200 ${taxiSectionOpen ? 'transform rotate-180' : ''}`} />
+                            </Button>
+                          </CollapsibleTrigger>
+                          <CollapsibleContent className="space-y-4 pt-4">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                              <div className="space-y-2">
+                                <Label>Number of Trips</Label>
+                                <Input 
+                                  type="number" 
+                                  placeholder="0"
+                                  value={averageTravel.taxi.trips}
+                                  onChange={(e) => setAverageTravel(prev => ({
+                                    ...prev,
+                                    taxi: { trips: Number(e.target.value) }
+                                  }))}
+                                />
+                              </div>
+                            </div>
+                          </CollapsibleContent>
+                        </Collapsible>
+                      </TooltipProvider>
                     </CardContent>
                   </Card>
                 </TabsContent>
 
                 <TabsContent value="accurate" className="space-y-6">
+                  <div className="flex gap-4 mb-6">
+                    <Button onClick={handleImportData} variant="outline" className="flex items-center gap-2">
+                      <Upload className="h-4 w-4" />
+                      Import Travel Data
+                    </Button>
+                  </div>
+
+                  {/* Travel Routes Card */}
                   <Card className="border-2">
                     <CardHeader>
                       <div className="flex items-center justify-between">
-                        <CardTitle className="text-2xl">
-                          Accurate Travel Data
+                        <CardTitle className="text-xl flex items-center gap-2">
+                          <Plane className="h-5 w-5" />
+                          Travel Routes
                         </CardTitle>
                         <Button onClick={addRoute} className="flex items-center gap-2">
                           <Plus className="h-4 w-4" />
@@ -322,9 +475,9 @@ export default function Travel() {
                               <TableHead>From</TableHead>
                               <TableHead>To</TableHead>
                               <TableHead className="w-[120px]">Distance (KM)</TableHead>
-                              <TableHead className="w-[100px]">Passengers</TableHead>
+                              <TableHead className="w-[100px]">PAX</TableHead>
                               <TableHead className="w-[120px]">Class</TableHead>
-                              <TableHead className="w-[100px]">CO2 (kg)</TableHead>
+                              <TableHead className="w-[100px]">CO₂e (kg)</TableHead>
                               <TableHead className="w-[60px]">Actions</TableHead>
                             </TableRow>
                           </TableHeader>
@@ -349,22 +502,16 @@ export default function Travel() {
                                           Flight
                                         </div>
                                       </SelectItem>
-                                      <SelectItem value="train">
-                                        <div className="flex items-center gap-2">
-                                          <Train className="h-4 w-4" />
-                                          Train
-                                        </div>
-                                      </SelectItem>
-                                      <SelectItem value="bus">
-                                        <div className="flex items-center gap-2">
-                                          <Bus className="h-4 w-4" />
-                                          Bus/Coach
-                                        </div>
-                                      </SelectItem>
                                       <SelectItem value="car">
                                         <div className="flex items-center gap-2">
                                           <Car className="h-4 w-4" />
                                           Car
+                                        </div>
+                                      </SelectItem>
+                                      <SelectItem value="train">
+                                        <div className="flex items-center gap-2">
+                                          <Train className="h-4 w-4" />
+                                          Rail
                                         </div>
                                       </SelectItem>
                                       <SelectItem value="taxi">
@@ -398,6 +545,7 @@ export default function Travel() {
                                     value={route.distance}
                                     onChange={(e) => updateRoute(route.id, 'distance', Number(e.target.value))}
                                     className="w-full"
+                                    placeholder="Auto-calc"
                                   />
                                 </TableCell>
                                 <TableCell>
@@ -425,7 +573,7 @@ export default function Travel() {
                                       </SelectContent>
                                     </Select>
                                   ) : (
-                                    <div className="text-muted-foreground">-</div>
+                                    <div className="text-muted-foreground text-center">-</div>
                                   )}
                                 </TableCell>
                                 <TableCell>
@@ -455,54 +603,180 @@ export default function Travel() {
                           </TableBody>
                         </Table>
                       </div>
-                      
-                      {/* Summary */}
-                      <div className="mt-6 p-4 bg-muted/50 rounded-lg">
-                        <div className="grid grid-cols-3 gap-4 text-center">
-                          <div>
-                            <div className="text-2xl font-bold text-primary">
-                              {routes.reduce((sum, route) => sum + route.passengers, 0)}
-                            </div>
-                            <div className="text-sm text-muted-foreground">Total Passengers</div>
-                          </div>
-                          <div>
-                            <div className="text-2xl font-bold text-primary">
-                              {routes.reduce((sum, route) => sum + route.distance, 0).toLocaleString()}
-                            </div>
-                            <div className="text-sm text-muted-foreground">Total Distance (km)</div>
-                          </div>
-                          <div>
-                            <div className="text-2xl font-bold text-primary">
-                              {routes.reduce((sum, route) => sum + Number(calculateCO2(route.distance, route.passengers, route.transportType)), 0).toFixed(1)}
-                            </div>
-                            <div className="text-sm text-muted-foreground">Total CO2 (kg)</div>
-                          </div>
-                        </div>
-                      </div>
                     </CardContent>
                   </Card>
+
+                  {/* Accommodations Card */}
+                  <TooltipProvider>
+                    <Collapsible open={accommodationSectionOpen} onOpenChange={setAccommodationSectionOpen}>
+                      <Card className="border-2">
+                        <CardHeader>
+                          <CollapsibleTrigger asChild>
+                            <Button variant="ghost" className="w-full justify-between p-0 h-auto">
+                              <div className="flex items-center gap-3">
+                                <CardTitle className="text-xl flex items-center gap-2">
+                                  <Hotel className="h-5 w-5" />
+                                  Accommodation Data
+                                </CardTitle>
+                                <Tooltip>
+                                  <TooltipTrigger asChild>
+                                    <Info className="h-4 w-4 text-muted-foreground cursor-help" />
+                                  </TooltipTrigger>
+                                  <TooltipContent>
+                                    <p className="max-w-xs">Track accommodation details including hotel types, locations, duration and occupancy for accurate carbon footprint calculations.</p>
+                                  </TooltipContent>
+                                </Tooltip>
+                              </div>
+                              <div className="flex items-center gap-2">
+                                <Button onClick={addAccommodation} size="sm" className="flex items-center gap-1">
+                                  <Plus className="h-3 w-3" />
+                                  Add
+                                </Button>
+                                <ChevronDown className={`h-4 w-4 transition-transform duration-200 ${accommodationSectionOpen ? 'transform rotate-180' : ''}`} />
+                              </div>
+                            </Button>
+                          </CollapsibleTrigger>
+                        </CardHeader>
+                        <CollapsibleContent>
+                          <CardContent>
+                            <div className="overflow-x-auto">
+                              <Table>
+                                <TableHeader>
+                                  <TableRow>
+                                    <TableHead>City Name</TableHead>
+                                    <TableHead>Accommodation Type</TableHead>
+                                    <TableHead className="w-[100px]">Nights</TableHead>
+                                    <TableHead className="w-[100px]">Guests</TableHead>
+                                    <TableHead className="w-[60px]">Actions</TableHead>
+                                  </TableRow>
+                                </TableHeader>
+                                <TableBody>
+                                  {accommodations.map((acc) => (
+                                    <TableRow key={acc.id}>
+                                      <TableCell>
+                                        <Input
+                                          value={acc.city}
+                                          onChange={(e) => updateAccommodation(acc.id, 'city', e.target.value)}
+                                          placeholder="City name"
+                                        />
+                                      </TableCell>
+                                      <TableCell>
+                                        <Select 
+                                          value={acc.type} 
+                                          onValueChange={(value) => updateAccommodation(acc.id, 'type', value)}
+                                        >
+                                          <SelectTrigger>
+                                            <SelectValue />
+                                          </SelectTrigger>
+                                          <SelectContent>
+                                            <SelectItem value="Hotel 3 Star">Hotel 3 Star</SelectItem>
+                                            <SelectItem value="Hotel 4 Star">Hotel 4 Star</SelectItem>
+                                            <SelectItem value="Hotel 5 Star">Hotel 5 Star</SelectItem>
+                                            <SelectItem value="Boutique Hotel">Boutique Hotel</SelectItem>
+                                            <SelectItem value="Budget Hotel">Budget Hotel</SelectItem>
+                                            <SelectItem value="Hostel">Hostel</SelectItem>
+                                            <SelectItem value="Apartment">Apartment</SelectItem>
+                                            <SelectItem value="Guesthouse">Guesthouse</SelectItem>
+                                          </SelectContent>
+                                        </Select>
+                                      </TableCell>
+                                      <TableCell>
+                                        <Input
+                                          type="number"
+                                          value={acc.nights}
+                                          onChange={(e) => updateAccommodation(acc.id, 'nights', Number(e.target.value))}
+                                          className="w-full"
+                                        />
+                                      </TableCell>
+                                      <TableCell>
+                                        <Input
+                                          type="number"
+                                          value={acc.guests}
+                                          onChange={(e) => updateAccommodation(acc.id, 'guests', Number(e.target.value))}
+                                          className="w-full"
+                                        />
+                                      </TableCell>
+                                      <TableCell>
+                                        <Button
+                                          variant="ghost"
+                                          size="sm"
+                                          onClick={() => deleteAccommodation(acc.id)}
+                                          className="text-destructive hover:text-destructive"
+                                        >
+                                          <Trash2 className="h-4 w-4" />
+                                        </Button>
+                                      </TableCell>
+                                    </TableRow>
+                                  ))}
+                                  {accommodations.length === 0 && (
+                                    <TableRow>
+                                      <TableCell colSpan={5} className="text-center text-muted-foreground py-8">
+                                        No accommodation data added yet. Click "Add" to get started.
+                                      </TableCell>
+                                    </TableRow>
+                                  )}
+                                </TableBody>
+                              </Table>
+                            </div>
+                          </CardContent>
+                        </CollapsibleContent>
+                      </Card>
+                    </Collapsible>
+                  </TooltipProvider>
                 </TabsContent>
               </Tabs>
 
-              {/* Navigation */}
-              <div className="flex justify-between">
-                <Button
-                  onClick={() => navigate(-1)}
-                  variant="outline"
-                  size="lg"
-                  className="text-lg px-8 py-4 h-auto"
-                >
-                  <ArrowLeft className="w-5 h-5 mr-2" />
-                  BACK
-                </Button>
-                <Button
-                  onClick={handleSubmit}
-                  size="lg"
-                  className="text-lg px-8 py-4 h-auto font-semibold"
-                >
-                  CONTINUE
-                  <ArrowRight className="w-5 h-5 ml-2" />
-                </Button>
+              {/* Sticky Summary Bar */}
+              <div className="sticky bottom-0 bg-background/95 backdrop-blur border-t p-4 -m-8 mt-8">
+                <div className="max-w-6xl mx-auto">
+                  <div className="flex items-center justify-between">
+                    <div className="grid grid-cols-4 gap-8">
+                      <div className="text-center">
+                        <div className="text-2xl font-bold text-primary">
+                          {routes.reduce((sum, route) => sum + route.passengers, 0)}
+                        </div>
+                        <div className="text-sm text-muted-foreground">Total PAX</div>
+                      </div>
+                      <div className="text-center">
+                        <div className="text-2xl font-bold text-primary">
+                          {routes.reduce((sum, route) => sum + route.distance, 0).toLocaleString()} km
+                        </div>
+                        <div className="text-sm text-muted-foreground">Distance</div>
+                      </div>
+                      <div className="text-center">
+                        <div className="text-2xl font-bold text-primary">
+                          {accommodations.reduce((sum, acc) => sum + acc.nights, 0)} nights
+                        </div>
+                        <div className="text-sm text-muted-foreground">Accommodation</div>
+                      </div>
+                      <div className="text-center">
+                        <div className="text-2xl font-bold text-destructive">
+                          {routes.reduce((sum, route) => sum + Number(calculateCO2(route.distance, route.passengers, route.transportType)), 0).toFixed(1)} kg
+                        </div>
+                        <div className="text-sm text-muted-foreground">Total CO₂e</div>
+                      </div>
+                    </div>
+                    <div className="flex gap-4">
+                      <Button
+                        onClick={() => navigate(-1)}
+                        variant="outline"
+                        size="lg"
+                        className="text-lg px-8"
+                      >
+                        <ArrowLeft className="w-5 h-5 mr-2" />
+                        Back
+                      </Button>
+                      <Button
+                        onClick={handleSubmit}
+                        size="lg"
+                        className="text-lg px-8 font-semibold"
+                      >
+                        Save & Continue
+                        <ArrowRight className="w-5 h-5 ml-2" />
+                      </Button>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
