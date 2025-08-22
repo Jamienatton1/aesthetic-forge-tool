@@ -9,7 +9,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { Checkbox } from "@/components/ui/checkbox";
-import { ArrowLeft, ArrowRight, Car, Plane, Train, Bus, Plus, Trash2, Info, ChevronDown, Upload, Hotel } from "lucide-react";
+import { ArrowLeft, ArrowRight, Car, Plane, Train, Bus, Plus, Trash2, Info, ChevronDown, Upload } from "lucide-react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Sidebar } from "@/components/dashboard/Sidebar";
 
@@ -21,14 +21,6 @@ interface TravelRoute {
   distance: number;
   passengers: number;
   class?: string;
-}
-
-interface AccommodationData {
-  id: string;
-  city: string;
-  type: string;
-  nights: number;
-  guests: number;
 }
 
 export default function Travel() {
@@ -59,25 +51,14 @@ export default function Travel() {
     },
         taxi: { 
           local: { trips: 0 }
-        },
-        accommodation: {
-          local: { nights: 5 },
-          national: { nights: 10 },
-          international: { nights: 8 }
         }
       });
-
-  const [accommodations, setAccommodations] = useState<AccommodationData[]>([
-    { id: "1", type: "Hotel 4 Star", city: "Manchester", nights: 2, guests: 65 }
-  ]);
 
   const [estimateBasedOnAttendees, setEstimateBasedOnAttendees] = useState(false);
   const [flightSectionOpen, setFlightSectionOpen] = useState(true);
   const [railSectionOpen, setRailSectionOpen] = useState(false);
   const [carSectionOpen, setCarSectionOpen] = useState(false);
   const [taxiSectionOpen, setTaxiSectionOpen] = useState(false);
-  const [accommodationSectionOpen, setAccommodationSectionOpen] = useState(false);
-  const [averageAccommodationSectionOpen, setAverageAccommodationSectionOpen] = useState(false);
 
   const addRoute = () => {
     const newRoute: TravelRoute = {
@@ -90,27 +71,6 @@ export default function Travel() {
       class: "Economy"
     };
     setRoutes([...routes, newRoute]);
-  };
-
-  const addAccommodation = () => {
-    const newAccommodation: AccommodationData = {
-      id: Date.now().toString(),
-      city: "",
-      type: "Hotel 3 Star",
-      nights: 1,
-      guests: 0
-    };
-    setAccommodations([...accommodations, newAccommodation]);
-  };
-
-  const updateAccommodation = (id: string, field: keyof AccommodationData, value: string | number) => {
-    setAccommodations(accommodations.map(acc => 
-      acc.id === id ? { ...acc, [field]: value } : acc
-    ));
-  };
-
-  const deleteAccommodation = (id: string) => {
-    setAccommodations(accommodations.filter(acc => acc.id !== id));
   };
 
   const updateRoute = (id: string, field: keyof TravelRoute, value: string | number) => {
@@ -150,11 +110,6 @@ export default function Travel() {
         },
         taxi: { 
           local: { trips: 15 }
-        },
-        accommodation: {
-          local: { nights: 5 },
-          national: { nights: 10 },
-          international: { nights: 8 }
         }
       });
     } else {
@@ -176,11 +131,6 @@ export default function Travel() {
         },
         taxi: { 
           local: { trips: 0 } 
-        },
-        accommodation: {
-          local: { nights: 0 },
-          national: { nights: 0 },
-          international: { nights: 0 }
         }
       });
     }
@@ -211,7 +161,7 @@ export default function Travel() {
   };
 
   const handleSubmit = () => {
-    console.log("Travel data:", { routes, accommodations });
+    console.log("Travel data:", { routes });
     
     const categoryOrder = ["venue", "food", "travel", "accommodations", "promotion"];
     const { selectedCategories = [] } = location.state || {};
@@ -242,7 +192,7 @@ export default function Travel() {
                 <Plane className="w-10 h-10" />
               </div>
               <div>
-                <h1 className="text-3xl font-bold mb-2">Travel Information</h1>
+                <h1 className="text-3xl font-bold mb-2">Travel and Accommodation Information</h1>
                 <p className="text-lg text-primary-foreground/90">
                   Enter detailed travel routes and accommodation data
                 </p>
@@ -725,105 +675,6 @@ export default function Travel() {
                        </TooltipProvider>
                      </CardContent>
                    </Card>
-
-                   {/* Accommodation Section - Separate Card */}
-                   <Card className="border-2">
-                     <CardHeader>
-                       <div className="flex items-center justify-between">
-                         <CardTitle className="text-xl flex items-center gap-2">
-                           <Hotel className="h-5 w-5" />
-                           Accommodation Estimate
-                         </CardTitle>
-                         <Button onClick={addAccommodation} className="flex items-center gap-2">
-                           <Plus className="h-4 w-4" />
-                           Add Accommodation
-                         </Button>
-                       </div>
-                     </CardHeader>
-                     <CardContent>
-                       <div className="overflow-x-auto">
-                         <Table>
-                           <TableHeader>
-                             <TableRow>
-                               <TableHead>City Name</TableHead>
-                               <TableHead>Accommodation Type</TableHead>
-                               <TableHead className="w-[100px]">Nights</TableHead>
-                               <TableHead className="w-[100px]">Guests</TableHead>
-                               <TableHead className="w-[60px]">Actions</TableHead>
-                             </TableRow>
-                           </TableHeader>
-                           <TableBody>
-                             {accommodations.map((acc) => (
-                               <TableRow key={acc.id}>
-                                 <TableCell>
-                                   <Input
-                                     value={acc.city}
-                                     onChange={(e) => updateAccommodation(acc.id, 'city', e.target.value)}
-                                     placeholder="City name"
-                                   />
-                                 </TableCell>
-                                 <TableCell>
-                                   <Select 
-                                     value={acc.type} 
-                                     onValueChange={(value) => updateAccommodation(acc.id, 'type', value)}
-                                   >
-                                     <SelectTrigger>
-                                       <SelectValue />
-                                     </SelectTrigger>
-                                     <SelectContent>
-                                       <SelectItem value="Hotel 3 Star">Hotel 3 Star</SelectItem>
-                                       <SelectItem value="Hotel 4 Star">Hotel 4 Star</SelectItem>
-                                       <SelectItem value="Hotel 5 Star">Hotel 5 Star</SelectItem>
-                                       <SelectItem value="Boutique Hotel">Boutique Hotel</SelectItem>
-                                       <SelectItem value="Budget Hotel">Budget Hotel</SelectItem>
-                                       <SelectItem value="Hostel">Hostel</SelectItem>
-                                       <SelectItem value="Apartment">Apartment</SelectItem>
-                                       <SelectItem value="B&B">B&B</SelectItem>
-                                     </SelectContent>
-                                   </Select>
-                                 </TableCell>
-                                 <TableCell>
-                                   <Input
-                                     type="number"
-                                     value={acc.nights}
-                                     onChange={(e) => updateAccommodation(acc.id, 'nights', Number(e.target.value))}
-                                     placeholder="0"
-                                     className="text-center"
-                                   />
-                                 </TableCell>
-                                 <TableCell>
-                                   <Input
-                                     type="number"
-                                     value={acc.guests}
-                                     onChange={(e) => updateAccommodation(acc.id, 'guests', Number(e.target.value))}
-                                     placeholder="0"
-                                     className="text-center"
-                                   />
-                                 </TableCell>
-                                 <TableCell>
-                                   <Button
-                                     variant="ghost"
-                                     size="sm"
-                                     onClick={() => deleteAccommodation(acc.id)}
-                                     className="text-destructive hover:text-destructive"
-                                   >
-                                     <Trash2 className="h-4 w-4" />
-                                   </Button>
-                                 </TableCell>
-                               </TableRow>
-                             ))}
-                             {accommodations.length === 0 && (
-                               <TableRow>
-                                 <TableCell colSpan={5} className="text-center text-muted-foreground py-8">
-                                   No accommodations added yet. Click "Add Accommodation" to get started.
-                                 </TableCell>
-                               </TableRow>
-                             )}
-                           </TableBody>
-                         </Table>
-                       </div>
-                     </CardContent>
-                   </Card>
                  </TabsContent>
 
                 <TabsContent value="accurate" className="space-y-6">
@@ -988,131 +839,14 @@ export default function Travel() {
                     </CardContent>
                   </Card>
 
-                  {/* Accommodations Card */}
-                  <TooltipProvider>
-                    <Collapsible open={accommodationSectionOpen} onOpenChange={setAccommodationSectionOpen}>
-                      <Card className="border-2">
-                        <CardHeader>
-                          <CollapsibleTrigger asChild>
-                            <Button variant="ghost" className="w-full justify-between p-0 h-auto">
-                              <div className="flex items-center gap-3">
-                                <CardTitle className="text-xl flex items-center gap-2">
-                                  <Hotel className="h-5 w-5" />
-                                  Accommodation Data
-                                </CardTitle>
-                                <Tooltip>
-                                  <TooltipTrigger asChild>
-                                    <Info className="h-4 w-4 text-muted-foreground cursor-help" />
-                                  </TooltipTrigger>
-                                  <TooltipContent>
-                                    <p className="max-w-xs">Track accommodation details including hotel types, locations, duration and occupancy for accurate carbon footprint calculations.</p>
-                                  </TooltipContent>
-                                </Tooltip>
-                              </div>
-                              <div className="flex items-center gap-2">
-                                <Button onClick={addAccommodation} size="sm" className="flex items-center gap-1">
-                                  <Plus className="h-3 w-3" />
-                                  Add
-                                </Button>
-                                <ChevronDown className={`h-4 w-4 transition-transform duration-200 ${accommodationSectionOpen ? 'transform rotate-180' : ''}`} />
-                              </div>
-                            </Button>
-                          </CollapsibleTrigger>
-                        </CardHeader>
-                        <CollapsibleContent>
-                          <CardContent>
-                            <div className="overflow-x-auto">
-                              <Table>
-                                <TableHeader>
-                                  <TableRow>
-                                    <TableHead>City Name</TableHead>
-                                    <TableHead>Accommodation Type</TableHead>
-                                    <TableHead className="w-[100px]">Nights</TableHead>
-                                    <TableHead className="w-[100px]">Guests</TableHead>
-                                    <TableHead className="w-[60px]">Actions</TableHead>
-                                  </TableRow>
-                                </TableHeader>
-                                <TableBody>
-                                  {accommodations.map((acc) => (
-                                    <TableRow key={acc.id}>
-                                      <TableCell>
-                                        <Input
-                                          value={acc.city}
-                                          onChange={(e) => updateAccommodation(acc.id, 'city', e.target.value)}
-                                          placeholder="City name"
-                                        />
-                                      </TableCell>
-                                      <TableCell>
-                                        <Select 
-                                          value={acc.type} 
-                                          onValueChange={(value) => updateAccommodation(acc.id, 'type', value)}
-                                        >
-                                          <SelectTrigger>
-                                            <SelectValue />
-                                          </SelectTrigger>
-                                          <SelectContent>
-                                            <SelectItem value="Hotel 3 Star">Hotel 3 Star</SelectItem>
-                                            <SelectItem value="Hotel 4 Star">Hotel 4 Star</SelectItem>
-                                            <SelectItem value="Hotel 5 Star">Hotel 5 Star</SelectItem>
-                                            <SelectItem value="Boutique Hotel">Boutique Hotel</SelectItem>
-                                            <SelectItem value="Budget Hotel">Budget Hotel</SelectItem>
-                                            <SelectItem value="Hostel">Hostel</SelectItem>
-                                            <SelectItem value="Apartment">Apartment</SelectItem>
-                                            <SelectItem value="Guesthouse">Guesthouse</SelectItem>
-                                          </SelectContent>
-                                        </Select>
-                                      </TableCell>
-                                      <TableCell>
-                                        <Input
-                                          type="number"
-                                          value={acc.nights}
-                                          onChange={(e) => updateAccommodation(acc.id, 'nights', Number(e.target.value))}
-                                          className="w-full"
-                                        />
-                                      </TableCell>
-                                      <TableCell>
-                                        <Input
-                                          type="number"
-                                          value={acc.guests}
-                                          onChange={(e) => updateAccommodation(acc.id, 'guests', Number(e.target.value))}
-                                          className="w-full"
-                                        />
-                                      </TableCell>
-                                      <TableCell>
-                                        <Button
-                                          variant="ghost"
-                                          size="sm"
-                                          onClick={() => deleteAccommodation(acc.id)}
-                                          className="text-destructive hover:text-destructive"
-                                        >
-                                          <Trash2 className="h-4 w-4" />
-                                        </Button>
-                                      </TableCell>
-                                    </TableRow>
-                                  ))}
-                                  {accommodations.length === 0 && (
-                                    <TableRow>
-                                      <TableCell colSpan={5} className="text-center text-muted-foreground py-8">
-                                        No accommodation data added yet. Click "Add" to get started.
-                                      </TableCell>
-                                    </TableRow>
-                                  )}
-                                </TableBody>
-                              </Table>
-                            </div>
-                          </CardContent>
-                        </CollapsibleContent>
-                      </Card>
-                    </Collapsible>
-                  </TooltipProvider>
-                </TabsContent>
+                 </TabsContent>
               </Tabs>
 
               {/* Sticky Summary Bar */}
               <div className="sticky bottom-0 bg-background/95 backdrop-blur border-t p-4 -m-8 mt-8">
                 <div className="max-w-6xl mx-auto">
                   <div className="flex items-center justify-between">
-                    <div className="grid grid-cols-4 gap-8">
+                    <div className="grid grid-cols-3 gap-8">
                       <div className="text-center">
                         <div className="text-2xl font-bold text-primary">
                           {routes.reduce((sum, route) => sum + route.passengers, 0)}
@@ -1124,12 +858,6 @@ export default function Travel() {
                           {routes.reduce((sum, route) => sum + route.distance, 0).toLocaleString()} km
                         </div>
                         <div className="text-sm text-muted-foreground">Distance</div>
-                      </div>
-                      <div className="text-center">
-                        <div className="text-2xl font-bold text-primary">
-                          {accommodations.reduce((sum, acc) => sum + acc.nights, 0)} nights
-                        </div>
-                        <div className="text-sm text-muted-foreground">Accommodation</div>
                       </div>
                       <div className="text-center">
                         <div className="text-2xl font-bold text-destructive">
