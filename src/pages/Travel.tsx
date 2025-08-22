@@ -273,16 +273,6 @@ export default function Travel() {
                       <CardTitle className="text-2xl flex items-center gap-3">
                         Travel Estimate
                       </CardTitle>
-                      <div className="flex items-center space-x-2 pt-4">
-                        <Checkbox 
-                          id="attendee-estimate" 
-                          checked={estimateBasedOnAttendees}
-                          onCheckedChange={handleAttendeeBasedEstimate}
-                        />
-                        <Label htmlFor="attendee-estimate" className="text-sm font-medium">
-                          Estimate based on attendee numbers (100 attendees)
-                        </Label>
-                      </div>
                     </CardHeader>
                     <CardContent className="space-y-6">
                       <TooltipProvider>
@@ -310,19 +300,21 @@ export default function Travel() {
                           <CollapsibleContent className="space-y-4 pt-4">
                             <div className="overflow-x-auto">
                               <Table>
-                                <TableHeader>
-                                  <TableRow>
-                                    <TableHead>Route Type</TableHead>
-                                    <TableHead className="text-center">Economy</TableHead>
-                                    <TableHead className="text-center">Premium</TableHead>
-                                    <TableHead className="text-center">Business</TableHead>
-                                    <TableHead className="text-center">First</TableHead>
-                                    <TableHead className="text-center">Total</TableHead>
-                                  </TableRow>
-                                </TableHeader>
+                                 <TableHeader>
+                                   <TableRow>
+                                     <TableHead>Route Type</TableHead>
+                                     <TableHead className="text-center">Distance</TableHead>
+                                     <TableHead className="text-center">Economy</TableHead>
+                                     <TableHead className="text-center">Premium</TableHead>
+                                     <TableHead className="text-center">Business</TableHead>
+                                     <TableHead className="text-center">First</TableHead>
+                                     <TableHead className="text-center">Total</TableHead>
+                                   </TableRow>
+                                 </TableHeader>
                                 <TableBody>
-                                  <TableRow>
-                                    <TableCell className="font-medium">Local (Short haul)</TableCell>
+                                   <TableRow>
+                                     <TableCell className="font-medium">Local (≤500 KM)</TableCell>
+                                     <TableCell className="text-center text-muted-foreground">≤500 KM</TableCell>
                                     <TableCell>
                                       <Input 
                                         type="number" 
@@ -375,8 +367,9 @@ export default function Travel() {
                                       {averageTravel.flight.local.economy + averageTravel.flight.local.premium + averageTravel.flight.local.business + averageTravel.flight.local.first}
                                     </TableCell>
                                   </TableRow>
-                                  <TableRow>
-                                    <TableCell className="font-medium">National (Domestic)</TableCell>
+                                   <TableRow>
+                                     <TableCell className="font-medium">National (501-3000 KM)</TableCell>
+                                     <TableCell className="text-center text-muted-foreground">501-3000 KM</TableCell>
                                     <TableCell>
                                       <Input 
                                         type="number" 
@@ -429,8 +422,9 @@ export default function Travel() {
                                       {averageTravel.flight.national.economy + averageTravel.flight.national.premium + averageTravel.flight.national.business + averageTravel.flight.national.first}
                                     </TableCell>
                                   </TableRow>
-                                  <TableRow>
-                                    <TableCell className="font-medium">International (Long haul)</TableCell>
+                                   <TableRow>
+                                     <TableCell className="font-medium">International (3000+ KM)</TableCell>
+                                     <TableCell className="text-center text-muted-foreground">3000+ KM</TableCell>
                                     <TableCell>
                                       <Input 
                                         type="number" 
@@ -727,102 +721,110 @@ export default function Travel() {
                               </Table>
                             </div>
                           </CollapsibleContent>
-                        </Collapsible>
-                        {/* Accommodation Section */}
-                        <Collapsible open={averageAccommodationSectionOpen} onOpenChange={setAverageAccommodationSectionOpen}>
-                          <CollapsibleTrigger asChild>
-                            <Button variant="ghost" className="w-full justify-between p-0 h-auto">
-                              <div className="flex items-center gap-3">
-                                <h3 className="text-lg font-semibold flex items-center gap-2">
-                                  <Hotel className="h-5 w-5" />
-                                  Accommodation
-                                </h3>
-                                <Tooltip>
-                                  <TooltipTrigger asChild>
-                                    <Info className="h-4 w-4 text-muted-foreground cursor-help" />
-                                  </TooltipTrigger>
-                                  <TooltipContent>
-                                    <p className="max-w-xs">Hotel and accommodation nights based on event location and attendee travel distances.</p>
-                                  </TooltipContent>
-                                </Tooltip>
-                              </div>
-                              <ChevronDown className={`h-4 w-4 transition-transform duration-200 ${averageAccommodationSectionOpen ? 'transform rotate-180' : ''}`} />
-                            </Button>
-                          </CollapsibleTrigger>
-                          <CollapsibleContent className="space-y-4 pt-4">
-                            <div className="overflow-x-auto">
-                              <Table>
-                                <TableHeader>
-                                  <TableRow>
-                                    <TableHead>Distance Type</TableHead>
-                                    <TableHead className="text-center">Number of Nights</TableHead>
-                                    <TableHead className="text-center">Total</TableHead>
-                                  </TableRow>
-                                </TableHeader>
-                                <TableBody>
-                                  <TableRow>
-                                    <TableCell className="font-medium">Local (≤50 KM)</TableCell>
-                                    <TableCell>
-                                      <Input 
-                                        type="number" 
-                                        placeholder="0" 
-                                        className="text-center"
-                                        value={averageTravel.accommodation.local.nights}
-                                        onChange={(e) => setAverageTravel(prev => ({
-                                          ...prev,
-                                          accommodation: { ...prev.accommodation, local: { nights: Number(e.target.value) } }
-                                        }))}
-                                      />
-                                    </TableCell>
-                                    <TableCell className="text-center font-medium">
-                                      {averageTravel.accommodation.local.nights}
-                                    </TableCell>
-                                  </TableRow>
-                                  <TableRow>
-                                    <TableCell className="font-medium">National (51-500 KM)</TableCell>
-                                    <TableCell>
-                                      <Input 
-                                        type="number" 
-                                        placeholder="0" 
-                                        className="text-center"
-                                        value={averageTravel.accommodation.national.nights}
-                                        onChange={(e) => setAverageTravel(prev => ({
-                                          ...prev,
-                                          accommodation: { ...prev.accommodation, national: { nights: Number(e.target.value) } }
-                                        }))}
-                                      />
-                                    </TableCell>
-                                    <TableCell className="text-center font-medium">
-                                      {averageTravel.accommodation.national.nights}
-                                    </TableCell>
-                                  </TableRow>
-                                  <TableRow>
-                                    <TableCell className="font-medium">International (500+ KM)</TableCell>
-                                    <TableCell>
-                                      <Input 
-                                        type="number" 
-                                        placeholder="0" 
-                                        className="text-center"
-                                        value={averageTravel.accommodation.international.nights}
-                                        onChange={(e) => setAverageTravel(prev => ({
-                                          ...prev,
-                                          accommodation: { ...prev.accommodation, international: { nights: Number(e.target.value) } }
-                                        }))}
-                                      />
-                                    </TableCell>
-                                    <TableCell className="text-center font-medium">
-                                      {averageTravel.accommodation.international.nights}
-                                    </TableCell>
-                                  </TableRow>
-                                </TableBody>
-                              </Table>
-                            </div>
-                          </CollapsibleContent>
-                        </Collapsible>
-                      </TooltipProvider>
-                    </CardContent>
-                  </Card>
-                </TabsContent>
+                         </Collapsible>
+                       </TooltipProvider>
+                     </CardContent>
+                   </Card>
+
+                   {/* Accommodation Section - Separate Card */}
+                   <Card className="border-2">
+                     <CardHeader>
+                       <div className="flex items-center justify-between">
+                         <CardTitle className="text-xl flex items-center gap-2">
+                           <Hotel className="h-5 w-5" />
+                           Accommodation Estimate
+                         </CardTitle>
+                         <Button onClick={addAccommodation} className="flex items-center gap-2">
+                           <Plus className="h-4 w-4" />
+                           Add Accommodation
+                         </Button>
+                       </div>
+                     </CardHeader>
+                     <CardContent>
+                       <div className="overflow-x-auto">
+                         <Table>
+                           <TableHeader>
+                             <TableRow>
+                               <TableHead>City Name</TableHead>
+                               <TableHead>Accommodation Type</TableHead>
+                               <TableHead className="w-[100px]">Nights</TableHead>
+                               <TableHead className="w-[100px]">Guests</TableHead>
+                               <TableHead className="w-[60px]">Actions</TableHead>
+                             </TableRow>
+                           </TableHeader>
+                           <TableBody>
+                             {accommodations.map((acc) => (
+                               <TableRow key={acc.id}>
+                                 <TableCell>
+                                   <Input
+                                     value={acc.city}
+                                     onChange={(e) => updateAccommodation(acc.id, 'city', e.target.value)}
+                                     placeholder="City name"
+                                   />
+                                 </TableCell>
+                                 <TableCell>
+                                   <Select 
+                                     value={acc.type} 
+                                     onValueChange={(value) => updateAccommodation(acc.id, 'type', value)}
+                                   >
+                                     <SelectTrigger>
+                                       <SelectValue />
+                                     </SelectTrigger>
+                                     <SelectContent>
+                                       <SelectItem value="Hotel 3 Star">Hotel 3 Star</SelectItem>
+                                       <SelectItem value="Hotel 4 Star">Hotel 4 Star</SelectItem>
+                                       <SelectItem value="Hotel 5 Star">Hotel 5 Star</SelectItem>
+                                       <SelectItem value="Boutique Hotel">Boutique Hotel</SelectItem>
+                                       <SelectItem value="Budget Hotel">Budget Hotel</SelectItem>
+                                       <SelectItem value="Hostel">Hostel</SelectItem>
+                                       <SelectItem value="Apartment">Apartment</SelectItem>
+                                       <SelectItem value="B&B">B&B</SelectItem>
+                                     </SelectContent>
+                                   </Select>
+                                 </TableCell>
+                                 <TableCell>
+                                   <Input
+                                     type="number"
+                                     value={acc.nights}
+                                     onChange={(e) => updateAccommodation(acc.id, 'nights', Number(e.target.value))}
+                                     placeholder="0"
+                                     className="text-center"
+                                   />
+                                 </TableCell>
+                                 <TableCell>
+                                   <Input
+                                     type="number"
+                                     value={acc.guests}
+                                     onChange={(e) => updateAccommodation(acc.id, 'guests', Number(e.target.value))}
+                                     placeholder="0"
+                                     className="text-center"
+                                   />
+                                 </TableCell>
+                                 <TableCell>
+                                   <Button
+                                     variant="ghost"
+                                     size="sm"
+                                     onClick={() => deleteAccommodation(acc.id)}
+                                     className="text-destructive hover:text-destructive"
+                                   >
+                                     <Trash2 className="h-4 w-4" />
+                                   </Button>
+                                 </TableCell>
+                               </TableRow>
+                             ))}
+                             {accommodations.length === 0 && (
+                               <TableRow>
+                                 <TableCell colSpan={5} className="text-center text-muted-foreground py-8">
+                                   No accommodations added yet. Click "Add Accommodation" to get started.
+                                 </TableCell>
+                               </TableRow>
+                             )}
+                           </TableBody>
+                         </Table>
+                       </div>
+                     </CardContent>
+                   </Card>
+                 </TabsContent>
 
                 <TabsContent value="accurate" className="space-y-6">
                   <div className="flex gap-4 mb-6">
