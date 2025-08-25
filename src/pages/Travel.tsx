@@ -681,79 +681,67 @@ export default function Travel() {
                           </CollapsibleContent>
                           </Collapsible>
 
-                          {/* Accommodation Section */}
-                          <Collapsible open={accommodationSectionOpen} onOpenChange={setAccommodationSectionOpen}>
-                            <CollapsibleTrigger asChild>
-                              <Button variant="ghost" className="w-full justify-between p-0 h-auto">
-                                <div className="flex items-center gap-3">
-                                  <h3 className="text-lg font-semibold flex items-center gap-2">
-                                    <Hotel className="h-5 w-5" />
-                                    Accommodation
-                                  </h3>
-                                  <Tooltip>
-                                    <TooltipTrigger asChild>
-                                      <Info className="h-4 w-4 text-muted-foreground cursor-help" />
-                                    </TooltipTrigger>
-                                    <TooltipContent>
-                                      <p className="max-w-xs">Estimate accommodation nights for different types of lodging based on event attendees.</p>
-                                    </TooltipContent>
-                                  </Tooltip>
-                                </div>
-                                <ChevronDown className={`h-4 w-4 transition-transform duration-200 ${accommodationSectionOpen ? 'transform rotate-180' : ''}`} />
-                              </Button>
-                            </CollapsibleTrigger>
-                            <CollapsibleContent className="space-y-4 pt-4">
-                              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                <div className="space-y-3">
-                                  <Label className="text-sm font-medium flex items-center gap-2">
-                                    <Hotel className="w-4 h-4" />
-                                    Hotel Nights
-                                  </Label>
-                                  <Input
-                                    type="number"
-                                    value={accommodationData.hotelNights}
-                                    onChange={(e) => setAccommodationData({...accommodationData, hotelNights: Number(e.target.value)})}
-                                    className="text-center"
-                                    placeholder="0"
-                                  />
-                                </div>
-
-                                <div className="space-y-3">
-                                  <Label className="text-sm font-medium">Guesthouse Nights</Label>
-                                  <Input
-                                    type="number"
-                                    value={accommodationData.guesthouses}
-                                    onChange={(e) => setAccommodationData({...accommodationData, guesthouses: Number(e.target.value)})}
-                                    className="text-center"
-                                    placeholder="0"
-                                  />
-                                </div>
-
-                                <div className="space-y-3">
-                                  <Label className="text-sm font-medium">Airbnb/Rental Nights</Label>
-                                  <Input
-                                    type="number"
-                                    value={accommodationData.airbnb}
-                                    onChange={(e) => setAccommodationData({...accommodationData, airbnb: Number(e.target.value)})}
-                                    className="text-center"
-                                    placeholder="0"
-                                  />
-                                </div>
-
-                                <div className="space-y-3">
-                                  <Label className="text-sm font-medium">Other Accommodation</Label>
-                                  <Input
-                                    type="number"
-                                    value={accommodationData.other}
-                                    onChange={(e) => setAccommodationData({...accommodationData, other: Number(e.target.value)})}
-                                    className="text-center"
-                                    placeholder="0"
-                                  />
-                                </div>
-                              </div>
-                            </CollapsibleContent>
-                          </Collapsible>
                         </TooltipProvider>
+                      </CardContent>
+                    </Card>
+
+                    {/* Accommodation Details Card */}
+                    <Card className="border-2">
+                      <CardHeader>
+                        <CardTitle className="text-xl flex items-center gap-2">
+                          <Hotel className="h-5 w-5" />
+                          Accommodation Details
+                        </CardTitle>
+                      </CardHeader>
+                      <CardContent className="space-y-6">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                          <div className="space-y-3">
+                            <Label className="text-sm font-medium flex items-center gap-2">
+                              <Hotel className="w-4 h-4" />
+                              Hotel Nights
+                            </Label>
+                            <Input
+                              type="number"
+                              value={accommodationData.hotelNights}
+                              onChange={(e) => setAccommodationData({...accommodationData, hotelNights: Number(e.target.value)})}
+                              className="text-lg h-12"
+                              placeholder="0"
+                            />
+                          </div>
+
+                          <div className="space-y-3">
+                            <Label className="text-sm font-medium">Guesthouse Nights</Label>
+                            <Input
+                              type="number"
+                              value={accommodationData.guesthouses}
+                              onChange={(e) => setAccommodationData({...accommodationData, guesthouses: Number(e.target.value)})}
+                              className="text-lg h-12"
+                              placeholder="0"
+                            />
+                          </div>
+
+                          <div className="space-y-3">
+                            <Label className="text-sm font-medium">Airbnb/Rental Nights</Label>
+                            <Input
+                              type="number"
+                              value={accommodationData.airbnb}
+                              onChange={(e) => setAccommodationData({...accommodationData, airbnb: Number(e.target.value)})}
+                              className="text-lg h-12"
+                              placeholder="0"
+                            />
+                          </div>
+
+                          <div className="space-y-3">
+                            <Label className="text-sm font-medium">Other Accommodation</Label>
+                            <Input
+                              type="number"
+                              value={accommodationData.other}
+                              onChange={(e) => setAccommodationData({...accommodationData, other: Number(e.target.value)})}
+                              className="text-lg h-12"
+                              placeholder="0"
+                            />
+                          </div>
+                        </div>
                       </CardContent>
                     </Card>
                   </TabsContent>
