@@ -145,12 +145,12 @@ const EventSuccess = () => {
                 </div>
               </div>
 
-              {/* Event Info Card */}
+              {/* Event Info Section */}
               <div className="p-8">
-                <div className="bg-white rounded-xl border border-border shadow-sm p-8 mb-8">
-                  <div className="flex items-center justify-between mb-6">
+                <div className="space-y-6 mb-8">
+                  <div className="flex items-center justify-between">
                     <div>
-                      <h2 className="text-2xl font-bold text-foreground flex items-center gap-3">
+                      <h2 className="text-xl font-semibold text-foreground flex items-center gap-3">
                         <Calendar className="w-6 h-6 text-primary" />
                         {eventData.eventName || "Untitled Event"} - {eventData.client || "No client specified"}
                       </h2>
@@ -165,41 +165,43 @@ const EventSuccess = () => {
                     </Button>
                   </div>
                   
-                  <div className="grid grid-cols-2 gap-8">
-                    <div className="space-y-4">
-                      <div className="flex items-center gap-4">
-                        <MapPin className="w-6 h-6 text-primary" />
-                        <div>
-                          <p className="text-base font-semibold text-foreground">
-                            {eventData.city || "Not specified"}, {eventData.country || ""}
-                          </p>
-                          <p className="text-sm text-muted-foreground">Location</p>
+                  <div className="bg-card rounded-xl border border-border p-6">
+                    <div className="grid grid-cols-2 gap-8">
+                      <div className="space-y-4">
+                        <div className="flex items-center gap-4">
+                          <MapPin className="w-6 h-6 text-primary" />
+                          <div>
+                            <p className="text-base font-semibold text-foreground">
+                              {eventData.city || "Not specified"}, {eventData.country || ""}
+                            </p>
+                            <p className="text-sm text-muted-foreground">Location</p>
+                          </div>
+                        </div>
+                        
+                        <div className="flex items-center gap-4">
+                          <Building2 className="w-6 h-6 text-primary" />
+                          <div>
+                            <p className="text-base font-semibold text-foreground">{eventData.venueName || "Not specified"}</p>
+                            <p className="text-sm text-muted-foreground">Venue</p>
+                          </div>
                         </div>
                       </div>
                       
-                      <div className="flex items-center gap-4">
-                        <Building2 className="w-6 h-6 text-primary" />
-                        <div>
-                          <p className="text-base font-semibold text-foreground">{eventData.venueName || "Not specified"}</p>
-                          <p className="text-sm text-muted-foreground">Venue</p>
+                      <div className="space-y-4">
+                        <div className="flex items-center gap-4">
+                          <Users className="w-6 h-6 text-primary" />
+                          <div>
+                            <p className="text-base font-semibold text-foreground">{eventData.physicalAttendees || eventData.attendees || "Not specified"}</p>
+                            <p className="text-sm text-muted-foreground">Attendees</p>
+                          </div>
                         </div>
-                      </div>
-                    </div>
-                    
-                    <div className="space-y-4">
-                      <div className="flex items-center gap-4">
-                        <Users className="w-6 h-6 text-primary" />
-                        <div>
-                          <p className="text-base font-semibold text-foreground">{eventData.physicalAttendees || eventData.attendees || "Not specified"}</p>
-                          <p className="text-sm text-muted-foreground">Attendees</p>
-                        </div>
-                      </div>
-                      
-                      <div className="flex items-center gap-4">
-                        <CheckCircle className="w-6 h-6 text-primary" />
-                        <div>
-                          <p className="text-base font-semibold text-foreground capitalize">{eventData.eventType || "Not specified"}</p>
-                          <p className="text-sm text-muted-foreground">Event Type</p>
+                        
+                        <div className="flex items-center gap-4">
+                          <CheckCircle className="w-6 h-6 text-primary" />
+                          <div>
+                            <p className="text-base font-semibold text-foreground capitalize">{eventData.eventType || "Not specified"}</p>
+                            <p className="text-sm text-muted-foreground">Event Type</p>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -209,7 +211,7 @@ const EventSuccess = () => {
                 {/* Choose Emission Categories */}
                 <div className="space-y-6 mb-8">
                   <div>
-                    <h2 className="text-2xl font-bold text-foreground mb-2">Choose Emission Categories</h2>
+                    <h2 className="text-xl font-semibold text-foreground mb-2">Choose Emission Categories</h2>
                     <p className="text-base text-muted-foreground mb-6">
                       Empower your meetings and events sustainability; accurately track and reduce your events carbon footprint. 
                       Please select which emissions you want to calculate as part of your carbon impact report.
@@ -285,7 +287,7 @@ const EventSuccess = () => {
                 {/* Create Custom Questionnaire */}
                 <div className="space-y-6 mb-8">
                   <div>
-                    <h2 className="text-2xl font-bold text-foreground mb-2">Create Custom Questionnaire</h2>
+                    <h2 className="text-xl font-semibold text-foreground mb-2">Create Custom Questionnaire</h2>
                     <p className="text-base text-muted-foreground">Would you like to create a questionnaire for your suppliers?</p>
                   </div>
                   
@@ -344,7 +346,7 @@ const EventSuccess = () => {
                     <Button 
                       variant="outline" 
                       onClick={handleCancel}
-                      className="px-8 py-3 text-base font-medium h-auto"
+                      className="px-8 py-3 text-base font-medium h-auto uppercase tracking-wide"
                       size="lg"
                     >
                       CANCEL
