@@ -108,20 +108,18 @@ export default function Questionnaire() {
           subtitle="Build a custom questionnaire to gather emission data from attendees" 
         />
         
-        <div className="flex-1 overflow-auto">
-          {/* Hero Section */}
-          <div className="bg-gradient-hero text-white px-8 py-12">
-            <div className="max-w-4xl">
-              <h1 className="text-4xl font-bold mb-4">Questionnaire Builder</h1>
+        <main className="flex-1 overflow-auto p-8">
+          <div className="bg-metric-card rounded-xl shadow-card border border-border overflow-hidden">
+            {/* Integrated Header */}
+            <div className="bg-gradient-to-r from-primary via-primary/90 to-primary/80 p-8 text-primary-foreground">
+              <h1 className="text-4xl font-bold mb-2">QUESTIONNAIRE BUILDER</h1>
               <p className="text-xl opacity-90">
                 Event: Software Expo - HMRC • Manchester, UK • 100 Attendees
               </p>
             </div>
-          </div>
 
-          {/* Main Content */}
-          <div className="px-8 py-8">
-            <div className="max-w-4xl mx-auto">
+            {/* Main Content */}
+            <div className="p-8">
               <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-8">
                 <TabsList className="grid w-full grid-cols-3">
                   <TabsTrigger value="settings" className="flex items-center gap-2">
@@ -140,343 +138,330 @@ export default function Questionnaire() {
 
                 {/* Settings Tab */}
                 <TabsContent value="settings" className="space-y-6">
-                  <Card>
-                    <CardHeader>
-                      <CardTitle className="flex items-center gap-2">
-                        <Settings className="w-5 h-5" />
-                        Questionnaire Settings
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent className="space-y-6">
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div className="space-y-2">
-                          <Label>Title</Label>
-                          <Input
-                            value={settings.title}
-                            onChange={(e) => updateSettings('title', e.target.value)}
-                            placeholder="Enter questionnaire title"
-                          />
-                        </div>
-                        
-                        <div className="space-y-2">
-                          <Label>Background Theme</Label>
-                          <Select value={settings.backgroundColor} onValueChange={(value) => updateSettings('backgroundColor', value)}>
-                            <SelectTrigger>
-                              <SelectValue />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value="default">Default</SelectItem>
-                              <SelectItem value="green">Green</SelectItem>
-                              <SelectItem value="blue">Blue</SelectItem>
-                              <SelectItem value="purple">Purple</SelectItem>
-                            </SelectContent>
-                          </Select>
-                        </div>
-                      </div>
-
+                  <div className="space-y-6">
+                    <div className="flex items-center gap-2 mb-6">
+                      <Settings className="w-5 h-5" />
+                      <h2 className="text-xl font-semibold">Questionnaire Settings</h2>
+                    </div>
+                    
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div className="space-y-2">
-                        <Label>Description</Label>
-                        <Textarea
-                          value={settings.description}
-                          onChange={(e) => updateSettings('description', e.target.value)}
-                          placeholder="Enter questionnaire description"
-                          className="min-h-[100px]"
+                        <Label>Title</Label>
+                        <Input
+                          value={settings.title}
+                          onChange={(e) => updateSettings('title', e.target.value)}
+                          placeholder="Enter questionnaire title"
                         />
                       </div>
-
-                      <div className="flex items-center justify-between">
-                        <div className="space-y-2">
-                          <Label>Show Progress Bar</Label>
-                          <p className="text-sm text-muted-foreground">Display progress to users as they complete the questionnaire</p>
-                        </div>
-                        <Switch
-                          checked={settings.showProgress}
-                          onCheckedChange={(checked) => updateSettings('showProgress', checked)}
-                        />
-                      </div>
-
+                      
                       <div className="space-y-2">
-                        <Label>Logo Upload</Label>
-                        <div className="border-2 border-dashed rounded-lg p-6 text-center">
-                          <Upload className="w-8 h-8 mx-auto mb-2 text-muted-foreground" />
-                          <p className="text-sm text-muted-foreground">Click to upload your organization's logo</p>
-                          <Button variant="outline" size="sm" className="mt-2">
-                            Choose File
-                          </Button>
-                        </div>
+                        <Label>Background Theme</Label>
+                        <Select value={settings.backgroundColor} onValueChange={(value) => updateSettings('backgroundColor', value)}>
+                          <SelectTrigger>
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="default">Default</SelectItem>
+                            <SelectItem value="green">Green</SelectItem>
+                            <SelectItem value="blue">Blue</SelectItem>
+                            <SelectItem value="purple">Purple</SelectItem>
+                          </SelectContent>
+                        </Select>
                       </div>
-                    </CardContent>
-                  </Card>
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label>Description</Label>
+                      <Textarea
+                        value={settings.description}
+                        onChange={(e) => updateSettings('description', e.target.value)}
+                        placeholder="Enter questionnaire description"
+                        className="min-h-[100px]"
+                      />
+                    </div>
+
+                    <div className="flex items-center justify-between">
+                      <div className="space-y-2">
+                        <Label>Show Progress Bar</Label>
+                        <p className="text-sm text-muted-foreground">Display progress to users as they complete the questionnaire</p>
+                      </div>
+                      <Switch
+                        checked={settings.showProgress}
+                        onCheckedChange={(checked) => updateSettings('showProgress', checked)}
+                      />
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label>Logo Upload</Label>
+                      <div className="border-2 border-dashed rounded-lg p-6 text-center">
+                        <Upload className="w-8 h-8 mx-auto mb-2 text-muted-foreground" />
+                        <p className="text-sm text-muted-foreground">Click to upload your organization's logo</p>
+                        <Button variant="outline" size="sm" className="mt-2">
+                          Choose File
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
                 </TabsContent>
 
                 {/* Questions Tab */}
                 <TabsContent value="questions" className="space-y-6">
-                  <Card>
-                    <CardHeader>
-                      <CardTitle className="flex items-center gap-2">
-                        <FileText className="w-5 h-5" />
-                        Questions ({questions.length})
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent className="space-y-6">
-                      {/* Existing Questions */}
-                      <div className="space-y-4">
-                        {questions.map((question, index) => (
-                          <Card key={question.id} className="border-l-4 border-primary/20">
-                            <CardContent className="p-4">
-                              <div className="flex items-start justify-between gap-4 mb-4">
-                                <div className="flex items-center gap-2">
-                                  <Badge variant="secondary">Q{index + 1}</Badge>
-                                  <Badge variant={question.required ? "default" : "outline"}>
-                                    {question.required ? 'Required' : 'Optional'}
-                                  </Badge>
-                                </div>
-                                <Button
-                                  onClick={() => removeQuestion(question.id)}
-                                  variant="ghost"
-                                  size="sm"
-                                  className="text-destructive hover:bg-destructive hover:text-destructive-foreground"
-                                >
-                                  <Trash2 className="w-4 h-4" />
-                                </Button>
+                  <div className="space-y-6">
+                    <div className="flex items-center gap-2 mb-6">
+                      <FileText className="w-5 h-5" />
+                      <h2 className="text-xl font-semibold">Questions ({questions.length})</h2>
+                    </div>
+                    
+                    {/* Existing Questions */}
+                    <div className="space-y-4">
+                      {questions.map((question, index) => (
+                        <Card key={question.id} className="border-l-4 border-primary/20">
+                          <CardContent className="p-4">
+                            <div className="flex items-start justify-between gap-4 mb-4">
+                              <div className="flex items-center gap-2">
+                                <Badge variant="secondary">Q{index + 1}</Badge>
+                                <Badge variant={question.required ? "default" : "outline"}>
+                                  {question.required ? 'Required' : 'Optional'}
+                                </Badge>
                               </div>
-
-                              <div className="space-y-4">
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                  <div className="space-y-2">
-                                    <Label>Question Text</Label>
-                                    <Input
-                                      value={question.text}
-                                      onChange={(e) => updateQuestion(question.id, 'text', e.target.value)}
-                                      placeholder="Enter question"
-                                    />
-                                  </div>
-                                  <div className="space-y-2">
-                                    <Label>Type</Label>
-                                    <Select 
-                                      value={question.type} 
-                                      onValueChange={(value) => updateQuestion(question.id, 'type', value)}
-                                    >
-                                      <SelectTrigger>
-                                        <SelectValue />
-                                      </SelectTrigger>
-                                      <SelectContent>
-                                        <SelectItem value="text">Text</SelectItem>
-                                        <SelectItem value="number">Number</SelectItem>
-                                        <SelectItem value="multiple-choice">Multiple Choice</SelectItem>
-                                        <SelectItem value="rating">Rating</SelectItem>
-                                        <SelectItem value="date">Date</SelectItem>
-                                        <SelectItem value="boolean">Yes/No</SelectItem>
-                                      </SelectContent>
-                                    </Select>
-                                  </div>
-                                </div>
-
-                                <div className="flex items-center justify-between">
-                                  <div className="flex items-center gap-2">
-                                    <Switch
-                                      checked={question.required}
-                                      onCheckedChange={(checked) => updateQuestion(question.id, 'required', checked)}
-                                    />
-                                    <Label className="text-sm">Required question</Label>
-                                  </div>
-                                </div>
-
-                                {question.type === 'multiple-choice' && question.options && (
-                                  <div className="space-y-2">
-                                    <Label>Options</Label>
-                                    {question.options.map((option, optionIndex) => (
-                                      <div key={optionIndex} className="flex items-center gap-2">
-                                        <Input
-                                          value={option}
-                                          onChange={(e) => {
-                                            const newOptions = [...question.options!];
-                                            newOptions[optionIndex] = e.target.value;
-                                            updateQuestion(question.id, 'options', newOptions);
-                                          }}
-                                          placeholder={`Option ${optionIndex + 1}`}
-                                        />
-                                        {question.options!.length > 2 && (
-                                          <Button
-                                            onClick={() => removeOption(question.id, optionIndex)}
-                                            variant="ghost"
-                                            size="sm"
-                                          >
-                                            <Trash2 className="w-4 h-4" />
-                                          </Button>
-                                        )}
-                                      </div>
-                                    ))}
-                                    <Button
-                                      onClick={() => addOption(question.id)}
-                                      variant="outline"
-                                      size="sm"
-                                    >
-                                      <Plus className="w-4 h-4 mr-2" />
-                                      Add Option
-                                    </Button>
-                                  </div>
-                                )}
-                              </div>
-                            </CardContent>
-                          </Card>
-                        ))}
-                      </div>
-
-                      {/* Add New Question */}
-                      <Card className="border-2 border-dashed">
-                        <CardContent className="p-6">
-                          <div className="space-y-4">
-                            <Label className="flex items-center gap-2">
-                              <Plus className="w-4 h-4" />
-                              Add New Question
-                            </Label>
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                              <Textarea
-                                value={newQuestion}
-                                onChange={(e) => setNewQuestion(e.target.value)}
-                                placeholder="Enter your question here..."
-                                className="min-h-[80px]"
-                              />
-                              <div className="space-y-2">
-                                <Label>Question Type</Label>
-                                <Select value={newQuestionType} onValueChange={(value) => setNewQuestionType(value as Question['type'])}>
-                                  <SelectTrigger>
-                                    <SelectValue />
-                                  </SelectTrigger>
-                                  <SelectContent>
-                                    <SelectItem value="text">Text</SelectItem>
-                                    <SelectItem value="number">Number</SelectItem>
-                                    <SelectItem value="multiple-choice">Multiple Choice</SelectItem>
-                                    <SelectItem value="rating">Rating</SelectItem>
-                                    <SelectItem value="date">Date</SelectItem>
-                                    <SelectItem value="boolean">Yes/No</SelectItem>
-                                  </SelectContent>
-                                </Select>
-                              </div>
+                              <Button
+                                onClick={() => removeQuestion(question.id)}
+                                variant="ghost"
+                                size="sm"
+                                className="text-destructive hover:bg-destructive hover:text-destructive-foreground"
+                              >
+                                <Trash2 className="w-4 h-4" />
+                              </Button>
                             </div>
-                            <Button
-                              onClick={addQuestion}
-                              disabled={!newQuestion.trim()}
-                              className="w-full"
-                            >
-                              <Plus className="w-4 h-4 mr-2" />
-                              Add Question
-                            </Button>
+
+                            <div className="space-y-4">
+                              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div className="space-y-2">
+                                  <Label>Question Text</Label>
+                                  <Input
+                                    value={question.text}
+                                    onChange={(e) => updateQuestion(question.id, 'text', e.target.value)}
+                                    placeholder="Enter question"
+                                  />
+                                </div>
+                                <div className="space-y-2">
+                                  <Label>Type</Label>
+                                  <Select 
+                                    value={question.type} 
+                                    onValueChange={(value) => updateQuestion(question.id, 'type', value)}
+                                  >
+                                    <SelectTrigger>
+                                      <SelectValue />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                      <SelectItem value="text">Text</SelectItem>
+                                      <SelectItem value="number">Number</SelectItem>
+                                      <SelectItem value="multiple-choice">Multiple Choice</SelectItem>
+                                      <SelectItem value="rating">Rating</SelectItem>
+                                      <SelectItem value="date">Date</SelectItem>
+                                      <SelectItem value="boolean">Yes/No</SelectItem>
+                                    </SelectContent>
+                                  </Select>
+                                </div>
+                              </div>
+
+                              <div className="flex items-center justify-between">
+                                <div className="flex items-center gap-2">
+                                  <Switch
+                                    checked={question.required}
+                                    onCheckedChange={(checked) => updateQuestion(question.id, 'required', checked)}
+                                  />
+                                  <Label className="text-sm">Required question</Label>
+                                </div>
+                              </div>
+
+                              {question.type === 'multiple-choice' && question.options && (
+                                <div className="space-y-2">
+                                  <Label>Options</Label>
+                                  {question.options.map((option, optionIndex) => (
+                                    <div key={optionIndex} className="flex items-center gap-2">
+                                      <Input
+                                        value={option}
+                                        onChange={(e) => {
+                                          const newOptions = [...question.options!];
+                                          newOptions[optionIndex] = e.target.value;
+                                          updateQuestion(question.id, 'options', newOptions);
+                                        }}
+                                        placeholder={`Option ${optionIndex + 1}`}
+                                      />
+                                      {question.options!.length > 2 && (
+                                        <Button
+                                          onClick={() => removeOption(question.id, optionIndex)}
+                                          variant="ghost"
+                                          size="sm"
+                                        >
+                                          <Trash2 className="w-4 h-4" />
+                                        </Button>
+                                      )}
+                                    </div>
+                                  ))}
+                                  <Button
+                                    onClick={() => addOption(question.id)}
+                                    variant="outline"
+                                    size="sm"
+                                  >
+                                    <Plus className="w-4 h-4 mr-2" />
+                                    Add Option
+                                  </Button>
+                                </div>
+                              )}
+                            </div>
+                          </CardContent>
+                        </Card>
+                      ))}
+                    </div>
+
+                    {/* Add New Question */}
+                    <Card className="border-2 border-dashed">
+                      <CardContent className="p-6">
+                        <div className="space-y-4">
+                          <Label className="flex items-center gap-2">
+                            <Plus className="w-4 h-4" />
+                            Add New Question
+                          </Label>
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <Textarea
+                              value={newQuestion}
+                              onChange={(e) => setNewQuestion(e.target.value)}
+                              placeholder="Enter your question here..."
+                              className="min-h-[80px]"
+                            />
+                            <div className="space-y-2">
+                              <Label>Question Type</Label>
+                              <Select value={newQuestionType} onValueChange={(value) => setNewQuestionType(value as Question['type'])}>
+                                <SelectTrigger>
+                                  <SelectValue />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  <SelectItem value="text">Text</SelectItem>
+                                  <SelectItem value="number">Number</SelectItem>
+                                  <SelectItem value="multiple-choice">Multiple Choice</SelectItem>
+                                  <SelectItem value="rating">Rating</SelectItem>
+                                  <SelectItem value="date">Date</SelectItem>
+                                  <SelectItem value="boolean">Yes/No</SelectItem>
+                                </SelectContent>
+                              </Select>
+                            </div>
                           </div>
-                        </CardContent>
-                      </Card>
-                    </CardContent>
-                  </Card>
+                          <Button
+                            onClick={addQuestion}
+                            disabled={!newQuestion.trim()}
+                            className="w-full"
+                          >
+                            <Plus className="w-4 h-4 mr-2" />
+                            Add Question
+                          </Button>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </div>
                 </TabsContent>
 
                 {/* Preview Tab */}
                 <TabsContent value="preview" className="space-y-6">
-                  <Card>
-                    <CardHeader>
-                      <CardTitle className="flex items-center gap-2">
-                        <Eye className="w-5 h-5" />
-                        Preview
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <div className={`p-6 rounded-lg ${
-                        settings.backgroundColor === 'green' ? 'bg-green-50' :
-                        settings.backgroundColor === 'blue' ? 'bg-blue-50' :
-                        settings.backgroundColor === 'purple' ? 'bg-purple-50' :
-                        'bg-muted/30'
-                      }`}>
-                        <div className="max-w-2xl mx-auto space-y-6">
-                          <div className="text-center space-y-2">
-                            <h2 className="text-2xl font-bold">{settings.title}</h2>
-                            <p className="text-muted-foreground">{settings.description}</p>
-                            {settings.showProgress && (
-                              <div className="w-full bg-background rounded-full h-2 mt-4">
-                                <div className="bg-primary h-2 rounded-full w-0"></div>
+                  <div className="space-y-6">
+                    <div className="flex items-center gap-2 mb-6">
+                      <Eye className="w-5 h-5" />
+                      <h2 className="text-xl font-semibold">Preview</h2>
+                    </div>
+                    
+                    <div className={`p-6 rounded-lg ${
+                      settings.backgroundColor === 'green' ? 'bg-green-50' :
+                      settings.backgroundColor === 'blue' ? 'bg-blue-50' :
+                      settings.backgroundColor === 'purple' ? 'bg-purple-50' :
+                      'bg-muted/30'
+                    }`}>
+                      <div className="max-w-2xl mx-auto space-y-6">
+                        <div className="text-center space-y-2">
+                          <h2 className="text-2xl font-bold">{settings.title}</h2>
+                          <p className="text-muted-foreground">{settings.description}</p>
+                          {settings.showProgress && (
+                            <div className="w-full bg-background rounded-full h-2 mt-4">
+                              <div className="bg-primary h-2 rounded-full w-0"></div>
+                            </div>
+                          )}
+                        </div>
+                        
+                        <div className="space-y-4">
+                          {questions.map((question, index) => (
+                            <div key={question.id} className="bg-background p-4 rounded-lg">
+                              <div className="flex items-center gap-2 mb-2">
+                                <span className="text-sm font-medium">Question {index + 1}</span>
+                                {question.required && <Badge variant="secondary" className="text-xs">Required</Badge>}
                               </div>
-                            )}
-                          </div>
-                          
-                          <div className="space-y-4">
-                            {questions.map((question, index) => (
-                              <div key={question.id} className="bg-background p-4 rounded-lg">
-                                <div className="flex items-center gap-2 mb-2">
-                                  <span className="text-sm font-medium">Question {index + 1}</span>
-                                  {question.required && <Badge variant="secondary" className="text-xs">Required</Badge>}
+                              <p className="mb-3">{question.text}</p>
+                              
+                              {question.type === 'text' && (
+                                <Input placeholder="Your answer..." disabled />
+                              )}
+                              {question.type === 'number' && (
+                                <Input type="number" placeholder="Enter number..." disabled />
+                              )}
+                              {question.type === 'multiple-choice' && question.options && (
+                                <div className="space-y-2">
+                                  {question.options.map((option, optionIndex) => (
+                                    <div key={optionIndex} className="flex items-center gap-2">
+                                      <input type="radio" disabled />
+                                      <span className="text-sm">{option}</span>
+                                    </div>
+                                  ))}
                                 </div>
-                                <p className="mb-3">{question.text}</p>
-                                
-                                {question.type === 'text' && (
-                                  <Input placeholder="Your answer..." disabled />
-                                )}
-                                {question.type === 'number' && (
-                                  <Input type="number" placeholder="Enter number..." disabled />
-                                )}
-                                {question.type === 'multiple-choice' && question.options && (
-                                  <div className="space-y-2">
-                                    {question.options.map((option, optionIndex) => (
-                                      <div key={optionIndex} className="flex items-center gap-2">
-                                        <input type="radio" disabled />
-                                        <span className="text-sm">{option}</span>
-                                      </div>
-                                    ))}
+                              )}
+                              {question.type === 'rating' && (
+                                <div className="flex items-center gap-1">
+                                  {[1, 2, 3, 4, 5].map((star) => (
+                                    <div key={star} className="w-6 h-6 border rounded text-center text-sm">☆</div>
+                                  ))}
+                                </div>
+                              )}
+                              {question.type === 'boolean' && (
+                                <div className="space-y-2">
+                                  <div className="flex items-center gap-2">
+                                    <input type="radio" disabled />
+                                    <span className="text-sm">Yes</span>
                                   </div>
-                                )}
-                                {question.type === 'rating' && (
-                                  <div className="flex items-center gap-1">
-                                    {[1, 2, 3, 4, 5].map((star) => (
-                                      <div key={star} className="w-6 h-6 border rounded text-center text-sm">☆</div>
-                                    ))}
+                                  <div className="flex items-center gap-2">
+                                    <input type="radio" disabled />
+                                    <span className="text-sm">No</span>
                                   </div>
-                                )}
-                                {question.type === 'boolean' && (
-                                  <div className="space-y-2">
-                                    <div className="flex items-center gap-2">
-                                      <input type="radio" disabled />
-                                      <span className="text-sm">Yes</span>
-                                    </div>
-                                    <div className="flex items-center gap-2">
-                                      <input type="radio" disabled />
-                                      <span className="text-sm">No</span>
-                                    </div>
-                                  </div>
-                                )}
-                                {question.type === 'date' && (
-                                  <Input type="date" disabled />
-                                )}
-                              </div>
-                            ))}
-                          </div>
+                                </div>
+                              )}
+                              {question.type === 'date' && (
+                                <Input type="date" disabled />
+                              )}
+                            </div>
+                          ))}
                         </div>
                       </div>
-                    </CardContent>
-                  </Card>
+                    </div>
+                  </div>
                 </TabsContent>
               </Tabs>
 
               {/* Navigation */}
-              <div className="flex justify-between pt-6">
+              <div className="flex justify-between gap-4 mt-12 pt-8 border-t border-border">
                 <Button
                   onClick={() => navigate(-1)}
                   variant="outline"
-                  size="lg"
-                  className="px-8"
+                  className="px-8 py-3 text-base font-medium h-auto uppercase tracking-wide"
                 >
-                  <ArrowLeft className="w-4 h-4 mr-2" />
-                  Back
+                  BACK
                 </Button>
                 <Button
                   onClick={handleSubmit}
-                  size="lg"
-                  className="px-8 bg-gradient-hero hover:opacity-90"
+                  className="px-8 py-3 text-base font-semibold h-auto uppercase tracking-wide"
                 >
-                  Create Questionnaire
-                  <ArrowRight className="w-4 h-4 ml-2" />
+                  CREATE QUESTIONNAIRE
                 </Button>
               </div>
             </div>
           </div>
-        </div>
+        </main>
       </div>
     </div>
   );
