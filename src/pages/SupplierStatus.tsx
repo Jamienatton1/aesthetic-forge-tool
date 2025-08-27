@@ -4,6 +4,7 @@ import { Calendar, User, AlertCircle } from "lucide-react";
 import { format } from "date-fns";
 import { Sidebar } from "@/components/dashboard/Sidebar";
 import { EventsHeader } from "@/components/events/EventsHeader";
+import { EventProgressBar } from "@/components/events/EventProgressBar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -53,6 +54,8 @@ const SupplierStatus = () => {
           title="Event Management" 
           subtitle="Track data collection progress and enter remaining information" 
         />
+        
+        <EventProgressBar currentStep={4} completedSteps={[1, 2, 3]} />
         
         <main className="flex-1 overflow-auto p-8">
           <div className="bg-metric-card rounded-xl shadow-card border border-border overflow-hidden">

@@ -4,6 +4,7 @@ import { Plus, ArrowLeft, Trash2, CalendarIcon } from "lucide-react";
 import { format } from "date-fns";
 import { Sidebar } from "@/components/dashboard/Sidebar";
 import { EventsHeader } from "@/components/events/EventsHeader";
+import { EventProgressBar } from "@/components/events/EventProgressBar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -94,6 +95,8 @@ const SupplierContributors = () => {
           title="Event Management" 
           subtitle="Add supplier contributors to manage data collection" 
         />
+        
+        <EventProgressBar currentStep={3} completedSteps={[1, 2]} />
         
         <main className="flex-1 overflow-auto p-8">
           <div className="bg-metric-card rounded-xl shadow-card border border-border overflow-hidden">

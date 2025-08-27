@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { Calendar, Mail, User, Building, MapPin, Utensils, Car, Gift, Bed, HelpCircle } from "lucide-react";
 import { Sidebar } from "@/components/dashboard/Sidebar";
 import { EventsHeader } from "@/components/events/EventsHeader";
+import { EventProgressBar } from "@/components/events/EventProgressBar";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -136,6 +137,8 @@ export default function DataCollectionStatus() {
           title="Event Management"
           subtitle="Track data collection progress and enter remaining information"
         />
+        
+        <EventProgressBar currentStep={4} completedSteps={[1, 2, 3]} />
         
         <main className="flex-1 overflow-auto">
           {/* Hero Section */}

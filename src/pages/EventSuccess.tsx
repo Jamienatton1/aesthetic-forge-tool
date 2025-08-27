@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { Progress } from "@/components/ui/progress";
+import { EventProgressBar } from "@/components/events/EventProgressBar";
 import { cn } from "@/lib/utils";
 
 const EventSuccess = () => {
@@ -103,28 +103,7 @@ const EventSuccess = () => {
             subtitle="Event created successfully - choose your calculations" 
           />
           
-          {/* Progress Section */}
-          <div className="bg-background border-b border-border px-8 py-6">
-            <div className="flex items-center justify-between text-sm">
-              <div className="flex items-center gap-2 text-accent">
-                <Check className="w-4 h-4" />
-                <span className="font-medium">Step 1: Event Details</span>
-              </div>
-              <ArrowRight className="w-4 h-4 text-muted-foreground" />
-              <div className="flex items-center gap-2 text-foreground">
-                <div className="w-4 h-4 rounded-full border-2 border-primary flex items-center justify-center">
-                  <div className="w-2 h-2 rounded-full bg-primary"></div>
-                </div>
-                <span className="font-medium">Step 2: Select Emission Categories</span>
-              </div>
-              <ArrowRight className="w-4 h-4 text-muted-foreground" />
-              <div className="flex items-center gap-2 text-muted-foreground">
-                <div className="w-4 h-4 rounded-full border-2 border-muted-foreground/30"></div>
-                <span>Step 3: Generate Report</span>
-              </div>
-            </div>
-            <Progress value={33} className="mt-3" />
-          </div>
+          <EventProgressBar currentStep={2} completedSteps={[1]} />
 
           <main className="flex-1 overflow-auto">
             {/* Hero Section */}
