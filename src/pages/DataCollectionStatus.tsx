@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { Calendar, Mail, User, Building, MapPin, Utensils, Car, Gift, Bed, HelpCircle } from "lucide-react";
+import { Calendar, Mail, User, Building, MapPin, Utensils, Car, Gift, Bed, HelpCircle, Hotel } from "lucide-react";
 import { Sidebar } from "@/components/dashboard/Sidebar";
 import { EventsHeader } from "@/components/events/EventsHeader";
 import { EventProgressBar } from "@/components/events/EventProgressBar";
@@ -55,9 +55,15 @@ const allCategories: Category[] = [
   },
   {
     id: "travel",
-    name: "Travel and Accommodation",
+    name: "Travel",
     icon: Car,
-    description: "Transportation and lodging arrangements"
+    description: "Transportation including flights, trains, cars, and local transport"
+  },
+  {
+    id: "accommodation",
+    name: "Accommodation",
+    icon: Hotel,
+    description: "Hotel stays, venue accommodations, and lodging arrangements"
   },
   {
     id: "promotion-items",
@@ -89,6 +95,7 @@ export default function DataCollectionStatus() {
       'venue': '/events/venue-information',
       'food-drink': '/events/food-drink',
       'travel': '/events/travel',
+      'accommodation': '/events/accommodations',
       'promotion-items': '/events/promotion-items',
       'questionnaire': '/events/questionnaire'
     };

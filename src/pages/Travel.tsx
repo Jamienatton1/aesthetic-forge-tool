@@ -9,7 +9,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { Checkbox } from "@/components/ui/checkbox";
-import { ArrowLeft, ArrowRight, Car, Plane, Train, Bus, Plus, Trash2, Info, ChevronDown, Upload, Hotel } from "lucide-react";
+import { ArrowLeft, ArrowRight, Car, Plane, Train, Bus, Plus, Trash2, Info, ChevronDown, Upload } from "lucide-react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Sidebar } from "@/components/dashboard/Sidebar";
 
@@ -59,14 +59,6 @@ export default function Travel() {
   const [railSectionOpen, setRailSectionOpen] = useState(false);
   const [carSectionOpen, setCarSectionOpen] = useState(false);
   const [taxiSectionOpen, setTaxiSectionOpen] = useState(false);
-  const [accommodationSectionOpen, setAccommodationSectionOpen] = useState(false);
-
-  const [accommodationData, setAccommodationData] = useState({
-    hotelNights: 0,
-    guesthouses: 0,
-    airbnb: 0,
-    other: 0
-  });
 
   const addRoute = () => {
     const newRoute: TravelRoute = {
@@ -169,16 +161,16 @@ export default function Travel() {
   };
 
   const handleSubmit = () => {
-    console.log("Travel data:", { routes, accommodationData });
+    console.log("Travel data:", { routes });
     
-    const categoryOrder = ["venue", "food", "travel", "accommodations", "promotion"];
+    const categoryOrder = ["venue", "food", "travel", "accommodation", "promotion"];
     const { selectedCategories = [] } = location.state || {};
     const currentIndex = categoryOrder.indexOf("travel");
     
     for (let i = currentIndex + 1; i < categoryOrder.length; i++) {
       if (selectedCategories.includes(categoryOrder[i])) {
         const nextCategory = categoryOrder[i];
-        if (nextCategory === "accommodations") navigate("/events/accommodations");
+        if (nextCategory === "accommodation") navigate("/events/accommodations");
         else if (nextCategory === "promotion") navigate("/events/promotion-items");
         return;
       }
@@ -200,9 +192,9 @@ export default function Travel() {
                 <Plane className="w-10 h-10" />
               </div>
               <div>
-                <h1 className="text-3xl font-bold mb-2">Travel and Accommodation Information</h1>
+                <h1 className="text-3xl font-bold mb-2">Travel Information</h1>
                 <p className="text-lg text-primary-foreground/90">
-                  Enter detailed travel routes and accommodation data
+                  Enter detailed travel routes for your event attendees
                 </p>
               </div>
             </div>
@@ -685,65 +677,6 @@ export default function Travel() {
                       </CardContent>
                     </Card>
 
-                    {/* Accommodation Details Card */}
-                    <Card className="border-2">
-                      <CardHeader>
-                        <CardTitle className="text-xl flex items-center gap-2">
-                          <Hotel className="h-5 w-5" />
-                          Accommodation Details
-                        </CardTitle>
-                      </CardHeader>
-                      <CardContent className="space-y-6">
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                          <div className="space-y-3">
-                            <Label className="text-sm font-medium flex items-center gap-2">
-                              <Hotel className="w-4 h-4" />
-                              Hotel Nights
-                            </Label>
-                            <Input
-                              type="number"
-                              value={accommodationData.hotelNights}
-                              onChange={(e) => setAccommodationData({...accommodationData, hotelNights: Number(e.target.value)})}
-                              className="text-lg h-12"
-                              placeholder="0"
-                            />
-                          </div>
-
-                          <div className="space-y-3">
-                            <Label className="text-sm font-medium">Guesthouse Nights</Label>
-                            <Input
-                              type="number"
-                              value={accommodationData.guesthouses}
-                              onChange={(e) => setAccommodationData({...accommodationData, guesthouses: Number(e.target.value)})}
-                              className="text-lg h-12"
-                              placeholder="0"
-                            />
-                          </div>
-
-                          <div className="space-y-3">
-                            <Label className="text-sm font-medium">Airbnb/Rental Nights</Label>
-                            <Input
-                              type="number"
-                              value={accommodationData.airbnb}
-                              onChange={(e) => setAccommodationData({...accommodationData, airbnb: Number(e.target.value)})}
-                              className="text-lg h-12"
-                              placeholder="0"
-                            />
-                          </div>
-
-                          <div className="space-y-3">
-                            <Label className="text-sm font-medium">Other Accommodation</Label>
-                            <Input
-                              type="number"
-                              value={accommodationData.other}
-                              onChange={(e) => setAccommodationData({...accommodationData, other: Number(e.target.value)})}
-                              className="text-lg h-12"
-                              placeholder="0"
-                            />
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
                   </TabsContent>
 
                 <TabsContent value="accurate" className="space-y-6">
@@ -904,66 +837,6 @@ export default function Travel() {
                             )}
                           </TableBody>
                         </Table>
-                      </div>
-                    </CardContent>
-                  </Card>
-
-                  {/* Accommodation Data Card */}
-                  <Card className="border-2">
-                    <CardHeader>
-                      <CardTitle className="text-xl flex items-center gap-2">
-                        <Hotel className="h-5 w-5" />
-                        Accommodation Details
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent className="space-y-6">
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div className="space-y-3">
-                          <Label className="text-sm font-medium flex items-center gap-2">
-                            <Hotel className="w-4 h-4" />
-                            Hotel Nights
-                          </Label>
-                          <Input
-                            type="number"
-                            value={accommodationData.hotelNights}
-                            onChange={(e) => setAccommodationData({...accommodationData, hotelNights: Number(e.target.value)})}
-                            className="text-lg h-12"
-                            placeholder="0"
-                          />
-                        </div>
-
-                        <div className="space-y-3">
-                          <Label className="text-sm font-medium">Guesthouse Nights</Label>
-                          <Input
-                            type="number"
-                            value={accommodationData.guesthouses}
-                            onChange={(e) => setAccommodationData({...accommodationData, guesthouses: Number(e.target.value)})}
-                            className="text-lg h-12"
-                            placeholder="0"
-                          />
-                        </div>
-
-                        <div className="space-y-3">
-                          <Label className="text-sm font-medium">Airbnb/Rental Nights</Label>
-                          <Input
-                            type="number"
-                            value={accommodationData.airbnb}
-                            onChange={(e) => setAccommodationData({...accommodationData, airbnb: Number(e.target.value)})}
-                            className="text-lg h-12"
-                            placeholder="0"
-                          />
-                        </div>
-
-                        <div className="space-y-3">
-                          <Label className="text-sm font-medium">Other Accommodation</Label>
-                          <Input
-                            type="number"
-                            value={accommodationData.other}
-                            onChange={(e) => setAccommodationData({...accommodationData, other: Number(e.target.value)})}
-                            className="text-lg h-12"
-                            placeholder="0"
-                          />
-                        </div>
                       </div>
                     </CardContent>
                   </Card>
