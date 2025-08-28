@@ -49,16 +49,26 @@ export default function Travel() {
       national: { cars: 0 },
       international: { cars: 0 }
     },
-        taxi: { 
-          local: { trips: 0 }
-        }
-      });
+    taxi: { 
+      local: { trips: 0 }
+    },
+    coach: {
+      local: { trips: 0 },
+      national: { trips: 0 },
+      international: { trips: 0 }
+    },
+    blackCab: {
+      local: { trips: 0 }
+    }
+  });
 
   const [estimateBasedOnAttendees, setEstimateBasedOnAttendees] = useState(false);
   const [flightSectionOpen, setFlightSectionOpen] = useState(true);
   const [railSectionOpen, setRailSectionOpen] = useState(false);
   const [carSectionOpen, setCarSectionOpen] = useState(false);
   const [taxiSectionOpen, setTaxiSectionOpen] = useState(false);
+  const [coachSectionOpen, setCoachSectionOpen] = useState(false);
+  const [blackCabSectionOpen, setBlackCabSectionOpen] = useState(false);
 
   const addRoute = () => {
     const newRoute: TravelRoute = {
@@ -110,6 +120,14 @@ export default function Travel() {
         },
         taxi: { 
           local: { trips: 15 }
+        },
+        coach: {
+          local: { trips: 3 },
+          national: { trips: 8 },
+          international: { trips: 2 }
+        },
+        blackCab: {
+          local: { trips: 20 }
         }
       });
     } else {
@@ -131,6 +149,14 @@ export default function Travel() {
         },
         taxi: { 
           local: { trips: 0 } 
+        },
+        coach: {
+          local: { trips: 0 },
+          national: { trips: 0 },
+          international: { trips: 0 }
+        },
+        blackCab: {
+          local: { trips: 0 }
         }
       });
     }
@@ -672,6 +698,154 @@ export default function Travel() {
                             </div>
                           </CollapsibleContent>
                           </Collapsible>
+
+                        {/* Coach Section */}
+                        <Collapsible open={coachSectionOpen} onOpenChange={setCoachSectionOpen}>
+                          <CollapsibleTrigger asChild>
+                            <Button variant="ghost" className="w-full justify-between p-0 h-auto">
+                              <div className="flex items-center gap-3">
+                                <h3 className="text-lg font-semibold flex items-center gap-2">
+                                  <Bus className="h-5 w-5" />
+                                  Coach Travel
+                                </h3>
+                                <Tooltip>
+                                  <TooltipTrigger asChild>
+                                    <Info className="h-4 w-4 text-muted-foreground cursor-help" />
+                                  </TooltipTrigger>
+                                  <TooltipContent>
+                                    <p className="max-w-xs">Long-distance coach services with high passenger capacity and lower per-passenger emissions.</p>
+                                  </TooltipContent>
+                                </Tooltip>
+                              </div>
+                              <ChevronDown className={`h-4 w-4 transition-transform duration-200 ${coachSectionOpen ? 'transform rotate-180' : ''}`} />
+                            </Button>
+                          </CollapsibleTrigger>
+                          <CollapsibleContent className="space-y-4 pt-4">
+                            <div className="overflow-x-auto">
+                              <Table>
+                                <TableHeader>
+                                  <TableRow>
+                                    <TableHead>Route Type</TableHead>
+                                    <TableHead className="text-center">Number of Trips</TableHead>
+                                    <TableHead className="text-center">Total</TableHead>
+                                  </TableRow>
+                                </TableHeader>
+                                <TableBody>
+                                  <TableRow>
+                                    <TableCell className="font-medium">Local (≤100 KM)</TableCell>
+                                    <TableCell>
+                                      <Input 
+                                        type="number" 
+                                        placeholder="0" 
+                                        className="text-center"
+                                        value={averageTravel.coach.local.trips}
+                                        onChange={(e) => setAverageTravel(prev => ({
+                                          ...prev,
+                                          coach: { ...prev.coach, local: { trips: Number(e.target.value) } }
+                                        }))}
+                                      />
+                                    </TableCell>
+                                    <TableCell className="text-center font-medium">
+                                      {averageTravel.coach.local.trips}
+                                    </TableCell>
+                                  </TableRow>
+                                  <TableRow>
+                                    <TableCell className="font-medium">National (100-500 KM)</TableCell>
+                                    <TableCell>
+                                      <Input 
+                                        type="number" 
+                                        placeholder="0" 
+                                        className="text-center"
+                                        value={averageTravel.coach.national.trips}
+                                        onChange={(e) => setAverageTravel(prev => ({
+                                          ...prev,
+                                          coach: { ...prev.coach, national: { trips: Number(e.target.value) } }
+                                        }))}
+                                      />
+                                    </TableCell>
+                                    <TableCell className="text-center font-medium">
+                                      {averageTravel.coach.national.trips}
+                                    </TableCell>
+                                  </TableRow>
+                                  <TableRow>
+                                    <TableCell className="font-medium">International (&gt;500 KM)</TableCell>
+                                    <TableCell>
+                                      <Input 
+                                        type="number" 
+                                        placeholder="0" 
+                                        className="text-center"
+                                        value={averageTravel.coach.international.trips}
+                                        onChange={(e) => setAverageTravel(prev => ({
+                                          ...prev,
+                                          coach: { ...prev.coach, international: { trips: Number(e.target.value) } }
+                                        }))}
+                                      />
+                                    </TableCell>
+                                    <TableCell className="text-center font-medium">
+                                      {averageTravel.coach.international.trips}
+                                    </TableCell>
+                                  </TableRow>
+                                </TableBody>
+                              </Table>
+                            </div>
+                          </CollapsibleContent>
+                        </Collapsible>
+
+                        {/* Black Cab & EV Taxis Section */}
+                        <Collapsible open={blackCabSectionOpen} onOpenChange={setBlackCabSectionOpen}>
+                          <CollapsibleTrigger asChild>
+                            <Button variant="ghost" className="w-full justify-between p-0 h-auto">
+                              <div className="flex items-center gap-3">
+                                <h3 className="text-lg font-semibold flex items-center gap-2">
+                                  <Car className="h-5 w-5" />
+                                  Black Cab & EV Taxis
+                                </h3>
+                                <Tooltip>
+                                  <TooltipTrigger asChild>
+                                    <Info className="h-4 w-4 text-muted-foreground cursor-help" />
+                                  </TooltipTrigger>
+                                  <TooltipContent>
+                                    <p className="max-w-xs">Traditional black cabs and electric vehicle taxi services for short urban journeys.</p>
+                                  </TooltipContent>
+                                </Tooltip>
+                              </div>
+                              <ChevronDown className={`h-4 w-4 transition-transform duration-200 ${blackCabSectionOpen ? 'transform rotate-180' : ''}`} />
+                            </Button>
+                          </CollapsibleTrigger>
+                          <CollapsibleContent className="space-y-4 pt-4">
+                            <div className="overflow-x-auto">
+                              <Table>
+                                <TableHeader>
+                                  <TableRow>
+                                    <TableHead>Route Type</TableHead>
+                                    <TableHead className="text-center">Number of Trips</TableHead>
+                                    <TableHead className="text-center">Total</TableHead>
+                                  </TableRow>
+                                </TableHeader>
+                                <TableBody>
+                                  <TableRow>
+                                    <TableCell className="font-medium">Local (≤30 KM)</TableCell>
+                                    <TableCell>
+                                      <Input 
+                                        type="number" 
+                                        placeholder="0" 
+                                        className="text-center"
+                                        value={averageTravel.blackCab.local.trips}
+                                        onChange={(e) => setAverageTravel(prev => ({
+                                          ...prev,
+                                          blackCab: { local: { trips: Number(e.target.value) } }
+                                        }))}
+                                      />
+                                    </TableCell>
+                                    <TableCell className="text-center font-medium">
+                                      {averageTravel.blackCab.local.trips}
+                                    </TableCell>
+                                  </TableRow>
+                                </TableBody>
+                              </Table>
+                            </div>
+                          </CollapsibleContent>
+                        </Collapsible>
 
                         </TooltipProvider>
                       </CardContent>
