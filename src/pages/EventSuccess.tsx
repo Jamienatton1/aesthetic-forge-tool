@@ -36,9 +36,15 @@ const EventSuccess = () => {
     },
     { 
       id: "travel", 
-      label: "Travel and Accommodation", 
+      label: "Travel", 
       icon: Car,
-      details: "Measure emissions from attendee transportation including flights, trains, cars, local transport and hotel accommodations."
+      details: "Measure emissions from attendee transportation including flights, trains, cars, and local transport."
+    },
+    { 
+      id: "accommodation", 
+      label: "Accommodation", 
+      icon: Hotel,
+      details: "Calculate emissions from hotel stays, venue accommodations, and lodging-related energy consumption."
     },
     { 
       id: "promotion", 
