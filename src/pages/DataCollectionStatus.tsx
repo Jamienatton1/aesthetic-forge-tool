@@ -273,15 +273,6 @@ export default function DataCollectionStatus() {
                         <Edit className="w-4 h-4 mr-1" />
                         Edit
                       </Button>
-                      {category.status !== 'completed' && (
-                        <Button 
-                          onClick={() => handleEditCategory(category.id)}
-                          className="bg-gradient-hero hover:opacity-90"
-                          size="sm"
-                        >
-                          Enter Information
-                        </Button>
-                      )}
                     </div>
                   </div>
                 ))}
