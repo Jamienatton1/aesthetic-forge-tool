@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { Calendar, Mail, User, Building, MapPin, Utensils, Car, Gift, Bed, HelpCircle, Hotel } from "lucide-react";
+import { Calendar, Mail, User, Building, MapPin, Utensils, Car, Gift, Bed, HelpCircle, Hotel, Edit, CheckCircle } from "lucide-react";
 import { Sidebar } from "@/components/dashboard/Sidebar";
 import { EventsHeader } from "@/components/events/EventsHeader";
 import { EventProgressBar } from "@/components/events/EventProgressBar";
@@ -21,6 +21,8 @@ interface Category {
   name: string;
   icon: any;
   description: string;
+  status: 'completed' | 'awaiting-supplier' | 'pending';
+  hasSuppliers?: boolean;
 }
 
 const mockSuppliers: Supplier[] = [
@@ -45,31 +47,38 @@ const allCategories: Category[] = [
     id: "venue",
     name: "Venue Information",
     icon: Building,
-    description: "Location and facility details"
+    description: "Location and facility details",
+    status: "completed"
   },
   {
     id: "food-drink",
     name: "Food & Drink",
     icon: Utensils,
-    description: "Catering and beverage services"
+    description: "Catering and beverage services",
+    status: "awaiting-supplier",
+    hasSuppliers: true
   },
   {
     id: "travel",
     name: "Travel",
     icon: Car,
-    description: "Transportation including flights, trains, cars, and local transport"
+    description: "Transportation including flights, trains, cars, and local transport",
+    status: "awaiting-supplier",
+    hasSuppliers: true
   },
   {
     id: "accommodation",
     name: "Accommodation",
     icon: Hotel,
-    description: "Hotel stays, venue accommodations, and lodging arrangements"
+    description: "Hotel stays, venue accommodations, and lodging arrangements",
+    status: "pending"
   },
   {
     id: "promotion-items",
     name: "Promotion Items",
     icon: Gift,
-    description: "Marketing materials and giveaways"
+    description: "Marketing materials and giveaways",
+    status: "pending"
   }
 ];
 
@@ -232,17 +241,48 @@ export default function DataCollectionStatus() {
                       <div className="w-10 h-10 bg-muted rounded-lg flex items-center justify-center">
                         <category.icon className="w-5 h-5" />
                       </div>
-                      <div>
-                        <h3 className="font-semibold text-foreground">{category.name}</h3>
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2 mb-1">
+                          <h3 className="font-semibold text-foreground">{category.name}</h3>
+                          {category.status === 'completed' && (
+                            <Badge className="bg-success/10 text-success border-success/20">
+                              <CheckCircle className="w-3 h-3 mr-1" />
+                              Completed
+                            </Badge>
+                          )}
+                          {category.status === 'awaiting-supplier' && (
+                            <Badge variant="outline" className="border-warning/20 text-warning">
+                              Awaiting Supplier Information
+                            </Badge>
+                          )}
+                          {category.status === 'pending' && (
+                            <Badge variant="outline">
+                              Pending
+                            </Badge>
+                          )}
+                        </div>
                         <p className="text-sm text-muted-foreground">{category.description}</p>
                       </div>
                     </div>
-                    <Button 
-                      onClick={() => handleEditCategory(category.id)}
-                      className="bg-gradient-hero hover:opacity-90"
-                    >
-                      Enter Information
-                    </Button>
+                    <div className="flex gap-2">
+                      <Button 
+                        onClick={() => handleEditCategory(category.id)}
+                        variant="outline"
+                        size="sm"
+                      >
+                        <Edit className="w-4 h-4 mr-1" />
+                        Edit
+                      </Button>
+                      {category.status !== 'completed' && (
+                        <Button 
+                          onClick={() => handleEditCategory(category.id)}
+                          className="bg-gradient-hero hover:opacity-90"
+                          size="sm"
+                        >
+                          Enter Information
+                        </Button>
+                      )}
+                    </div>
                   </div>
                 ))}
               </CardContent>
