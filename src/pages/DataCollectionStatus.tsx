@@ -331,7 +331,7 @@ export default function DataCollectionStatus() {
                 onClick={handleContinue}
                 className="bg-gradient-hero hover:opacity-90 px-8"
               >
-                Continue
+                Generate Report
               </Button>
             </div>
           </div>
