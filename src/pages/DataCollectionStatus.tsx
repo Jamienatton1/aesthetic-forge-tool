@@ -154,7 +154,7 @@ export default function DataCollectionStatus() {
           subtitle="Track data collection progress and enter remaining information"
         />
         
-        <EventProgressBar currentStep={4} completedSteps={[1, 2, 3]} />
+        <EventProgressBar currentStep={5} completedSteps={[1, 2, 3, 4]} />
         
         <main className="flex-1 overflow-auto">
           {/* Hero Section */}
