@@ -21,7 +21,7 @@ interface Category {
   name: string;
   icon: any;
   description: string;
-  status: 'completed' | 'awaiting-supplier' | 'pending';
+  status: 'completed' | 'awaiting-supplier' | 'pending' | 'not-started';
   hasSuppliers?: boolean;
 }
 
@@ -48,14 +48,14 @@ const allCategories: Category[] = [
     name: "Venue Information",
     icon: Building,
     description: "Location and facility details",
-    status: "completed"
+    status: "completed" // Data has been entered
   },
   {
     id: "food-drink",
     name: "Food & Drink",
     icon: Utensils,
     description: "Catering and beverage services",
-    status: "awaiting-supplier",
+    status: "awaiting-supplier", // Has suppliers waiting
     hasSuppliers: true
   },
   {
@@ -63,7 +63,7 @@ const allCategories: Category[] = [
     name: "Travel",
     icon: Car,
     description: "Transportation including flights, trains, cars, and local transport",
-    status: "awaiting-supplier",
+    status: "awaiting-supplier", // Has suppliers waiting
     hasSuppliers: true
   },
   {
@@ -71,14 +71,14 @@ const allCategories: Category[] = [
     name: "Accommodation",
     icon: Hotel,
     description: "Hotel stays, venue accommodations, and lodging arrangements",
-    status: "pending"
+    status: "not-started" // No data entered yet
   },
   {
     id: "promotion-items",
     name: "Promotion Items",
     icon: Gift,
     description: "Marketing materials and giveaways",
-    status: "pending"
+    status: "not-started" // No data entered yet
   }
 ];
 
@@ -258,6 +258,11 @@ export default function DataCollectionStatus() {
                           {category.status === 'pending' && (
                             <Badge className="bg-muted-foreground text-white font-semibold px-3 py-1">
                               Pending
+                            </Badge>
+                          )}
+                          {category.status === 'not-started' && (
+                            <Badge className="bg-destructive text-white font-semibold px-3 py-1">
+                              Not Started
                             </Badge>
                           )}
                         </div>
