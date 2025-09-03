@@ -237,48 +237,46 @@ export default function DataCollectionStatus() {
               <CardContent className="space-y-4">
                 {allCategories.map((category) => (
                   <div key={category.id} className="flex items-center justify-between p-4 border rounded-lg bg-card">
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 bg-muted rounded-lg flex items-center justify-center">
-                        <category.icon className="w-5 h-5" />
-                      </div>
-                      <div className="flex-1">
-                        <div className="flex items-center gap-2 mb-1">
-                          <h3 className="font-semibold text-foreground">{category.name}</h3>
-                          {category.status === 'completed' && (
-                            <Badge className="bg-success text-white font-semibold px-3 py-1">
-                              <CheckCircle className="w-4 h-4 mr-1" />
-                              Completed
-                            </Badge>
-                          )}
-                          {category.status === 'awaiting-supplier' && (
-                            <Badge className="bg-warning text-white font-semibold px-3 py-1">
-                              Awaiting Supplier Information
-                            </Badge>
-                          )}
-                          {category.status === 'pending' && (
-                            <Badge className="bg-muted-foreground text-white font-semibold px-3 py-1">
-                              Pending
-                            </Badge>
-                          )}
-                          {category.status === 'not-started' && (
-                            <Badge className="bg-destructive text-white font-semibold px-3 py-1">
-                              Not Started
-                            </Badge>
-                          )}
-                        </div>
-                        <p className="text-sm text-muted-foreground">{category.description}</p>
-                      </div>
-                    </div>
-                    <div className="flex gap-2">
-                      <Button 
-                        onClick={() => handleEditCategory(category.id)}
-                        variant="outline"
-                        size="sm"
-                      >
-                        <Edit className="w-4 h-4 mr-1" />
-                        Edit
-                      </Button>
-                    </div>
+                     <div className="flex items-center gap-3">
+                       <div className="w-10 h-10 bg-muted rounded-lg flex items-center justify-center">
+                         <category.icon className="w-5 h-5" />
+                       </div>
+                       <div className="flex-1">
+                         <h3 className="font-semibold text-foreground mb-1">{category.name}</h3>
+                         <p className="text-sm text-muted-foreground">{category.description}</p>
+                       </div>
+                     </div>
+                     <div className="flex items-center gap-2">
+                       {category.status === 'completed' && (
+                         <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">
+                           <CheckCircle className="w-3 h-3 mr-1" />
+                           Completed
+                         </Badge>
+                       )}
+                       {category.status === 'awaiting-supplier' && (
+                         <Badge variant="outline" className="bg-yellow-50 text-yellow-700 border-yellow-200">
+                           Awaiting Supplier Info
+                         </Badge>
+                       )}
+                       {category.status === 'pending' && (
+                         <Badge variant="outline" className="bg-gray-50 text-gray-600 border-gray-200">
+                           Pending
+                         </Badge>
+                       )}
+                       {category.status === 'not-started' && (
+                         <Badge variant="outline" className="bg-red-50 text-red-600 border-red-200">
+                           Not Started
+                         </Badge>
+                       )}
+                       <Button 
+                         onClick={() => handleEditCategory(category.id)}
+                         variant="outline"
+                         size="sm"
+                       >
+                         <Edit className="w-4 h-4 mr-1" />
+                         Edit
+                       </Button>
+                     </div>
                   </div>
                 ))}
               </CardContent>
