@@ -245,18 +245,18 @@ export default function DataCollectionStatus() {
                         <div className="flex items-center gap-2 mb-1">
                           <h3 className="font-semibold text-foreground">{category.name}</h3>
                           {category.status === 'completed' && (
-                            <Badge className="bg-success/10 text-success border-success/20">
-                              <CheckCircle className="w-3 h-3 mr-1" />
+                            <Badge className="bg-success text-white font-semibold px-3 py-1">
+                              <CheckCircle className="w-4 h-4 mr-1" />
                               Completed
                             </Badge>
                           )}
                           {category.status === 'awaiting-supplier' && (
-                            <Badge variant="outline" className="border-warning/20 text-warning">
+                            <Badge className="bg-warning text-white font-semibold px-3 py-1">
                               Awaiting Supplier Information
                             </Badge>
                           )}
                           {category.status === 'pending' && (
-                            <Badge variant="outline">
+                            <Badge className="bg-muted-foreground text-white font-semibold px-3 py-1">
                               Pending
                             </Badge>
                           )}
