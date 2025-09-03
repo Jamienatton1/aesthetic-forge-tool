@@ -127,7 +127,7 @@ export default function DataCollectionStatus() {
   };
 
   const handleContinue = () => {
-    navigate('/questionnaire', { 
+    navigate('/events/compensation-report', { 
       state: { 
         eventData,
         selectedCategories
