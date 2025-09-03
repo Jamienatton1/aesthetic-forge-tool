@@ -38,16 +38,13 @@ const CompensationReport = () => {
     totalCost: 6250
   };
 
-  // Mock category data with calculated emissions
+  // Mock category data
   const categoryData = [
-    { name: "Travel", icon: Plane, value: "18.2 tCO2e", cost: "$2,850" },
-    { name: "Accommodation", icon: Hotel, value: "8.7 tCO2e", cost: "$1,200" },
-    { name: "Food & Drink", icon: UtensilsCrossed, value: "6.3 tCO2e", cost: "$950" },
-    { name: "Transportation", icon: Car, value: "4.1 tCO2e", cost: "$600" },
-    { name: "Promotional Items", icon: Gift, value: "2.8 tCO2e", cost: "$400" },
-    { name: "Venue", icon: Building, value: "1.9 tCO2e", cost: "$300" },
-    { name: "Entertainment", icon: Music, value: "0.3 tCO2e", cost: "$50" },
-    { name: "Materials", icon: FileText, value: "0.2 tCO2e", cost: "$100" }
+    { name: "Event Space", icon: Building },
+    { name: "Room Nights", icon: Hotel },
+    { name: "Food & Drink", icon: UtensilsCrossed },
+    { name: "Travel", icon: Plane },
+    { name: "Promotional Items", icon: Gift }
   ];
 
   return (
@@ -162,11 +159,7 @@ const CompensationReport = () => {
                     <div className="w-12 h-12 bg-gradient-hero rounded-full flex items-center justify-center mx-auto mb-3">
                       <category.icon className="w-6 h-6 text-white" />
                     </div>
-                    <h3 className="font-semibold text-foreground mb-2">{category.name}</h3>
-                    <div className="space-y-1">
-                      <div className="text-lg font-bold text-primary">{category.value}</div>
-                      <div className="text-sm text-muted-foreground">Offset: {category.cost}</div>
-                    </div>
+                    <h3 className="font-semibold text-foreground">{category.name}</h3>
                   </div>
                 ))}
               </div>
