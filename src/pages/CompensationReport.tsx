@@ -18,7 +18,8 @@ import {
   FileText,
   Download,
   Save,
-  Share
+  Share,
+  UserCheck
 } from "lucide-react";
 
 const CompensationReport = () => {
@@ -38,13 +39,17 @@ const CompensationReport = () => {
     totalCost: 6250
   };
 
-  // Mock category data
+  // Mock category data with journey values
   const categoryData = [
-    { name: "Event Space", icon: Building },
-    { name: "Room Nights", icon: Hotel },
-    { name: "Food & Drink", icon: UtensilsCrossed },
-    { name: "Travel", icon: Plane },
-    { name: "Promotional Items", icon: Gift }
+    { name: "Event Space", icon: Building, value: "260m²*" },
+    { name: "Room Nights", icon: Hotel, value: "300" },
+    { name: "Food & Beverages", icon: UtensilsCrossed, value: "0" },
+    { name: "Attendees", icon: UserCheck, value: "100" },
+    { name: "Travel", icon: Plane, value: "50 trips" },
+    { name: "Promotional Items", icon: Gift, value: "250 items" },
+    { name: "Transportation", icon: Car, value: "15 transfers" },
+    { name: "Venue Equipment", icon: Music, value: "5 setups" },
+    { name: "Materials", icon: FileText, value: "200 packs" }
   ];
 
   return (
@@ -153,13 +158,14 @@ const CompensationReport = () => {
               <CardTitle className="text-xl text-foreground">Emission Categories Breakdown</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {categoryData.map((category, index) => (
                   <div key={index} className="p-4 bg-metric-card rounded-lg border border-border text-center">
                     <div className="w-12 h-12 bg-gradient-hero rounded-full flex items-center justify-center mx-auto mb-3">
                       <category.icon className="w-6 h-6 text-white" />
                     </div>
-                    <h3 className="font-semibold text-foreground">{category.name}</h3>
+                    <h3 className="font-semibold text-foreground mb-2">{category.name}</h3>
+                    <div className="text-2xl font-bold text-primary">{category.value}</div>
                   </div>
                 ))}
               </div>
