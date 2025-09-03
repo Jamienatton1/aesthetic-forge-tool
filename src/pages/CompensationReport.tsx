@@ -112,7 +112,7 @@ const CompensationReport = () => {
                 
                 <div className="text-center p-4 bg-background rounded-lg border">
                   <div className="w-12 h-12 bg-accent/10 rounded-full flex items-center justify-center mx-auto mb-3">
-                    <DollarSign className="w-6 h-6 text-accent" />
+                    <Users className="w-6 h-6 text-accent" />
                   </div>
                   <div className="text-2xl font-bold text-foreground">${compensationData.costPerPerson}</div>
                   <div className="text-sm text-muted-foreground">Cost per Person</div>
@@ -141,11 +141,11 @@ const CompensationReport = () => {
             </Button>
             <Button variant="outline" className="flex items-center gap-2">
               <Download className="w-4 h-4" />
-              Download Quote
+              Download Pre-Event Emissions Report
             </Button>
             <Button variant="secondary" className="flex items-center gap-2">
               <Save className="w-4 h-4" />
-              Save Quote
+              Save Pre-Event Emissions Report
             </Button>
           </div>
 
