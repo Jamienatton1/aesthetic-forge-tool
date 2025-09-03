@@ -44,12 +44,9 @@ const CompensationReport = () => {
     { name: "Event Space", icon: Building, value: "260m²*" },
     { name: "Room Nights", icon: Hotel, value: "300" },
     { name: "Food & Beverages", icon: UtensilsCrossed, value: "0" },
-    { name: "Attendees", icon: UserCheck, value: "100" },
     { name: "Travel", icon: Plane, value: "50 trips" },
     { name: "Promotional Items", icon: Gift, value: "250 items" },
-    { name: "Transportation", icon: Car, value: "15 transfers" },
-    { name: "Venue Equipment", icon: Music, value: "5 setups" },
-    { name: "Materials", icon: FileText, value: "200 packs" }
+    { name: "Attendees", icon: UserCheck, value: "100" }
   ];
 
   return (
