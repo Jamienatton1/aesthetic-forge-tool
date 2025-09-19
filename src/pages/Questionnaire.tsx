@@ -27,6 +27,7 @@ interface QuestionnaireSettings {
   backgroundColor: string;
   logoUrl?: string;
   showProgress: boolean;
+  excludeFromEmissionsReport: boolean;
 }
 
 export default function Questionnaire() {
@@ -35,7 +36,8 @@ export default function Questionnaire() {
     title: 'Attendee Environmental Impact Questionnaire',
     description: 'Help us understand your environmental impact for this event by answering a few questions.',
     backgroundColor: 'default',
-    showProgress: true
+    showProgress: true,
+    excludeFromEmissionsReport: false
   });
   
   const [questions, setQuestions] = useState<Question[]>([
@@ -191,6 +193,17 @@ export default function Questionnaire() {
                       />
                     </div>
 
+                    <div className="flex items-center justify-between">
+                      <div className="space-y-2">
+                        <Label>Exclude from Final Emissions Report</Label>
+                        <p className="text-sm text-muted-foreground">Exclude all collected questionnaire data from the final emissions report</p>
+                      </div>
+                      <Switch
+                        checked={settings.excludeFromEmissionsReport}
+                        onCheckedChange={(checked) => updateSettings('excludeFromEmissionsReport', checked)}
+                      />
+                    </div>
+
                     <div className="space-y-2">
                       <Label>Logo Upload</Label>
                       <div className="border-2 border-dashed rounded-lg p-6 text-center">
@@ -224,90 +237,33 @@ export default function Questionnaire() {
                                   {question.required ? 'Required' : 'Optional'}
                                 </Badge>
                               </div>
-                              <Button
-                                onClick={() => removeQuestion(question.id)}
-                                variant="ghost"
-                                size="sm"
-                                className="text-destructive hover:bg-destructive hover:text-destructive-foreground"
-                              >
-                                <Trash2 className="w-4 h-4" />
-                              </Button>
                             </div>
 
                             <div className="space-y-4">
-                              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <div className="space-y-2">
-                                  <Label>Question Text</Label>
-                                  <Input
-                                    value={question.text}
-                                    onChange={(e) => updateQuestion(question.id, 'text', e.target.value)}
-                                    placeholder="Enter question"
-                                  />
-                                </div>
-                                <div className="space-y-2">
-                                  <Label>Type</Label>
-                                  <Select 
-                                    value={question.type} 
-                                    onValueChange={(value) => updateQuestion(question.id, 'type', value)}
-                                  >
-                                    <SelectTrigger>
-                                      <SelectValue />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                      <SelectItem value="text">Text</SelectItem>
-                                      <SelectItem value="number">Number</SelectItem>
-                                      <SelectItem value="multiple-choice">Multiple Choice</SelectItem>
-                                      <SelectItem value="rating">Rating</SelectItem>
-                                      <SelectItem value="date">Date</SelectItem>
-                                      <SelectItem value="boolean">Yes/No</SelectItem>
-                                    </SelectContent>
-                                  </Select>
+                              <div className="space-y-2">
+                                <Label>Question</Label>
+                                <div className="p-3 bg-muted rounded-md">
+                                  <p className="text-foreground">{question.text}</p>
                                 </div>
                               </div>
-
-                              <div className="flex items-center justify-between">
-                                <div className="flex items-center gap-2">
-                                  <Switch
-                                    checked={question.required}
-                                    onCheckedChange={(checked) => updateQuestion(question.id, 'required', checked)}
-                                  />
-                                  <Label className="text-sm">Required question</Label>
+                              
+                              <div className="space-y-2">
+                                <Label>Type</Label>
+                                <div className="p-3 bg-muted rounded-md">
+                                  <p className="text-foreground capitalize">{question.type.replace('-', ' ')}</p>
                                 </div>
                               </div>
 
                               {question.type === 'multiple-choice' && question.options && (
                                 <div className="space-y-2">
                                   <Label>Options</Label>
-                                  {question.options.map((option, optionIndex) => (
-                                    <div key={optionIndex} className="flex items-center gap-2">
-                                      <Input
-                                        value={option}
-                                        onChange={(e) => {
-                                          const newOptions = [...question.options!];
-                                          newOptions[optionIndex] = e.target.value;
-                                          updateQuestion(question.id, 'options', newOptions);
-                                        }}
-                                        placeholder={`Option ${optionIndex + 1}`}
-                                      />
-                                      {question.options!.length > 2 && (
-                                        <Button
-                                          onClick={() => removeOption(question.id, optionIndex)}
-                                          variant="ghost"
-                                          size="sm"
-                                        >
-                                          <Trash2 className="w-4 h-4" />
-                                        </Button>
-                                      )}
-                                    </div>
-                                  ))}
-                                  <Button
-                                    onClick={() => addOption(question.id)}
-                                    variant="outline"
-                                    size="sm"
-                                  >
-                                    <Plus className="w-4 h-4 mr-2" />
-                                    Add Option
-                                  </Button>
+                                  <div className="space-y-1">
+                                    {question.options.map((option, optionIndex) => (
+                                      <div key={optionIndex} className="p-2 bg-muted rounded-md">
+                                        <p className="text-foreground text-sm">{option}</p>
+                                      </div>
+                                    ))}
+                                  </div>
                                 </div>
                               )}
                             </div>
@@ -315,50 +271,6 @@ export default function Questionnaire() {
                         </Card>
                       ))}
                     </div>
-
-                    {/* Add New Question */}
-                    <Card className="border-2 border-dashed">
-                      <CardContent className="p-6">
-                        <div className="space-y-4">
-                          <Label className="flex items-center gap-2">
-                            <Plus className="w-4 h-4" />
-                            Add New Question
-                          </Label>
-                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <Textarea
-                              value={newQuestion}
-                              onChange={(e) => setNewQuestion(e.target.value)}
-                              placeholder="Enter your question here..."
-                              className="min-h-[80px]"
-                            />
-                            <div className="space-y-2">
-                              <Label>Question Type</Label>
-                              <Select value={newQuestionType} onValueChange={(value) => setNewQuestionType(value as Question['type'])}>
-                                <SelectTrigger>
-                                  <SelectValue />
-                                </SelectTrigger>
-                                <SelectContent>
-                                  <SelectItem value="text">Text</SelectItem>
-                                  <SelectItem value="number">Number</SelectItem>
-                                  <SelectItem value="multiple-choice">Multiple Choice</SelectItem>
-                                  <SelectItem value="rating">Rating</SelectItem>
-                                  <SelectItem value="date">Date</SelectItem>
-                                  <SelectItem value="boolean">Yes/No</SelectItem>
-                                </SelectContent>
-                              </Select>
-                            </div>
-                          </div>
-                          <Button
-                            onClick={addQuestion}
-                            disabled={!newQuestion.trim()}
-                            className="w-full"
-                          >
-                            <Plus className="w-4 h-4 mr-2" />
-                            Add Question
-                          </Button>
-                        </div>
-                      </CardContent>
-                    </Card>
                   </div>
                 </TabsContent>
 
