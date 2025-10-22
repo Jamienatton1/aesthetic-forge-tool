@@ -324,7 +324,6 @@ const QuestionnaireResponses = () => {
                           <th className="text-left p-4 font-semibold">Phone</th>
                           <th className="text-left p-4 font-semibold">Response Date</th>
                           <th className="text-left p-4 font-semibold">Status</th>
-                          <th className="text-left p-4 font-semibold">Actions</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -338,15 +337,6 @@ const QuestionnaireResponses = () => {
                               <Badge variant={response.status === "Complete" ? "default" : "secondary"}>
                                 {response.status}
                               </Badge>
-                            </td>
-                            <td className="p-4">
-                              <Button 
-                                variant="ghost" 
-                                size="sm"
-                                onClick={() => handleRemoveResponse(response.id)}
-                              >
-                                <Trash2 className="h-4 w-4 text-destructive" />
-                              </Button>
                             </td>
                           </tr>
                         ))}
@@ -575,6 +565,7 @@ const QuestionnaireResponses = () => {
                             <th className="text-left p-3 font-semibold">Meals</th>
                             <th className="text-left p-3 font-semibold">Accommodation</th>
                             <th className="text-right p-3 font-semibold">Emissions (kg CO₂e)</th>
+                            <th className="text-center p-3 font-semibold">Actions</th>
                           </tr>
                         </thead>
                         <tbody>
@@ -585,6 +576,15 @@ const QuestionnaireResponses = () => {
                               <td className="p-3 text-muted-foreground">{response.answers.meals}</td>
                               <td className="p-3 text-muted-foreground">{response.answers.accommodation}</td>
                               <td className="p-3 text-right font-medium">{response.emissions}</td>
+                              <td className="p-3 text-center">
+                                <Button 
+                                  variant="ghost" 
+                                  size="sm"
+                                  onClick={() => handleRemoveResponse(response.id)}
+                                >
+                                  <Trash2 className="h-4 w-4 text-destructive" />
+                                </Button>
+                              </td>
                             </tr>
                           ))}
                         </tbody>
