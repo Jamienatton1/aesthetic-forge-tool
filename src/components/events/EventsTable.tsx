@@ -18,7 +18,8 @@ import {
   DollarSign,
   BarChart3,
   Filter,
-  X
+  X,
+  ClipboardList
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -96,6 +97,7 @@ const eventData = [
 ];
 
 const EventActions = ({ event }: { event: typeof eventData[0] }) => {
+  const navigate = useNavigate();
   const isCreated = event.status === "Created";
   const hasInvoice = event.invoiceStatus === "Created";
 
@@ -180,6 +182,10 @@ const EventActions = ({ event }: { event: typeof eventData[0] }) => {
             <DropdownMenuItem className="text-sm">
               <QrCode className="mr-2 h-4 w-4" />
               Manage QR Codes
+            </DropdownMenuItem>
+            <DropdownMenuItem className="text-sm" onClick={() => navigate("/events/questionnaire-responses")}>
+              <ClipboardList className="mr-2 h-4 w-4" />
+              Questionnaire Responses
             </DropdownMenuItem>
             
             <DropdownMenuSeparator />

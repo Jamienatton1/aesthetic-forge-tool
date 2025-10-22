@@ -18,6 +18,7 @@ import PromotionItems from "./pages/PromotionItems";
 import Questionnaire from "./pages/Questionnaire";
 import DataCollectionStatus from "./pages/DataCollectionStatus";
 import CompensationReport from "./pages/CompensationReport";
+import QuestionnaireResponses from "./pages/QuestionnaireResponses";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -44,6 +45,7 @@ const App = () => (
           <Route path="/events/questionnaire" element={<Questionnaire />} />
           <Route path="/events/data-collection-status" element={<DataCollectionStatus />} />
           <Route path="/events/compensation-report" element={<CompensationReport />} />
+          <Route path="/events/questionnaire-responses" element={<QuestionnaireResponses />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
