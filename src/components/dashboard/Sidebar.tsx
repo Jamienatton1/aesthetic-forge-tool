@@ -10,7 +10,8 @@ import {
   Calendar, 
   MessageCircle,
   Megaphone,
-  Building
+  Building,
+  ShoppingBag
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useLocation } from "react-router-dom";
@@ -20,6 +21,7 @@ const navigationItems = [
   { icon: Calendar, label: "Events", path: "/events" },
   { icon: Scale, label: "Balance", path: "/balance" },
   { icon: TreePine, label: "Trees", path: "/trees" },
+  { icon: ShoppingBag, label: "Tree Swag", path: "/tree-swag" },
   { icon: FileText, label: "Reports", path: "/reports" },
   { icon: Package, label: "Packages", path: "/packages" },
   { icon: Users, label: "Clients", path: "/clients" },

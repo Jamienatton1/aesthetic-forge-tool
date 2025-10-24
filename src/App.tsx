@@ -19,6 +19,7 @@ import Questionnaire from "./pages/Questionnaire";
 import DataCollectionStatus from "./pages/DataCollectionStatus";
 import CompensationReport from "./pages/CompensationReport";
 import QuestionnaireResponses from "./pages/QuestionnaireResponses";
+import TreeSwag from "./pages/TreeSwag";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -46,6 +47,7 @@ const App = () => (
           <Route path="/events/data-collection-status" element={<DataCollectionStatus />} />
           <Route path="/events/compensation-report" element={<CompensationReport />} />
           <Route path="/events/questionnaire-responses" element={<QuestionnaireResponses />} />
+          <Route path="/tree-swag" element={<TreeSwag />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
