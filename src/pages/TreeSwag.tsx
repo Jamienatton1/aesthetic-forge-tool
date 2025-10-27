@@ -120,7 +120,7 @@ const TreeSwag = () => {
 
           {/* Alternative Text */}
           <div className="text-center text-sm text-muted-foreground mb-6">
-            <p>Alternatively give out the link at $15 per using or up going to $1,500 of all gifts of 100 trees</p>
+            <p>Alternatively plant a mix of 100% of our trees for every $1,500 of event revenue through your portal or $15 per unit</p>
             <a 
               href="https://treesfortheworld.com/pages/green-events-for-co2" 
               target="_blank" 
