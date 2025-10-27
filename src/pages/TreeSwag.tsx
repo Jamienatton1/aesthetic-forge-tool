@@ -130,14 +130,14 @@ const TreeSwag = () => {
 
           {/* Alternative Text */}
           <div className="text-center text-sm text-muted-foreground mb-6">
-            <p>Alternatively, you can use this link to gift trees by email of add it to your confrence app</p>
+            <p>Alternatively, you can use this link to gift trees by email of add it to your confrence app:</p>
             <a
-              href="https://,y.trees4trevel.com/testlink/123"
+              href="https://my.trees4trevel.com/testlink/123"
               target="_blank"
               rel="noopener noreferrer"
               className="text-primary hover:underline"
             >
-              https://treesfortheworld.com/pages/green-events-for-co2
+              https://my.trees4trevel.com/testlink/123
             </a>
           </div>
         </main>
