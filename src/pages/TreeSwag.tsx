@@ -23,7 +23,7 @@ const TreeSwag = () => {
           {/* Hero Banner */}
           <div className="mb-8 rounded-lg bg-gradient-to-r from-emerald-700 to-emerald-600 p-12 text-white">
             <h1 className="text-5xl font-bold mb-4">
-              <span className="bg-white text-emerald-700 px-3 py-1">TREE</span> SWAG
+              TREE SWAG
             </h1>
             <p className="text-lg leading-relaxed mb-2">
               Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat
