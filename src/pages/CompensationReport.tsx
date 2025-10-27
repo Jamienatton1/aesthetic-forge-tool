@@ -197,7 +197,7 @@ const CompensationReport = () => {
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               <TreePine className="w-5 h-5 text-accent" />
-              What is Tree Swag?
+              Would you like tree swag for your event?
             </DialogTitle>
             <DialogDescription className="text-base pt-4">
               Events can give trees away rather than event swag that ends up in landfills, 
@@ -212,14 +212,21 @@ const CompensationReport = () => {
               }}
               className="flex-1"
             >
-              Go to Tree Swag
+              Yes
             </Button>
             <Button 
               variant="outline" 
               onClick={() => setShowTreeSwagDialog(false)}
               className="flex-1"
             >
-              Close
+              No
+            </Button>
+            <Button 
+              variant="secondary" 
+              onClick={() => setShowTreeSwagDialog(false)}
+              className="flex-1"
+            >
+              Maybe Later
             </Button>
           </div>
         </DialogContent>
