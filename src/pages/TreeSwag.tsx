@@ -26,7 +26,7 @@ const TreeSwag = () => {
           </div>
 
           {/* Configuration Section */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
             <div>
               <Label htmlFor="maxTrees" className="text-sm font-medium mb-2 block">MAX NUMBER OF TREES</Label>
               <Input
@@ -44,7 +44,7 @@ const TreeSwag = () => {
               </div>
             </div>
             <div>
-              <Label htmlFor="usDays" className="text-sm font-medium mb-2 block">U.S DAYS</Label>
+              <Label htmlFor="usDays" className="text-sm font-medium mb-2 block">GIFTS USED</Label>
               <Input
                 id="usDays"
                 type="number"
@@ -53,13 +53,12 @@ const TreeSwag = () => {
                 className="w-full"
               />
             </div>
-          </div>
-
-          {/* Download QR Code Button */}
-          <div className="mb-8">
-            <Button variant="default" className="w-full md:w-auto">
-              DOWNLOAD QR CODE
-            </Button>
+            <div>
+              <Label className="text-sm font-medium mb-2 block invisible">ACTION</Label>
+              <Button variant="default" className="w-full h-10">
+                DOWNLOAD QR CODE
+              </Button>
+            </div>
           </div>
 
           {/* 3-Step Process */}
@@ -132,13 +131,6 @@ const TreeSwag = () => {
             </a>
           </div>
 
-          {/* Action Buttons */}
-          <div className="flex flex-wrap gap-4 justify-center">
-            <Button variant="default">SEND EMAIL</Button>
-            <Button variant="default">ADD TO APP</Button>
-            <Button variant="default">SHARE</Button>
-            <Button variant="default">EMBED</Button>
-          </div>
         </main>
       </div>
     </div>
