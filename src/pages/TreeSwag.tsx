@@ -9,16 +9,16 @@ import { useState } from "react";
 const TreeSwag = () => {
   const [maxTrees, setMaxTrees] = useState("100000");
   const [usDays, setUsDays] = useState("30");
-  
+
   const totalCost = (parseInt(maxTrees) || 0) * 0.015;
 
   return (
     <div className="flex h-screen bg-background">
       <Sidebar />
-      
+
       <div className="flex-1 flex flex-col overflow-hidden">
         <Header />
-        
+
         <main className="flex-1 overflow-auto p-8">
           {/* Header */}
           <div className="mb-6">
@@ -28,7 +28,9 @@ const TreeSwag = () => {
           {/* Configuration Section */}
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
             <div>
-              <Label htmlFor="maxTrees" className="text-sm font-medium mb-2 block">MAX NUMBER OF TREES</Label>
+              <Label htmlFor="maxTrees" className="text-sm font-medium mb-2 block">
+                MAX NUMBER OF TREES
+              </Label>
               <Input
                 id="maxTrees"
                 type="number"
@@ -44,7 +46,9 @@ const TreeSwag = () => {
               </div>
             </div>
             <div>
-              <Label htmlFor="usDays" className="text-sm font-medium mb-2 block">GIFTS USED</Label>
+              <Label htmlFor="usDays" className="text-sm font-medium mb-2 block">
+                GIFTS USED
+              </Label>
               <Input
                 id="usDays"
                 type="number"
@@ -67,7 +71,9 @@ const TreeSwag = () => {
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                  <span className="flex h-8 w-8 items-center justify-center rounded-full bg-primary text-primary-foreground font-bold">1</span>
+                  <span className="flex h-8 w-8 items-center justify-center rounded-full bg-primary text-primary-foreground font-bold">
+                    1
+                  </span>
                   Display your QR code at an event
                 </CardTitle>
               </CardHeader>
@@ -85,7 +91,9 @@ const TreeSwag = () => {
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                  <span className="flex h-8 w-8 items-center justify-center rounded-full bg-primary text-primary-foreground font-bold">2</span>
+                  <span className="flex h-8 w-8 items-center justify-center rounded-full bg-primary text-primary-foreground font-bold">
+                    2
+                  </span>
                   Link to form for contact information
                 </CardTitle>
               </CardHeader>
@@ -103,7 +111,9 @@ const TreeSwag = () => {
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                  <span className="flex h-8 w-8 items-center justify-center rounded-full bg-primary text-primary-foreground font-bold">3</span>
+                  <span className="flex h-8 w-8 items-center justify-center rounded-full bg-primary text-primary-foreground font-bold">
+                    3
+                  </span>
                   The tree gift is sent by email
                 </CardTitle>
               </CardHeader>
@@ -120,17 +130,16 @@ const TreeSwag = () => {
 
           {/* Alternative Text */}
           <div className="text-center text-sm text-muted-foreground mb-6">
-            <p>Alternatively plant a mix of 100% of our trees for every $1,500 of event revenue through your portal or $15 per unit</p>
-            <a 
-              href="https://treesfortheworld.com/pages/green-events-for-co2" 
-              target="_blank" 
+            <p>Alternatively, you can use this link to gift trees by email of add it to your confrence app</p>
+            <a
+              href="https://,y.trees4trevel.com/testlink/123"
+              target="_blank"
               rel="noopener noreferrer"
               className="text-primary hover:underline"
             >
               https://treesfortheworld.com/pages/green-events-for-co2
             </a>
           </div>
-
         </main>
       </div>
     </div>
