@@ -1,5 +1,4 @@
 import { Sidebar } from "@/components/dashboard/Sidebar";
-import { Header } from "@/components/dashboard/Header";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -17,8 +16,6 @@ const TreeSwag = () => {
       <Sidebar />
 
       <div className="flex-1 flex flex-col overflow-hidden">
-        <Header />
-
         <main className="flex-1 overflow-auto p-8">
           {/* Hero Banner */}
           <div className="mb-8 rounded-lg bg-gradient-to-r from-emerald-700 to-emerald-600 p-12 text-white">
