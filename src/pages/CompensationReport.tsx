@@ -3,6 +3,13 @@ import { EventsHeader } from "@/components/events/EventsHeader";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { 
   TreePine, 
   DollarSign, 
@@ -21,8 +28,13 @@ import {
   Share,
   UserCheck
 } from "lucide-react";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const CompensationReport = () => {
+  const navigate = useNavigate();
+  const [showTreeSwagDialog, setShowTreeSwagDialog] = useState(false);
+  
   // Mock event data
   const eventData = {
     name: "Corporate Sustainability Summit 2024",
@@ -135,7 +147,11 @@ const CompensationReport = () => {
               <Share className="w-4 h-4" />
               Event Marketing Kit
             </Button>
-            <Button variant="default" className="flex items-center gap-2">
+            <Button 
+              variant="default" 
+              className="flex items-center gap-2"
+              onClick={() => setShowTreeSwagDialog(true)}
+            >
               <TreePine className="w-4 h-4" />
               Tree Swag
             </Button>
@@ -174,6 +190,40 @@ const CompensationReport = () => {
           </Card>
         </main>
       </div>
+
+      {/* Tree Swag Dialog */}
+      <Dialog open={showTreeSwagDialog} onOpenChange={setShowTreeSwagDialog}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <TreePine className="w-5 h-5 text-accent" />
+              What is Tree Swag?
+            </DialogTitle>
+            <DialogDescription className="text-base pt-4">
+              Events can give trees away rather than event swag that ends up in landfills, 
+              helping the environment and you get their contact details.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="flex gap-3 mt-4">
+            <Button 
+              onClick={() => {
+                setShowTreeSwagDialog(false);
+                navigate("/tree-swag");
+              }}
+              className="flex-1"
+            >
+              Go to Tree Swag
+            </Button>
+            <Button 
+              variant="outline" 
+              onClick={() => setShowTreeSwagDialog(false)}
+              className="flex-1"
+            >
+              Close
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
