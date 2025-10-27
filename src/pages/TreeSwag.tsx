@@ -7,7 +7,7 @@ import { Label } from "@/components/ui/label";
 import { useState } from "react";
 
 const TreeSwag = () => {
-  const [maxTrees, setMaxTrees] = useState("100000");
+  const [maxTrees, setMaxTrees] = useState("100");
   const [usDays, setUsDays] = useState("30");
 
   const totalCost = (parseInt(maxTrees) || 0) * 0.015;
