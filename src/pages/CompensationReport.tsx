@@ -135,6 +135,10 @@ const CompensationReport = () => {
               <Share className="w-4 h-4" />
               Event Marketing Kit
             </Button>
+            <Button variant="default" className="flex items-center gap-2">
+              <TreePine className="w-4 h-4" />
+              Tree Swag
+            </Button>
             <Button variant="outline" className="flex items-center gap-2">
               <Save className="w-4 h-4" />
               Save Draft
