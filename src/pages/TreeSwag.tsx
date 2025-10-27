@@ -22,7 +22,7 @@ const TreeSwag = () => {
         <main className="flex-1 overflow-auto p-8">
           {/* Hero Banner */}
           <div className="mb-8 rounded-lg bg-gradient-to-r from-emerald-700 to-emerald-600 p-12 text-white">
-            <h1 className="text-5xl font-bold mb-4">
+            <h1 className="text-3xl font-bold mb-4">
               TREE SWAG
             </h1>
             <p className="text-lg leading-relaxed mb-2">
