@@ -1,8 +1,17 @@
 import { Sidebar } from "@/components/dashboard/Sidebar";
 import { Header } from "@/components/dashboard/Header";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { useState } from "react";
 
 const TreeSwag = () => {
+  const [maxTrees, setMaxTrees] = useState("100000");
+  const [usDays, setUsDays] = useState("30");
+  
+  const totalCost = (parseInt(maxTrees) || 0) * 0.015;
+
   return (
     <div className="flex h-screen bg-background">
       <Sidebar />
@@ -16,8 +25,45 @@ const TreeSwag = () => {
             <h1 className="text-3xl font-bold text-foreground mb-2">TREE SWAG</h1>
           </div>
 
+          {/* Configuration Section */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <div>
+              <Label htmlFor="maxTrees" className="text-sm font-medium mb-2 block">MAX NUMBER OF TREES</Label>
+              <Input
+                id="maxTrees"
+                type="number"
+                value={maxTrees}
+                onChange={(e) => setMaxTrees(e.target.value)}
+                className="w-full"
+              />
+            </div>
+            <div>
+              <Label className="text-sm font-medium mb-2 block">TOTAL COST</Label>
+              <div className="h-10 px-3 py-2 border rounded-md bg-muted flex items-center font-semibold">
+                ${totalCost.toFixed(2)}
+              </div>
+            </div>
+            <div>
+              <Label htmlFor="usDays" className="text-sm font-medium mb-2 block">U.S DAYS</Label>
+              <Input
+                id="usDays"
+                type="number"
+                value={usDays}
+                onChange={(e) => setUsDays(e.target.value)}
+                className="w-full"
+              />
+            </div>
+          </div>
+
+          {/* Download QR Code Button */}
+          <div className="mb-8">
+            <Button variant="default" className="w-full md:w-auto">
+              DOWNLOAD QR CODE
+            </Button>
+          </div>
+
           {/* 3-Step Process */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
             {/* Step 1: Display QR Code */}
             <Card>
               <CardHeader>
@@ -71,6 +117,27 @@ const TreeSwag = () => {
                 </div>
               </CardContent>
             </Card>
+          </div>
+
+          {/* Alternative Text */}
+          <div className="text-center text-sm text-muted-foreground mb-6">
+            <p>Alternatively give out the link at $15 per using or up going to $1,500 of all gifts of 100 trees</p>
+            <a 
+              href="https://treesfortheworld.com/pages/green-events-for-co2" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="text-primary hover:underline"
+            >
+              https://treesfortheworld.com/pages/green-events-for-co2
+            </a>
+          </div>
+
+          {/* Action Buttons */}
+          <div className="flex flex-wrap gap-4 justify-center">
+            <Button variant="default">SEND EMAIL</Button>
+            <Button variant="default">ADD TO APP</Button>
+            <Button variant="default">SHARE</Button>
+            <Button variant="default">EMBED</Button>
           </div>
         </main>
       </div>
