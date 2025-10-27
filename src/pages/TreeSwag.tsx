@@ -42,7 +42,7 @@ const TreeSwag = () => {
             <div>
               <Label className="text-sm font-medium mb-2 block">TOTAL COST</Label>
               <div className="h-10 px-3 py-2 border rounded-md bg-muted flex items-center font-semibold">
-                ${totalCost.toFixed(2)}
+                £{totalCost.toFixed(2)}
               </div>
             </div>
             <div>
