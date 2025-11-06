@@ -1,5 +1,6 @@
 import { Bell, Settings, User, UserCog, Building2, UserPlus } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useNavigate } from "react-router-dom";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -8,6 +9,8 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 export function Header() {
+  const navigate = useNavigate();
+
   return (
     <header className="bg-metric-card border-b border-border px-8 py-4">
       <div className="flex items-center justify-between">
@@ -31,7 +34,7 @@ export function Header() {
                 <UserCog className="mr-2 h-4 w-4" />
                 Personal setting
               </DropdownMenuItem>
-              <DropdownMenuItem>
+              <DropdownMenuItem onClick={() => navigate("/organization-settings")}>
                 <Building2 className="mr-2 h-4 w-4" />
                 Company setting
               </DropdownMenuItem>
