@@ -1,4 +1,4 @@
-import { Bell, Settings, User } from "lucide-react";
+import { Bell, Settings, User, UserCog, Building2, UserPlus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -27,9 +27,18 @@ export function Header() {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <DropdownMenuItem>Personal setting</DropdownMenuItem>
-              <DropdownMenuItem>Company setting</DropdownMenuItem>
-              <DropdownMenuItem>Invite user</DropdownMenuItem>
+              <DropdownMenuItem>
+                <UserCog className="mr-2 h-4 w-4" />
+                Personal setting
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                <Building2 className="mr-2 h-4 w-4" />
+                Company setting
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                <UserPlus className="mr-2 h-4 w-4" />
+                Invite user
+              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
           <Button variant="ghost" size="icon">
