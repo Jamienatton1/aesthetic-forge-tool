@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
+import { Check, X } from "lucide-react";
 
 export default function OrganizationSettings() {
   const [companyName, setCompanyName] = useState("Zeero Group");
@@ -17,7 +18,7 @@ export default function OrganizationSettings() {
   const [pricePerTree, setPricePerTree] = useState("25.00");
   const [billingName, setBillingName] = useState("");
   const [billingEmail, setBillingEmail] = useState("");
-  const [plan] = useState("Pro");
+  const [plan] = useState("Core");
 
   return (
     <div className="min-h-screen bg-background">
@@ -164,30 +165,163 @@ export default function OrganizationSettings() {
             </Card>
           </TabsContent>
 
-          <TabsContent value="billing" className="mt-6">
+          <TabsContent value="billing" className="mt-6 space-y-6">
             <Card>
               <CardHeader>
-                <CardTitle>Billing & Financial Details</CardTitle>
-                <CardDescription>Manage billing information and view your subscription plan</CardDescription>
+                <CardTitle>Subscription Plans</CardTitle>
+                <CardDescription>Choose the plan that best fits your organization's needs</CardDescription>
               </CardHeader>
-              <CardContent className="space-y-6">
-                <div className="bg-muted/50 p-4 rounded-lg">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <h4 className="font-medium text-foreground">Current Plan</h4>
-                      <p className="text-sm text-muted-foreground">Your organization's subscription tier</p>
+              <CardContent>
+                <div className="grid grid-cols-3 gap-6">
+                  {/* Core Plan */}
+                  <div className={`border-2 rounded-lg p-6 ${plan === "Core" ? "border-primary bg-primary/5" : "border-border"}`}>
+                    <div className="space-y-4">
+                      <div>
+                        <h3 className="text-2xl font-bold text-foreground">Core</h3>
+                        <div className="mt-2">
+                          <span className="text-4xl font-bold text-foreground">$100</span>
+                          <span className="text-muted-foreground">/month</span>
+                        </div>
+                      </div>
+                      {plan === "Core" ? (
+                        <Badge variant="default" className="w-full justify-center">Current Plan</Badge>
+                      ) : (
+                        <Button variant="outline" className="w-full">Downgrade</Button>
+                      )}
+                      <Separator />
+                      <ul className="space-y-3 text-sm">
+                        <li className="flex items-center gap-2">
+                          <Check className="h-4 w-4 text-green-600" />
+                          <span>Impact Reports</span>
+                        </li>
+                        <li className="flex items-center gap-2 text-muted-foreground">
+                          <X className="h-4 w-4 text-red-600" />
+                          <span>Co-Branded Impact Reports</span>
+                        </li>
+                        <li className="flex items-center gap-2 text-muted-foreground">
+                          <X className="h-4 w-4 text-red-600" />
+                          <span>Expo & Logistics</span>
+                        </li>
+                        <li className="flex items-center gap-2 text-muted-foreground">
+                          <X className="h-4 w-4 text-red-600" />
+                          <span>White Labelled Reports</span>
+                        </li>
+                        <li className="flex items-center gap-2 text-muted-foreground">
+                          <X className="h-4 w-4 text-red-600" />
+                          <span>Multi-User Access</span>
+                        </li>
+                      </ul>
                     </div>
-                    <Badge variant="default" className="text-lg px-4 py-1">
-                      {plan}
-                    </Badge>
+                  </div>
+
+                  {/* Pro Plan */}
+                  <div className={`border-2 rounded-lg p-6 ${plan === "Pro" ? "border-primary bg-primary/5" : "border-border"}`}>
+                    <div className="space-y-4">
+                      <div>
+                        <h3 className="text-2xl font-bold text-foreground">Pro</h3>
+                        <div className="mt-2">
+                          <span className="text-4xl font-bold text-foreground">$400</span>
+                          <span className="text-muted-foreground">/month</span>
+                        </div>
+                      </div>
+                      {plan === "Pro" ? (
+                        <Badge variant="default" className="w-full justify-center">Current Plan</Badge>
+                      ) : (
+                        <Button className="w-full">Upgrade to Pro</Button>
+                      )}
+                      <Separator />
+                      <ul className="space-y-3 text-sm">
+                        <li className="flex items-center gap-2">
+                          <Check className="h-4 w-4 text-green-600" />
+                          <span>Impact Reports</span>
+                        </li>
+                        <li className="flex items-center gap-2">
+                          <Check className="h-4 w-4 text-green-600" />
+                          <span>Co-Branded Impact Reports</span>
+                        </li>
+                        <li className="flex items-center gap-2">
+                          <Check className="h-4 w-4 text-green-600" />
+                          <span>Expo & Logistics</span>
+                        </li>
+                        <li className="flex items-center gap-2 text-muted-foreground">
+                          <X className="h-4 w-4 text-red-600" />
+                          <span>White Labelled Reports</span>
+                        </li>
+                        <li className="flex items-center gap-2">
+                          <Check className="h-4 w-4 text-green-600" />
+                          <span>Multi-User Access</span>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+
+                  {/* Enterprise Plan */}
+                  <div className={`border-2 rounded-lg p-6 ${plan === "Enterprise" ? "border-primary bg-primary/5" : "border-border"}`}>
+                    <div className="space-y-4">
+                      <div>
+                        <h3 className="text-2xl font-bold text-foreground">Enterprise</h3>
+                        <div className="mt-2">
+                          <span className="text-4xl font-bold text-foreground">$1,000</span>
+                          <span className="text-muted-foreground">/month</span>
+                        </div>
+                      </div>
+                      {plan === "Enterprise" ? (
+                        <Badge variant="default" className="w-full justify-center">Current Plan</Badge>
+                      ) : (
+                        <Button className="w-full">Upgrade to Enterprise</Button>
+                      )}
+                      <Separator />
+                      <ul className="space-y-3 text-sm">
+                        <li className="flex items-center gap-2">
+                          <Check className="h-4 w-4 text-green-600" />
+                          <span>Impact Reports</span>
+                        </li>
+                        <li className="flex items-center gap-2">
+                          <Check className="h-4 w-4 text-green-600" />
+                          <span>Co-Branded Impact Reports</span>
+                        </li>
+                        <li className="flex items-center gap-2">
+                          <Check className="h-4 w-4 text-green-600" />
+                          <span>Expo & Logistics</span>
+                        </li>
+                        <li className="flex items-center gap-2">
+                          <Check className="h-4 w-4 text-green-600" />
+                          <span>White Labelled Reports</span>
+                        </li>
+                        <li className="flex items-center gap-2">
+                          <Check className="h-4 w-4 text-green-600" />
+                          <span>Multi-User Access</span>
+                        </li>
+                        <li className="flex items-center gap-2">
+                          <Check className="h-4 w-4 text-green-600" />
+                          <span>White Labelled Dashboard</span>
+                        </li>
+                        <li className="flex items-center gap-2">
+                          <Check className="h-4 w-4 text-green-600" />
+                          <span>Event & Team Analytics</span>
+                        </li>
+                        <li className="flex items-center gap-2">
+                          <Check className="h-4 w-4 text-green-600" />
+                          <span>Dedicated Support</span>
+                        </li>
+                        <li className="flex items-center gap-2">
+                          <Check className="h-4 w-4 text-green-600" />
+                          <span>In-Country Measurements</span>
+                        </li>
+                      </ul>
+                    </div>
                   </div>
                 </div>
+              </CardContent>
+            </Card>
 
-                <Separator />
-
+            <Card>
+              <CardHeader>
+                <CardTitle>Billing Contact</CardTitle>
+                <CardDescription>Manage billing information and payment details</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-6">
                 <div className="space-y-4">
-                  <h4 className="font-medium text-foreground">Billing Contact</h4>
-                  
                   <div className="space-y-2">
                     <Label htmlFor="billing-name">Full Name</Label>
                     <Input
