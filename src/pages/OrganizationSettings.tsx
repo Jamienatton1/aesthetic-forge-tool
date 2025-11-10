@@ -243,8 +243,8 @@ export default function OrganizationSettings() {
                           <Check className="h-4 w-4 text-green-600" />
                           <span>Expo & Logistics</span>
                         </li>
-                        <li className="flex items-center gap-2 text-muted-foreground">
-                          <X className="h-4 w-4 text-red-600" />
+                        <li className="flex items-center gap-2">
+                          <Check className="h-4 w-4 text-green-600" />
                           <span>White Labelled Reports</span>
                         </li>
                         <li className="flex items-center gap-2">
