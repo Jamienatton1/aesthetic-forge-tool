@@ -15,8 +15,8 @@ export function Header() {
     <header className="bg-metric-card border-b border-border px-8 py-4">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-foreground">Environmental Dashboard</h1>
-          <p className="text-muted-foreground">Track your carbon footprint and environmental impact</p>
+          <h1 className="text-2xl font-bold text-foreground">CO₂ Balance Dashboard</h1>
+          <p className="text-muted-foreground">Monitor and manage your carbon offset balance</p>
         </div>
         
         <div className="flex items-center gap-4">
