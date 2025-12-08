@@ -22,6 +22,7 @@ import QuestionnaireResponses from "./pages/QuestionnaireResponses";
 import TreeSwag from "./pages/TreeSwag";
 import NotFound from "./pages/NotFound";
 import OrganizationSettings from "./pages/OrganizationSettings";
+import Balance from "./pages/Balance";
 
 const queryClient = new QueryClient();
 
@@ -49,6 +50,7 @@ const App = () => (
           <Route path="/events/compensation-report" element={<CompensationReport />} />
           <Route path="/events/questionnaire-responses" element={<QuestionnaireResponses />} />
           <Route path="/tree-swag" element={<TreeSwag />} />
+          <Route path="/balance" element={<Balance />} />
           <Route path="/organization-settings" element={<OrganizationSettings />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
