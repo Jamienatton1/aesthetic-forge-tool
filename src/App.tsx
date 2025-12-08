@@ -23,6 +23,7 @@ import TreeSwag from "./pages/TreeSwag";
 import NotFound from "./pages/NotFound";
 import OrganizationSettings from "./pages/OrganizationSettings";
 import Balance from "./pages/Balance";
+import Trees from "./pages/Trees";
 
 const queryClient = new QueryClient();
 
@@ -51,6 +52,7 @@ const App = () => (
           <Route path="/events/questionnaire-responses" element={<QuestionnaireResponses />} />
           <Route path="/tree-swag" element={<TreeSwag />} />
           <Route path="/balance" element={<Balance />} />
+          <Route path="/trees" element={<Trees />} />
           <Route path="/organization-settings" element={<OrganizationSettings />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
