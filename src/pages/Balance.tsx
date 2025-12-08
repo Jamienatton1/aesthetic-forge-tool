@@ -103,53 +103,6 @@ export default function Balance() {
       <div className="flex-1">
         <Header />
         <main className="p-6">
-
-          {/* Summary Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Current Balance</CardTitle>
-                <Scale className="h-4 w-4 text-muted-foreground" />
-              </CardHeader>
-              <CardContent>
-                <div className={`text-2xl font-bold ${isNegative(summaryStats.currentBalance) ? "text-red-600" : "text-green-600"}`}>
-                  {summaryStats.currentBalance}
-                </div>
-                <p className="text-xs text-muted-foreground">CO₂ offset balance</p>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Total Credits</CardTitle>
-                <TrendingUp className="h-4 w-4 text-green-600" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold text-green-600">{summaryStats.totalCredits}</div>
-                <p className="text-xs text-muted-foreground">CO₂ credits earned</p>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Total Debits</CardTitle>
-                <TrendingDown className="h-4 w-4 text-red-600" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold text-red-600">{summaryStats.totalDebits}</div>
-                <p className="text-xs text-muted-foreground">CO₂ emissions offset</p>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Trees Purchased</CardTitle>
-                <TreePine className="h-4 w-4 text-primary" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold text-primary">{summaryStats.totalTrees}</div>
-                <p className="text-xs text-muted-foreground">Total trees bought</p>
-              </CardContent>
-            </Card>
-          </div>
-
           {/* Balance Log Table */}
           <Card>
             <CardHeader>
