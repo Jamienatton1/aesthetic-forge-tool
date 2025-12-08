@@ -103,10 +103,6 @@ export default function Balance() {
       <div className="flex-1">
         <Header />
         <main className="p-6">
-          <div className="mb-6">
-            <h1 className="text-2xl font-bold text-foreground">CO₂ Balance</h1>
-            <p className="text-muted-foreground">Track your tree and trip CO₂ log</p>
-          </div>
 
           {/* Summary Cards */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
