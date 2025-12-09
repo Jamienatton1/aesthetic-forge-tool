@@ -58,54 +58,54 @@ export default function Trees() {
       <div className="flex-1">
         <Header />
         <main className="p-6 space-y-6">
-          {/* Trees Table */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <TreePine className="h-5 w-5" />
-                My Trees
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead className="w-[120px]">Date</TableHead>
-                    <TableHead className="w-[100px]">Trees</TableHead>
-                    <TableHead>Location</TableHead>
-                    <TableHead className="w-[80px] text-center">Certificate</TableHead>
-                    <TableHead className="w-[80px] text-center">Status</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {treesData.map((entry) => {
-                    const StatusIcon = statusConfig[entry.status].icon;
-                    return (
-                      <TableRow key={entry.id}>
-                        <TableCell className="font-medium text-muted-foreground">{entry.date}</TableCell>
-                        <TableCell className="font-semibold">{entry.trees.toLocaleString()}</TableCell>
-                        <TableCell>{entry.location}</TableCell>
-                        <TableCell className="text-center">
-                          <Button variant="ghost" size="icon" className="h-8 w-8">
-                            <FileDown className="h-4 w-4 text-muted-foreground hover:text-primary" />
-                          </Button>
-                        </TableCell>
-                        <TableCell className="text-center">
-                          <div className="flex justify-center">
-                            <StatusIcon className={`h-5 w-5 ${statusConfig[entry.status].className}`} />
-                          </div>
-                        </TableCell>
-                      </TableRow>
-                    );
-                  })}
-                </TableBody>
-              </Table>
-            </CardContent>
-          </Card>
+          {/* Main Content - Table and Map side by side */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* Trees Table */}
+            <Card>
+              <CardContent className="p-0">
+                <Table>
+                  <TableHeader>
+                    <TableRow className="bg-primary hover:bg-primary">
+                      <TableHead className="w-[100px] text-primary-foreground font-semibold">Date</TableHead>
+                      <TableHead className="w-[80px] text-primary-foreground font-semibold">Trees</TableHead>
+                      <TableHead className="text-primary-foreground font-semibold">Location</TableHead>
+                      <TableHead className="w-[60px] text-center text-primary-foreground font-semibold"></TableHead>
+                      <TableHead className="w-[60px] text-center text-primary-foreground font-semibold">Status</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {treesData.map((entry) => {
+                      const StatusIcon = statusConfig[entry.status].icon;
+                      return (
+                        <TableRow key={entry.id}>
+                          <TableCell className="font-medium text-muted-foreground text-sm">{entry.date}</TableCell>
+                          <TableCell className="font-semibold">{entry.trees.toLocaleString()}</TableCell>
+                          <TableCell className="text-sm">{entry.location}</TableCell>
+                          <TableCell className="text-center">
+                            <Button variant="ghost" size="icon" className="h-8 w-8">
+                              <FileDown className="h-4 w-4 text-muted-foreground hover:text-primary" />
+                            </Button>
+                          </TableCell>
+                          <TableCell className="text-center">
+                            <div className="flex justify-center">
+                              <StatusIcon className={`h-5 w-5 ${statusConfig[entry.status].className}`} />
+                            </div>
+                          </TableCell>
+                        </TableRow>
+                      );
+                    })}
+                  </TableBody>
+                </Table>
+              </CardContent>
+            </Card>
+
+            {/* Map Visualization */}
+            <TreesMap />
+          </div>
 
           {/* Status Key */}
           <Card>
-            <CardContent className="pt-6">
+            <CardContent className="py-4">
               <div className="flex flex-wrap items-center justify-center gap-6">
                 <span className="text-sm font-semibold text-muted-foreground">STATUS KEY:</span>
                 {Object.entries(statusConfig).map(([key, config]) => {
@@ -134,9 +134,6 @@ export default function Trees() {
               </Button>
             </div>
           </div>
-
-          {/* Map Visualization */}
-          <TreesMap />
         </main>
       </div>
     </div>
