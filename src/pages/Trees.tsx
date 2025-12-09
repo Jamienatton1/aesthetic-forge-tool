@@ -58,52 +58,6 @@ export default function Trees() {
       <div className="flex-1">
         <Header />
         <main className="p-6 space-y-6">
-          {/* Summary Stats */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <Card>
-              <CardContent className="pt-6">
-                <div className="flex items-center gap-3">
-                  <div className="p-3 rounded-lg bg-primary/10">
-                    <TreePine className="h-6 w-6 text-primary" />
-                  </div>
-                  <div>
-                    <p className="text-sm text-muted-foreground">Total Trees Planted</p>
-                    <p className="text-2xl font-bold text-foreground">{totalTrees.toLocaleString()}</p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardContent className="pt-6">
-                <div className="flex items-center gap-3">
-                  <div className="p-3 rounded-lg bg-primary/10">
-                    <MapPin className="h-6 w-6 text-primary" />
-                  </div>
-                  <div>
-                    <p className="text-sm text-muted-foreground">Locations</p>
-                    <p className="text-2xl font-bold text-foreground">3</p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardContent className="pt-6">
-                <div className="flex items-center gap-3">
-                  <div className="p-3 rounded-lg bg-primary/10">
-                    <FileDown className="h-6 w-6 text-primary" />
-                  </div>
-                  <div>
-                    <p className="text-sm text-muted-foreground">Certificates</p>
-                    <p className="text-2xl font-bold text-foreground">{treesData.length}</p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-
-          {/* Map Visualization */}
-          <TreesMap />
-
           {/* Trees Table */}
           <Card>
             <CardHeader>
@@ -180,6 +134,9 @@ export default function Trees() {
               </Button>
             </div>
           </div>
+
+          {/* Map Visualization */}
+          <TreesMap />
         </main>
       </div>
     </div>
