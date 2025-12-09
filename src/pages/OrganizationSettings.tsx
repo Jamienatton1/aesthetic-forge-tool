@@ -8,7 +8,19 @@ import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { Check, X } from "lucide-react";
+import { Check, X, UserPlus, Trash2, Mail } from "lucide-react";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { toast } from "sonner";
+
+type UserRole = "account_owner" | "billing_manager" | "user";
+
+interface OrganizationUser {
+  id: string;
+  email: string;
+  name: string;
+  role: UserRole;
+  status: "active" | "pending";
+}
 
 export default function OrganizationSettings() {
   const [companyName, setCompanyName] = useState("Zeero Group");
@@ -19,6 +31,79 @@ export default function OrganizationSettings() {
   const [billingName, setBillingName] = useState("");
   const [billingEmail, setBillingEmail] = useState("");
   const [plan] = useState("Core");
+  
+  // User management state
+  const [users, setUsers] = useState<OrganizationUser[]>([
+    { id: "1", email: "john@zeero-group.com", name: "John Smith", role: "account_owner", status: "active" },
+    { id: "2", email: "jane@zeero-group.com", name: "Jane Doe", role: "billing_manager", status: "active" },
+    { id: "3", email: "mike@zeero-group.com", name: "Mike Johnson", role: "user", status: "active" },
+  ]);
+  const [newUserEmail, setNewUserEmail] = useState("");
+  const [newUserRole, setNewUserRole] = useState<UserRole>("user");
+
+  const getRoleBadgeColor = (role: UserRole) => {
+    switch (role) {
+      case "account_owner":
+        return "bg-primary/10 text-primary border-primary/20";
+      case "billing_manager":
+        return "bg-amber-500/10 text-amber-600 border-amber-500/20";
+      case "user":
+        return "bg-muted text-muted-foreground border-border";
+    }
+  };
+
+  const getRoleLabel = (role: UserRole) => {
+    switch (role) {
+      case "account_owner":
+        return "Account Owner";
+      case "billing_manager":
+        return "Billing Manager";
+      case "user":
+        return "User";
+    }
+  };
+
+  const handleInviteUser = () => {
+    if (!newUserEmail) {
+      toast.error("Please enter an email address");
+      return;
+    }
+    
+    if (users.some(u => u.email === newUserEmail)) {
+      toast.error("This user is already a member");
+      return;
+    }
+
+    const newUser: OrganizationUser = {
+      id: Date.now().toString(),
+      email: newUserEmail,
+      name: "",
+      role: newUserRole,
+      status: "pending",
+    };
+
+    setUsers([...users, newUser]);
+    setNewUserEmail("");
+    setNewUserRole("user");
+    toast.success("Invitation sent successfully");
+  };
+
+  const handleRemoveUser = (userId: string) => {
+    const user = users.find(u => u.id === userId);
+    if (user?.role === "account_owner") {
+      toast.error("Cannot remove the account owner");
+      return;
+    }
+    setUsers(users.filter(u => u.id !== userId));
+    toast.success("User removed successfully");
+  };
+
+  const handleUpdateRole = (userId: string, newRole: UserRole) => {
+    setUsers(users.map(u => 
+      u.id === userId ? { ...u, role: newRole } : u
+    ));
+    toast.success("Role updated successfully");
+  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -31,8 +116,9 @@ export default function OrganizationSettings() {
         </div>
 
         <Tabs defaultValue="general" className="w-full">
-          <TabsList className="grid w-full max-w-md grid-cols-3">
+          <TabsList className="grid w-full max-w-lg grid-cols-4">
             <TabsTrigger value="general">General</TabsTrigger>
+            <TabsTrigger value="users">Users</TabsTrigger>
             <TabsTrigger value="contributions">Contributions</TabsTrigger>
             <TabsTrigger value="billing">Billing</TabsTrigger>
           </TabsList>
@@ -102,6 +188,145 @@ export default function OrganizationSettings() {
 
                 <div className="flex justify-end">
                   <Button>Save Changes</Button>
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="users" className="mt-6 space-y-6">
+            {/* Invite User Card */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <UserPlus className="h-5 w-5" />
+                  Invite New User
+                </CardTitle>
+                <CardDescription>
+                  Add team members to your organization and assign their roles
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="flex flex-col sm:flex-row gap-4">
+                  <div className="flex-1">
+                    <Label htmlFor="new-user-email" className="sr-only">Email</Label>
+                    <Input
+                      id="new-user-email"
+                      type="email"
+                      placeholder="Enter email address"
+                      value={newUserEmail}
+                      onChange={(e) => setNewUserEmail(e.target.value)}
+                    />
+                  </div>
+                  <div className="w-full sm:w-48">
+                    <Label htmlFor="new-user-role" className="sr-only">Role</Label>
+                    <Select value={newUserRole} onValueChange={(value: UserRole) => setNewUserRole(value)}>
+                      <SelectTrigger id="new-user-role">
+                        <SelectValue placeholder="Select role" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="account_owner">Account Owner</SelectItem>
+                        <SelectItem value="billing_manager">Billing Manager</SelectItem>
+                        <SelectItem value="user">User</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <Button onClick={handleInviteUser} className="gap-2">
+                    <Mail className="h-4 w-4" />
+                    Send Invite
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Users List Card */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Team Members</CardTitle>
+                <CardDescription>
+                  Manage your organization's users and their permissions
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>User</TableHead>
+                      <TableHead>Role</TableHead>
+                      <TableHead>Status</TableHead>
+                      <TableHead className="text-right">Actions</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {users.map((user) => (
+                      <TableRow key={user.id}>
+                        <TableCell>
+                          <div>
+                            <p className="font-medium text-foreground">
+                              {user.name || "Pending invitation"}
+                            </p>
+                            <p className="text-sm text-muted-foreground">{user.email}</p>
+                          </div>
+                        </TableCell>
+                        <TableCell>
+                          <Select
+                            value={user.role}
+                            onValueChange={(value: UserRole) => handleUpdateRole(user.id, value)}
+                            disabled={user.role === "account_owner"}
+                          >
+                            <SelectTrigger className="w-40">
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="account_owner">Account Owner</SelectItem>
+                              <SelectItem value="billing_manager">Billing Manager</SelectItem>
+                              <SelectItem value="user">User</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </TableCell>
+                        <TableCell>
+                          <Badge
+                            variant="outline"
+                            className={user.status === "active" 
+                              ? "bg-green-500/10 text-green-600 border-green-500/20" 
+                              : "bg-amber-500/10 text-amber-600 border-amber-500/20"
+                            }
+                          >
+                            {user.status === "active" ? "Active" : "Pending"}
+                          </Badge>
+                        </TableCell>
+                        <TableCell className="text-right">
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => handleRemoveUser(user.id)}
+                            disabled={user.role === "account_owner"}
+                            className="text-destructive hover:text-destructive hover:bg-destructive/10"
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+
+                {/* Role Descriptions */}
+                <div className="mt-6 p-4 bg-muted/50 rounded-lg">
+                  <h4 className="font-medium text-foreground mb-3">Role Permissions</h4>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+                    <div>
+                      <p className="font-medium text-primary">Account Owner</p>
+                      <p className="text-muted-foreground">Full access to all features, billing, and user management</p>
+                    </div>
+                    <div>
+                      <p className="font-medium text-amber-600">Billing Manager</p>
+                      <p className="text-muted-foreground">Can manage billing, view invoices, and update payment methods</p>
+                    </div>
+                    <div>
+                      <p className="font-medium text-muted-foreground">User</p>
+                      <p className="text-muted-foreground">Can create and manage events, view reports</p>
+                    </div>
+                  </div>
                 </div>
               </CardContent>
             </Card>
