@@ -159,25 +159,10 @@ export function TreesMap() {
   }
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          <MapPin className="h-5 w-5" />
-          Tree Planting Locations
-        </CardTitle>
-      </CardHeader>
-      <CardContent>
-        <div className="relative w-full h-[400px] rounded-lg overflow-hidden">
+    <Card className="h-full">
+      <CardContent className="p-0 h-full">
+        <div className="relative w-full h-[500px] rounded-lg overflow-hidden">
           <div ref={mapContainer} className="absolute inset-0" />
-        </div>
-        <div className="mt-4 flex flex-wrap gap-4 justify-center">
-          {treeLocations.map((location) => (
-            <div key={location.name} className="flex items-center gap-2 text-sm">
-              <div className="w-3 h-3 rounded-full bg-primary" />
-              <span className="text-muted-foreground">{location.name}</span>
-              <span className="font-semibold text-foreground">({location.trees.toLocaleString()} trees)</span>
-            </div>
-          ))}
         </div>
       </CardContent>
     </Card>
