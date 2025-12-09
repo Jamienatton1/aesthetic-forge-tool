@@ -10,7 +10,8 @@ import {
 } from "@/components/ui/table";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { TreePine, FileDown, MapPin, Clock, CheckCircle2, Map, Link2, Copy } from "lucide-react";
+import { TreePine, FileDown, MapPin, Clock, CheckCircle2, Map, Copy } from "lucide-react";
+import { TreesMap } from "@/components/trees/TreesMap";
 import { useToast } from "@/hooks/use-toast";
 
 interface TreeEntry {
@@ -99,6 +100,9 @@ export default function Trees() {
               </CardContent>
             </Card>
           </div>
+
+          {/* Map Visualization */}
+          <TreesMap />
 
           {/* Trees Table */}
           <Card>
