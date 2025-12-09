@@ -56,14 +56,11 @@ export default function Trees() {
     <div className="min-h-screen flex w-full bg-background">
       <Sidebar />
       <div className="flex-1">
-        <Header />
+        <Header 
+          title="Trees overview" 
+          subtitle="View your planted trees and carbon certificates" 
+        />
         <main className="p-6 space-y-6">
-          {/* Page Title */}
-          <div>
-            <h1 className="text-2xl font-bold text-foreground">Trees overview</h1>
-            <p className="text-muted-foreground">View your planted trees and carbon certificates</p>
-          </div>
-
           {/* Main Content - Table and Map side by side */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {/* Trees Table */}
