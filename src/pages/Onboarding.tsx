@@ -6,13 +6,17 @@ import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Card, CardContent } from "@/components/ui/card";
-import { Building2, Plane, Users, CreditCard, UserCog, Check } from "lucide-react";
+import { Building2, Plane, Users, CreditCard, UserCog, Check, User } from "lucide-react";
 
 type CompanyType = "events" | "tmc" | "corporate" | "";
 type PaymentMethod = "invoice" | "credit-card" | "";
 type UserRole = "billing_manager" | "account_owner" | "user" | "";
 
 interface OnboardingData {
+  name: string;
+  company: string;
+  workEmail: string;
+  phone: string;
   companyType: CompanyType;
   annualTurnover: string;
   businessTravelSpend: string;
@@ -27,6 +31,10 @@ const Onboarding = () => {
   const navigate = useNavigate();
   const [currentStep, setCurrentStep] = useState(1);
   const [formData, setFormData] = useState<OnboardingData>({
+    name: "",
+    company: "",
+    workEmail: "",
+    phone: "",
     companyType: "",
     annualTurnover: "",
     businessTravelSpend: "",
@@ -37,7 +45,7 @@ const Onboarding = () => {
     users: [{ email: "", role: "" }],
   });
 
-  const totalSteps = 4;
+  const totalSteps = 5;
 
   const handleNext = () => {
     if (currentStep < totalSteps) {
@@ -137,6 +145,73 @@ const Onboarding = () => {
   const renderStep1 = () => (
     <div className="space-y-6">
       <div className="text-center mb-8">
+        <h2 className="text-2xl font-bold text-foreground mb-2">Welcome! Let's get started</h2>
+        <p className="text-muted-foreground">Tell us a bit about yourself</p>
+      </div>
+
+      <div className="max-w-md mx-auto space-y-6">
+        <div className="space-y-3">
+          <Label htmlFor="name" className="text-lg font-semibold text-foreground">
+            Your Name
+          </Label>
+          <Input
+            id="name"
+            type="text"
+            placeholder="Enter your full name"
+            value={formData.name}
+            onChange={(e) => handleInputChange("name", e.target.value)}
+            className="h-12 text-base"
+          />
+        </div>
+
+        <div className="space-y-3">
+          <Label htmlFor="company" className="text-lg font-semibold text-foreground">
+            Company
+          </Label>
+          <Input
+            id="company"
+            type="text"
+            placeholder="Enter your company name"
+            value={formData.company}
+            onChange={(e) => handleInputChange("company", e.target.value)}
+            className="h-12 text-base"
+          />
+        </div>
+
+        <div className="space-y-3">
+          <Label htmlFor="workEmail" className="text-lg font-semibold text-foreground">
+            Work Email Address
+          </Label>
+          <Input
+            id="workEmail"
+            type="email"
+            placeholder="Enter your work email"
+            value={formData.workEmail}
+            onChange={(e) => handleInputChange("workEmail", e.target.value)}
+            className="h-12 text-base"
+          />
+        </div>
+
+        <div className="space-y-3">
+          <Label htmlFor="phone" className="text-lg font-semibold text-foreground">
+            Phone <span className="text-muted-foreground font-normal">(optional)</span>
+          </Label>
+          <Input
+            id="phone"
+            type="tel"
+            placeholder="Enter your phone number"
+            value={formData.phone}
+            onChange={(e) => handleInputChange("phone", e.target.value)}
+            className="h-12 text-base"
+          />
+        </div>
+      </div>
+    </div>
+  );
+
+  const renderStep2 = () => (
+    <div className="space-y-6">
+      <div className="text-center mb-8">
         <h2 className="text-2xl font-bold text-foreground mb-2">Select your company type</h2>
         <p className="text-muted-foreground">This helps us customize your experience</p>
       </div>
@@ -215,7 +290,7 @@ const Onboarding = () => {
     </div>
   );
 
-  const renderStep2 = () => {
+  const renderStep3 = () => {
     if (formData.companyType === "corporate") {
       return (
         <div className="space-y-6">
@@ -328,7 +403,7 @@ const Onboarding = () => {
     return null;
   };
 
-  const renderStep3 = () => {
+  const renderStep4 = () => {
     const accountSize = getAccountSize();
 
     return (
@@ -401,7 +476,7 @@ const Onboarding = () => {
     );
   };
 
-  const renderStep4 = () => (
+  const renderStep5 = () => (
     <div className="space-y-6">
       <div className="text-center mb-8">
         <h2 className="text-2xl font-bold text-foreground mb-2">Account Management</h2>
@@ -476,6 +551,8 @@ const Onboarding = () => {
         return renderStep3();
       case 4:
         return renderStep4();
+      case 5:
+        return renderStep5();
       default:
         return null;
     }
@@ -484,24 +561,26 @@ const Onboarding = () => {
   const canProceed = () => {
     switch (currentStep) {
       case 1:
-        return !!formData.companyType;
+        return formData.name !== "" && formData.company !== "" && formData.workEmail !== "";
       case 2:
+        return formData.companyType !== "";
+      case 3:
         if (formData.companyType === "corporate") {
-          return !!(formData.annualTurnover || formData.businessTravelSpend);
+          return formData.annualTurnover !== "" || formData.businessTravelSpend !== "";
         }
         if (formData.companyType === "tmc") {
-          return !!formData.customerTravelSpend;
+          return formData.customerTravelSpend !== "";
         }
         if (formData.companyType === "events") {
-          return !!(formData.numberOfEvents || formData.numberOfAttendees);
+          return formData.numberOfEvents !== "" || formData.numberOfAttendees !== "";
         }
         return false;
-      case 3:
-        return !!formData.paymentMethod;
       case 4:
-        return formData.users.some(u => u.email && u.role);
+        return formData.paymentMethod !== "";
+      case 5:
+        return formData.users.some(user => user.email !== "" && user.role !== "");
       default:
-        return false;
+        return true;
     }
   };
 
