@@ -22,7 +22,7 @@ import CompensationReport from "./pages/CompensationReport";
 import QuestionnaireResponses from "./pages/QuestionnaireResponses";
 import TreeSwag from "./pages/TreeSwag";
 import NotFound from "./pages/NotFound";
-import OrganizationSettings from "./pages/OrganizationSettings";
+import OrganisationSettings from "./pages/OrganisationSettings";
 import Balance from "./pages/Balance";
 import Trees from "./pages/Trees";
 
@@ -55,7 +55,7 @@ const App = () => (
           <Route path="/tree-swag" element={<TreeSwag />} />
           <Route path="/balance" element={<Balance />} />
           <Route path="/trees" element={<Trees />} />
-          <Route path="/organization-settings" element={<OrganizationSettings />} />
+          <Route path="/organisation-settings" element={<OrganisationSettings />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

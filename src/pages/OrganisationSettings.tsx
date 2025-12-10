@@ -15,7 +15,7 @@ import { toast } from "sonner";
 
 type UserRole = "account_owner" | "billing_manager" | "user";
 
-interface OrganizationUser {
+interface OrganisationUser {
   id: string;
   email: string;
   name: string;
@@ -23,7 +23,7 @@ interface OrganizationUser {
   status: "active" | "pending";
 }
 
-export default function OrganizationSettings() {
+export default function OrganisationSettings() {
   const navigate = useNavigate();
   const [companyName, setCompanyName] = useState("Zeero Group");
   const [urlSegment, setUrlSegment] = useState("zeero-group");
@@ -35,7 +35,7 @@ export default function OrganizationSettings() {
   const [plan] = useState("Core");
   
   // User management state
-  const [users, setUsers] = useState<OrganizationUser[]>([
+  const [users, setUsers] = useState<OrganisationUser[]>([
     { id: "1", email: "john@zeero-group.com", name: "John Smith", role: "account_owner", status: "active" },
     { id: "2", email: "jane@zeero-group.com", name: "Jane Doe", role: "billing_manager", status: "active" },
     { id: "3", email: "mike@zeero-group.com", name: "Mike Johnson", role: "user", status: "active" },
@@ -76,7 +76,7 @@ export default function OrganizationSettings() {
       return;
     }
 
-    const newUser: OrganizationUser = {
+    const newUser: OrganisationUser = {
       id: Date.now().toString(),
       email: newUserEmail,
       name: "",
@@ -138,7 +138,7 @@ export default function OrganizationSettings() {
             <Card>
               <CardHeader>
                 <CardTitle>General Settings</CardTitle>
-                <CardDescription>Update your organization's basic information</CardDescription>
+                <CardDescription>Update your organisation's basic information</CardDescription>
               </CardHeader>
               <CardContent className="space-y-6">
                 <div className="space-y-2">
@@ -213,7 +213,7 @@ export default function OrganizationSettings() {
                   Invite New User
                 </CardTitle>
                 <CardDescription>
-                  Add team members to your organization and assign their roles
+                  Add team members to your organisation and assign their roles
                 </CardDescription>
               </CardHeader>
               <CardContent>
@@ -254,7 +254,7 @@ export default function OrganizationSettings() {
               <CardHeader>
                 <CardTitle>Team Members</CardTitle>
                 <CardDescription>
-                  Manage your organization's users and their permissions
+                  Manage your organisation's users and their permissions
                 </CardDescription>
               </CardHeader>
               <CardContent>
@@ -348,7 +348,7 @@ export default function OrganizationSettings() {
               <CardHeader>
                 <CardTitle>Contribution Pricing</CardTitle>
                 <CardDescription>
-                  Manage prices per tree payable by organizations to offset their CO2 emissions
+                  Manage prices per tree payable by organisations to offset their CO2 emissions
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-6">
@@ -366,7 +366,7 @@ export default function OrganizationSettings() {
                     />
                   </div>
                   <p className="text-sm text-muted-foreground">
-                    This is the amount organizations will pay per tree to offset their carbon emissions
+                    This is the amount organisations will pay per tree to offset their carbon emissions
                   </p>
                 </div>
 
@@ -405,7 +405,7 @@ export default function OrganizationSettings() {
             <Card>
               <CardHeader>
                 <CardTitle>Subscription Plans</CardTitle>
-                <CardDescription>Choose the plan that best fits your organization's needs</CardDescription>
+                <CardDescription>Choose the plan that best fits your organisation's needs</CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="grid grid-cols-3 gap-6">
