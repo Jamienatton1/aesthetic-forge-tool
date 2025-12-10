@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Header } from "@/components/dashboard/Header";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -8,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { Check, X, UserPlus, Trash2, Mail } from "lucide-react";
+import { Check, X, UserPlus, Trash2, Mail, Home } from "lucide-react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { toast } from "sonner";
 
@@ -23,6 +24,7 @@ interface OrganizationUser {
 }
 
 export default function OrganizationSettings() {
+  const navigate = useNavigate();
   const [companyName, setCompanyName] = useState("Zeero Group");
   const [urlSegment, setUrlSegment] = useState("zeero-group");
   const [currency, setCurrency] = useState("USD");
@@ -107,12 +109,21 @@ export default function OrganizationSettings() {
 
   return (
     <div className="min-h-screen bg-background">
-      <Header />
+      <Header 
+        title="Organization Settings" 
+        subtitle="Manage your organization's configuration and billing"
+      />
       
       <div className="container mx-auto px-8 py-8">
         <div className="mb-6">
-          <h1 className="text-3xl font-bold text-foreground">Organization Settings</h1>
-          <p className="text-muted-foreground mt-1">Manage your organization's configuration and billing</p>
+          <Button 
+            variant="outline" 
+            onClick={() => navigate("/")}
+            className="gap-2"
+          >
+            <Home className="h-4 w-4" />
+            Back to Home
+          </Button>
         </div>
 
         <Tabs defaultValue="general" className="w-full">
