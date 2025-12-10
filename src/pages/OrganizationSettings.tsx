@@ -110,8 +110,8 @@ export default function OrganizationSettings() {
   return (
     <div className="min-h-screen bg-background">
       <Header 
-        title="Organization Settings" 
-        subtitle="Manage your organization's configuration and billing"
+        title="Organisation Settings" 
+        subtitle="Manage your organisation's configuration and billing"
       />
       
       <div className="container mx-auto px-8 py-8">
