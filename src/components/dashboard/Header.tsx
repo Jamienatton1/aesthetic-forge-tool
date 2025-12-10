@@ -42,7 +42,7 @@ export function Header({
                 <UserCog className="mr-2 h-4 w-4" />
                 Personal setting
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => navigate("/organization-settings")}>
+              <DropdownMenuItem onClick={() => navigate("/organisation-settings")}>
                 <Building2 className="mr-2 h-4 w-4" />
                 Company setting
               </DropdownMenuItem>

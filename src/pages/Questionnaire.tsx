@@ -41,7 +41,7 @@ export default function Questionnaire() {
   });
   
   const [questions, setQuestions] = useState<Question[]>([
-    { id: '1', text: 'How many people attended from your organization?', type: 'number', required: true },
+    { id: '1', text: 'How many people attended from your organisation?', type: 'number', required: true },
     { id: '2', text: 'What was the primary method of transportation?', type: 'multiple-choice', options: ['Car', 'Train', 'Bus', 'Flight', 'Walking/Cycling'], required: true },
     { id: '3', text: 'How would you rate the sustainability of this event?', type: 'rating', required: false }
   ]);
@@ -208,7 +208,7 @@ export default function Questionnaire() {
                       <Label>Logo Upload</Label>
                       <div className="border-2 border-dashed rounded-lg p-6 text-center">
                         <Upload className="w-8 h-8 mx-auto mb-2 text-muted-foreground" />
-                        <p className="text-sm text-muted-foreground">Click to upload your organization's logo</p>
+                        <p className="text-sm text-muted-foreground">Click to upload your organisation's logo</p>
                         <Button variant="outline" size="sm" className="mt-2">
                           Choose File
                         </Button>
