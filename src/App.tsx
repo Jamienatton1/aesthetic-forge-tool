@@ -25,6 +25,7 @@ import NotFound from "./pages/NotFound";
 import OrganisationSettings from "./pages/OrganisationSettings";
 import Balance from "./pages/Balance";
 import Trees from "./pages/Trees";
+import CO2Calculator from "./pages/CO2Calculator";
 
 const queryClient = new QueryClient();
 
@@ -55,6 +56,7 @@ const App = () => (
           <Route path="/tree-swag" element={<TreeSwag />} />
           <Route path="/balance" element={<Balance />} />
           <Route path="/trees" element={<Trees />} />
+          <Route path="/co2-calculator" element={<CO2Calculator />} />
           <Route path="/organisation-settings" element={<OrganisationSettings />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
