@@ -1,10 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react';
 import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { MapPin, TreePine } from 'lucide-react';
+import { TreePine } from 'lucide-react';
 
 interface Location {
   name: string;
@@ -108,63 +107,45 @@ export function CalculatorMap() {
 
   if (!token) {
     return (
-      <Card className="h-full bg-card">
-        <CardHeader className="pb-3">
-          <CardTitle className="flex items-center gap-2 text-base">
-            <MapPin className="h-5 w-5 text-primary" />
-            Tree Planting Locations
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            <div className="flex items-center gap-3 p-4 bg-muted/50 rounded-lg">
-              <TreePine className="h-8 w-8 text-primary" />
-              <p className="text-sm text-muted-foreground">
-                Enter your Mapbox token to view where your trees will be planted around the world.
-              </p>
-            </div>
-            <div className="flex gap-2">
-              <Input
-                type="text"
-                placeholder="Enter Mapbox public token"
-                value={inputToken}
-                onChange={(e) => setInputToken(e.target.value)}
-                className="flex-1"
-              />
-              <Button onClick={handleSaveToken} disabled={!inputToken}>
-                Load Map
-              </Button>
-            </div>
-            <p className="text-xs text-muted-foreground">
-              Get your free token from{' '}
-              <a 
-                href="https://mapbox.com/" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="text-primary hover:underline"
-              >
-                mapbox.com
-              </a>
+      <div className="p-4 flex-1 flex flex-col justify-center">
+        <div className="space-y-4">
+          <div className="flex items-center gap-3 p-4 bg-muted/50 rounded-lg">
+            <TreePine className="h-8 w-8 text-primary" />
+            <p className="text-sm text-muted-foreground">
+              Enter your Mapbox token to view where your trees will be planted around the world.
             </p>
           </div>
-        </CardContent>
-      </Card>
+          <div className="flex gap-2">
+            <Input
+              type="text"
+              placeholder="Enter Mapbox public token"
+              value={inputToken}
+              onChange={(e) => setInputToken(e.target.value)}
+              className="flex-1"
+            />
+            <Button onClick={handleSaveToken} disabled={!inputToken}>
+              Load Map
+            </Button>
+          </div>
+          <p className="text-xs text-muted-foreground">
+            Get your free token from{' '}
+            <a 
+              href="https://mapbox.com/" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="text-primary hover:underline"
+            >
+              mapbox.com
+            </a>
+          </p>
+        </div>
+      </div>
     );
   }
 
   return (
-    <Card className="h-full bg-card overflow-hidden">
-      <CardHeader className="pb-3">
-        <CardTitle className="flex items-center gap-2 text-base">
-          <TreePine className="h-5 w-5 text-primary" />
-          Where Your Trees Will Grow
-        </CardTitle>
-      </CardHeader>
-      <CardContent className="p-0">
-        <div className="relative w-full h-[280px]">
-          <div ref={mapContainer} className="absolute inset-0" />
-        </div>
-      </CardContent>
-    </Card>
+    <div className="relative w-full h-[280px] flex-1 min-h-[200px]">
+      <div ref={mapContainer} className="absolute inset-0" />
+    </div>
   );
 }
