@@ -11,7 +11,8 @@ import {
   Plus, Trash2, TreePine, MapPin, Calendar, Users, ArrowRight,
   Sailboat, Mountain
 } from "lucide-react";
-import { Sidebar } from "@/components/dashboard/Sidebar";
+import { TopNavBar } from "@/components/calculator/TopNavBar";
+import { CalculatorMap } from "@/components/calculator/CalculatorMap";
 import { TooltipProvider } from "@/components/ui/tooltip";
 
 // Item type definitions
@@ -286,22 +287,25 @@ export default function CO2Calculator() {
 
   return (
     <TooltipProvider>
-      <div className="flex min-h-screen bg-background">
-        <Sidebar />
+      <div className="min-h-screen bg-background flex flex-col">
+        <TopNavBar />
         
-        <div className="flex-1 ml-64">
-          {/* Hero Section */}
-          <div className="bg-gradient-to-r from-primary to-accent text-primary-foreground p-8">
+        {/* Hero Section */}
+        <div className="bg-gradient-to-r from-primary to-accent text-primary-foreground py-8 px-4">
+          <div className="max-w-7xl mx-auto">
             <h1 className="text-3xl font-bold mb-2">CO₂ Calculator</h1>
             <p className="text-primary-foreground/80">
               Calculate your carbon footprint and see how many trees you need to offset your emissions
             </p>
           </div>
+        </div>
 
-          <div className="p-8">
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        {/* Main Content */}
+        <main className="flex-1 py-8 px-4">
+          <div className="max-w-7xl mx-auto">
+            <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
               {/* Left Column - Calculator Form */}
-              <div className="lg:col-span-2 space-y-6">
+              <div className="xl:col-span-2 space-y-6">
                 <Card>
                   <CardHeader>
                     <CardTitle className="flex items-center gap-2">
@@ -731,7 +735,7 @@ export default function CO2Calculator() {
                 )}
               </div>
 
-              {/* Right Column - Summary */}
+              {/* Right Column - Summary & Map */}
               <div className="space-y-6">
                 <Card className="sticky top-8">
                   <CardHeader className="bg-primary text-primary-foreground rounded-t-lg">
@@ -798,10 +802,13 @@ export default function CO2Calculator() {
                     </p>
                   </CardContent>
                 </Card>
+
+                {/* Map */}
+                <CalculatorMap />
               </div>
             </div>
           </div>
-        </div>
+        </main>
       </div>
     </TooltipProvider>
   );
