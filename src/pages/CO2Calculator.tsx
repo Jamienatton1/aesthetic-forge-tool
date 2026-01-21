@@ -302,74 +302,38 @@ export default function CO2Calculator() {
 
         {/* Main Content */}
         <main className="flex-1 py-8 px-4">
-          <div className="max-w-7xl mx-auto space-y-8">
-            
-            {/* Section 1: Item Type Selection */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Plus className="h-5 w-5" />
-                  Select Item Type
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  <button
-                    onClick={() => handleCategoryChange("trip")}
-                    className={`p-6 rounded-lg border-2 transition-all text-left ${
-                      selectedCategory === "trip"
-                        ? "border-primary bg-primary/10"
-                        : "border-border hover:border-primary/50"
-                    }`}
-                  >
-                    <Plane className={`h-8 w-8 mb-3 ${selectedCategory === "trip" ? "text-primary" : "text-muted-foreground"}`} />
-                    <h3 className="font-semibold text-lg">Trip</h3>
-                    <p className="text-sm text-muted-foreground">Flights, cars, trains & more</p>
-                  </button>
-                  <button
-                    onClick={() => handleCategoryChange("accommodation")}
-                    className={`p-6 rounded-lg border-2 transition-all text-left ${
-                      selectedCategory === "accommodation"
-                        ? "border-primary bg-primary/10"
-                        : "border-border hover:border-primary/50"
-                    }`}
-                  >
-                    <Building className={`h-8 w-8 mb-3 ${selectedCategory === "accommodation" ? "text-primary" : "text-muted-foreground"}`} />
-                    <h3 className="font-semibold text-lg">Accommodation</h3>
-                    <p className="text-sm text-muted-foreground">Hotels, rentals & cruises</p>
-                  </button>
-                  <button
-                    onClick={() => handleCategoryChange("adventure")}
-                    className={`p-6 rounded-lg border-2 transition-all text-left ${
-                      selectedCategory === "adventure"
-                        ? "border-primary bg-primary/10"
-                        : "border-border hover:border-primary/50"
-                    }`}
-                  >
-                    <Mountain className={`h-8 w-8 mb-3 ${selectedCategory === "adventure" ? "text-primary" : "text-muted-foreground"}`} />
-                    <h3 className="font-semibold text-lg">Adventure Travel</h3>
-                    <p className="text-sm text-muted-foreground">4x4, boats, helicopters & camps</p>
-                  </button>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Section 2: Calculator Forms & Summary */}
+          <div className="max-w-7xl mx-auto">
             <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
-              {/* Calculator Form */}
+              {/* Left Column - Calculator Form */}
               <div className="xl:col-span-2 space-y-6">
                 <Card>
                   <CardHeader>
                     <CardTitle className="flex items-center gap-2">
-                      {selectedCategory === "trip" && <Plane className="h-5 w-5" />}
-                      {selectedCategory === "accommodation" && <Building className="h-5 w-5" />}
-                      {selectedCategory === "adventure" && <Mountain className="h-5 w-5" />}
-                      {selectedCategory === "trip" && "Trip Details"}
-                      {selectedCategory === "accommodation" && "Accommodation Details"}
-                      {selectedCategory === "adventure" && "Adventure Details"}
+                      <Plus className="h-5 w-5" />
+                      Add Item
                     </CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-6">
+                    {/* Item Type Selector */}
+                    <div className="space-y-2">
+                      <Label>Item Type</Label>
+                      <Select 
+                        value={selectedCategory} 
+                        onValueChange={(value) => handleCategoryChange(value as ItemCategory)}
+                      >
+                        <SelectTrigger className="bg-background">
+                          <SelectValue placeholder="Select item type" />
+                        </SelectTrigger>
+                        <SelectContent className="bg-popover z-50">
+                          <SelectItem value="trip">Trip</SelectItem>
+                          <SelectItem value="accommodation">Accommodation</SelectItem>
+                          <SelectItem value="adventure">Adventure Travel</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+
+                    <Separator />
+
                     {/* Trip Form */}
                     {selectedCategory === "trip" && (
                       <div className="space-y-4">
@@ -481,7 +445,7 @@ export default function CO2Calculator() {
 
                         {!tripData.manualDistance && (
                           <div className="space-y-2">
-                            <Label>Distance (km)</Label>
+                            <Label>Estimated Distance (km)</Label>
                             <Input 
                               type="number" 
                               placeholder="Distance will be calculated or enter manually"
@@ -496,7 +460,7 @@ export default function CO2Calculator() {
                           <div className="space-y-2">
                             <Label className="flex items-center gap-2">
                               <Users className="h-4 w-4" />
-                              Number of Travellers
+                              Travellers
                             </Label>
                             <Input 
                               type="number" 
@@ -506,17 +470,12 @@ export default function CO2Calculator() {
                               className="bg-background"
                             />
                           </div>
-                          <div className="space-y-2">
-                            <Label>Return Trip?</Label>
-                            <div className="flex items-center space-x-2 pt-2">
-                              <Switch 
-                                checked={tripData.returnTrip}
-                                onCheckedChange={(checked) => setTripData({ ...tripData, returnTrip: checked })}
-                              />
-                              <span className="text-sm text-muted-foreground">
-                                {tripData.returnTrip ? "Yes (×2 emissions)" : "One way"}
-                              </span>
-                            </div>
+                          <div className="flex items-center space-x-2 pt-8">
+                            <Switch 
+                              checked={tripData.returnTrip}
+                              onCheckedChange={(checked) => setTripData({ ...tripData, returnTrip: checked })}
+                            />
+                            <Label>Return Trip</Label>
                           </div>
                         </div>
                       </div>
@@ -561,22 +520,7 @@ export default function CO2Calculator() {
                             />
                           </div>
                           <div className="space-y-2">
-                            <Label className="flex items-center gap-2">
-                              <MapPin className="h-4 w-4" />
-                              Location
-                            </Label>
-                            <Input 
-                              placeholder="e.g., Paris, France"
-                              value={accommodationData.location}
-                              onChange={(e) => setAccommodationData({ ...accommodationData, location: e.target.value })}
-                              className="bg-background"
-                            />
-                          </div>
-                        </div>
-
-                        <div className="grid grid-cols-2 gap-4">
-                          <div className="space-y-2">
-                            <Label>Number of Nights</Label>
+                            <Label>Nights</Label>
                             <Input 
                               type="number" 
                               min="1"
@@ -585,19 +529,33 @@ export default function CO2Calculator() {
                               className="bg-background"
                             />
                           </div>
-                          <div className="space-y-2">
-                            <Label className="flex items-center gap-2">
-                              <Users className="h-4 w-4" />
-                              Number of Guests
-                            </Label>
-                            <Input 
-                              type="number" 
-                              min="1"
-                              value={accommodationData.guests}
-                              onChange={(e) => setAccommodationData({ ...accommodationData, guests: parseInt(e.target.value) || 1 })}
-                              className="bg-background"
-                            />
-                          </div>
+                        </div>
+
+                        <div className="space-y-2">
+                          <Label className="flex items-center gap-2">
+                            <MapPin className="h-4 w-4" />
+                            Location
+                          </Label>
+                          <Input 
+                            placeholder="e.g., Milan, Italy"
+                            value={accommodationData.location}
+                            onChange={(e) => setAccommodationData({ ...accommodationData, location: e.target.value })}
+                            className="bg-background"
+                          />
+                        </div>
+
+                        <div className="space-y-2">
+                          <Label className="flex items-center gap-2">
+                            <Users className="h-4 w-4" />
+                            Guests
+                          </Label>
+                          <Input 
+                            type="number" 
+                            min="1"
+                            value={accommodationData.guests}
+                            onChange={(e) => setAccommodationData({ ...accommodationData, guests: parseInt(e.target.value) || 1 })}
+                            className="bg-background"
+                          />
                         </div>
                       </div>
                     )}
@@ -642,21 +600,6 @@ export default function CO2Calculator() {
                           </div>
                           <div className="space-y-2">
                             <Label className="flex items-center gap-2">
-                              <MapPin className="h-4 w-4" />
-                              Location
-                            </Label>
-                            <Input 
-                              placeholder="e.g., Serengeti, Tanzania"
-                              value={adventureData.location}
-                              onChange={(e) => setAdventureData({ ...adventureData, location: e.target.value })}
-                              className="bg-background"
-                            />
-                          </div>
-                        </div>
-
-                        <div className="grid grid-cols-3 gap-4">
-                          <div className="space-y-2">
-                            <Label className="flex items-center gap-2">
                               <Users className="h-4 w-4" />
                               Participants
                             </Label>
@@ -668,30 +611,44 @@ export default function CO2Calculator() {
                               className="bg-background"
                             />
                           </div>
-                          {["lodge", "mobile_camp"].includes(adventureData.adventureType) ? (
-                            <div className="space-y-2">
-                              <Label>Duration (nights)</Label>
-                              <Input 
-                                type="number" 
-                                min="1"
-                                value={adventureData.duration}
-                                onChange={(e) => setAdventureData({ ...adventureData, duration: parseInt(e.target.value) || 1 })}
-                                className="bg-background"
-                              />
-                            </div>
-                          ) : (
-                            <div className="space-y-2">
-                              <Label>Distance (km)</Label>
-                              <Input 
-                                type="number" 
-                                min="0"
-                                value={adventureData.distance || ""}
-                                onChange={(e) => setAdventureData({ ...adventureData, distance: parseFloat(e.target.value) || 0 })}
-                                className="bg-background"
-                              />
-                            </div>
-                          )}
                         </div>
+
+                        <div className="space-y-2">
+                          <Label className="flex items-center gap-2">
+                            <MapPin className="h-4 w-4" />
+                            Location
+                          </Label>
+                          <Input 
+                            placeholder="e.g., Serengeti, Tanzania"
+                            value={adventureData.location}
+                            onChange={(e) => setAdventureData({ ...adventureData, location: e.target.value })}
+                            className="bg-background"
+                          />
+                        </div>
+
+                        {["lodge", "mobile_camp"].includes(adventureData.adventureType) ? (
+                          <div className="space-y-2">
+                            <Label>Duration (nights)</Label>
+                            <Input 
+                              type="number" 
+                              min="1"
+                              value={adventureData.duration}
+                              onChange={(e) => setAdventureData({ ...adventureData, duration: parseInt(e.target.value) || 1 })}
+                              className="bg-background"
+                            />
+                          </div>
+                        ) : (
+                          <div className="space-y-2">
+                            <Label>Distance (km)</Label>
+                            <Input 
+                              type="number" 
+                              placeholder="Enter distance in kilometers"
+                              value={adventureData.distance || ""}
+                              onChange={(e) => setAdventureData({ ...adventureData, distance: parseFloat(e.target.value) || 0 })}
+                              className="bg-background"
+                            />
+                          </div>
+                        )}
                       </div>
                     )}
 
@@ -778,8 +735,8 @@ export default function CO2Calculator() {
                 )}
               </div>
 
-              {/* Summary Card */}
-              <div>
+              {/* Right Column - Summary & Map */}
+              <div className="space-y-6">
                 <Card className="sticky top-8">
                   <CardHeader className="bg-primary text-primary-foreground rounded-t-lg">
                     <CardTitle className="flex items-center gap-2">
@@ -845,12 +802,10 @@ export default function CO2Calculator() {
                     </p>
                   </CardContent>
                 </Card>
-              </div>
-            </div>
 
-            {/* Section 3: Map */}
-            <div className="w-full">
-              <CalculatorMap />
+                {/* Map */}
+                <CalculatorMap />
+              </div>
             </div>
           </div>
         </main>
