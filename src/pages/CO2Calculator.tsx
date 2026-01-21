@@ -303,17 +303,16 @@ export default function CO2Calculator() {
         {/* Main Content - Three Column Layout */}
         <main className="flex-1 py-8 px-4">
           <div className="max-w-7xl mx-auto">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-stretch">
               {/* Column 1 - Item Type Form */}
-              <div className="space-y-6">
-                <Card className="h-fit">
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                      <Plus className="h-5 w-5" />
-                      Add Item
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
+              <Card className="flex flex-col">
+                <CardHeader className="bg-primary text-primary-foreground rounded-t-lg">
+                  <CardTitle className="flex items-center gap-2 text-base">
+                    <Plus className="h-5 w-5" />
+                    Add Item
+                  </CardTitle>
+                </CardHeader>
+                  <CardContent className="space-y-4 flex-1">
                     {/* Item Type Selector */}
                     <div className="space-y-2">
                       <Label>Item Type</Label>
@@ -642,21 +641,19 @@ export default function CO2Calculator() {
                       >
                         New Item
                       </Button>
-                    </div>
-                  </CardContent>
-                </Card>
-              </div>
+                  </div>
+                </CardContent>
+              </Card>
 
               {/* Column 2 - Trip CO2 Summary */}
-              <div className="space-y-6">
-                <Card className="h-fit">
-                  <CardHeader className="bg-primary text-primary-foreground rounded-t-lg">
-                    <CardTitle className="flex items-center gap-2 text-base">
-                      <TreePine className="h-5 w-5" />
-                      Trip CO₂
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="pt-4 space-y-4">
+              <Card className="flex flex-col">
+                <CardHeader className="bg-primary text-primary-foreground rounded-t-lg">
+                  <CardTitle className="flex items-center gap-2 text-base">
+                    <TreePine className="h-5 w-5" />
+                    Trip CO₂
+                  </CardTitle>
+                </CardHeader>
+                  <CardContent className="pt-4 space-y-4 flex-1">
                     {/* Items List */}
                     {items.length > 0 ? (
                       <div className="space-y-2">
@@ -726,16 +723,22 @@ export default function CO2Calculator() {
                       The trees you plant help create new future forests for our planet. 
                       We go that 'extra mile', combining your tree purchases with certified 
                       carbon credits investing into renewable energy projects.
-                    </p>
-                  </CardContent>
-                </Card>
-              </div>
+                  </p>
+                </CardContent>
+              </Card>
 
               {/* Column 3 - Map */}
-              <div className="space-y-4">
-                <CalculatorMap />
-                
-                {/* Action Buttons below map */}
+              <Card className="flex flex-col">
+                <CardHeader className="bg-primary text-primary-foreground rounded-t-lg">
+                  <CardTitle className="flex items-center gap-2 text-base">
+                    <TreePine className="h-5 w-5" />
+                    Tree Planting Locations
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="p-0 flex-1 flex flex-col">
+                  <CalculatorMap />
+                  
+                  {/* Action Buttons below map */}
                 <div className="space-y-2">
                   <Button className="w-full" size="lg">
                     Save Trip
@@ -744,16 +747,17 @@ export default function CO2Calculator() {
                     <TreePine className="h-4 w-4 mr-2" />
                     Just Plant My Trees
                   </Button>
-                </div>
+                  </div>
 
-                <p className="text-sm text-center text-muted-foreground">
-                  Larger Business?{" "}
-                  <a href="#" className="text-primary hover:underline">
-                    Contact us
-                  </a>{" "}
-                  about automatically adding all your travel.
-                </p>
-              </div>
+                  <p className="text-sm text-center text-muted-foreground p-4 pt-0">
+                    Larger Business?{" "}
+                    <a href="#" className="text-primary hover:underline">
+                      Contact us
+                    </a>{" "}
+                    about automatically adding all your travel.
+                  </p>
+                </CardContent>
+              </Card>
             </div>
           </div>
         </main>
