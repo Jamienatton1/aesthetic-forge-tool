@@ -300,20 +300,20 @@ export default function CO2Calculator() {
           </div>
         </div>
 
-        {/* Main Content */}
+        {/* Main Content - Three Column Layout */}
         <main className="flex-1 py-8 px-4">
           <div className="max-w-7xl mx-auto">
-            <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
-              {/* Left Column - Calculator Form */}
-              <div className="xl:col-span-2 space-y-6">
-                <Card>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {/* Column 1 - Item Type Form */}
+              <div className="space-y-6">
+                <Card className="h-fit">
                   <CardHeader>
                     <CardTitle className="flex items-center gap-2">
                       <Plus className="h-5 w-5" />
                       Add Item
                     </CardTitle>
                   </CardHeader>
-                  <CardContent className="space-y-6">
+                  <CardContent className="space-y-4">
                     {/* Item Type Selector */}
                     <div className="space-y-2">
                       <Label>Item Type</Label>
@@ -336,7 +336,7 @@ export default function CO2Calculator() {
 
                     {/* Trip Form */}
                     {selectedCategory === "trip" && (
-                      <div className="space-y-4">
+                      <div className="space-y-3">
                         <div className="space-y-2">
                           <Label>Transportation Type</Label>
                           <Select 
@@ -359,131 +359,104 @@ export default function CO2Calculator() {
                           </Select>
                         </div>
 
-                        <div className="grid grid-cols-2 gap-4">
+                        <div className="space-y-2">
+                          <Label className="flex items-center gap-2">
+                            <Calendar className="h-4 w-4" />
+                            Date
+                          </Label>
+                          <Input 
+                            type="date" 
+                            value={tripData.date}
+                            onChange={(e) => setTripData({ ...tripData, date: e.target.value })}
+                            className="bg-background"
+                          />
+                        </div>
+                        
+                        {tripData.transportType === "flight" && (
                           <div className="space-y-2">
-                            <Label className="flex items-center gap-2">
-                              <Calendar className="h-4 w-4" />
-                              Date
-                            </Label>
-                            <Input 
-                              type="date" 
-                              value={tripData.date}
-                              onChange={(e) => setTripData({ ...tripData, date: e.target.value })}
-                              className="bg-background"
-                            />
+                            <Label>Flight Class</Label>
+                            <Select 
+                              value={tripData.flightClass} 
+                              onValueChange={(value) => setTripData({ ...tripData, flightClass: value })}
+                            >
+                              <SelectTrigger className="bg-background">
+                                <SelectValue />
+                              </SelectTrigger>
+                              <SelectContent className="bg-popover z-50">
+                                {flightClasses.map((fc) => (
+                                  <SelectItem key={fc.value} value={fc.value}>
+                                    {fc.label}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
                           </div>
-                          
-                          {tripData.transportType === "flight" && (
-                            <div className="space-y-2">
-                              <Label>Flight Class</Label>
-                              <Select 
-                                value={tripData.flightClass} 
-                                onValueChange={(value) => setTripData({ ...tripData, flightClass: value })}
-                              >
-                                <SelectTrigger className="bg-background">
-                                  <SelectValue />
-                                </SelectTrigger>
-                                <SelectContent className="bg-popover z-50">
-                                  {flightClasses.map((fc) => (
-                                    <SelectItem key={fc.value} value={fc.value}>
-                                      {fc.label}
-                                    </SelectItem>
-                                  ))}
-                                </SelectContent>
-                              </Select>
-                            </div>
-                          )}
+                        )}
+
+                        <div className="space-y-2">
+                          <Label className="flex items-center gap-2">
+                            <MapPin className="h-4 w-4" />
+                            Trip From
+                          </Label>
+                          <Input 
+                            placeholder="e.g., MNL - Manila"
+                            value={tripData.from}
+                            onChange={(e) => setTripData({ ...tripData, from: e.target.value })}
+                            className="bg-background"
+                          />
+                        </div>
+                        
+                        <div className="space-y-2">
+                          <Label className="flex items-center gap-2">
+                            <ArrowRight className="h-4 w-4" />
+                            To
+                          </Label>
+                          <Input 
+                            placeholder="e.g., BKK - Bangkok"
+                            value={tripData.to}
+                            onChange={(e) => setTripData({ ...tripData, to: e.target.value })}
+                            className="bg-background"
+                          />
+                        </div>
+
+                        <div className="space-y-2">
+                          <Label>Distance (km)</Label>
+                          <Input 
+                            type="number" 
+                            placeholder="Enter distance"
+                            value={tripData.distance || ""}
+                            onChange={(e) => setTripData({ ...tripData, distance: parseFloat(e.target.value) || 0 })}
+                            className="bg-background"
+                          />
+                        </div>
+
+                        <div className="space-y-2">
+                          <Label className="flex items-center gap-2">
+                            <Users className="h-4 w-4" />
+                            Travellers
+                          </Label>
+                          <Input 
+                            type="number" 
+                            min="1"
+                            value={tripData.travellers}
+                            onChange={(e) => setTripData({ ...tripData, travellers: parseInt(e.target.value) || 1 })}
+                            className="bg-background"
+                          />
                         </div>
 
                         <div className="flex items-center space-x-2">
                           <Switch 
-                            checked={tripData.manualDistance}
-                            onCheckedChange={(checked) => setTripData({ ...tripData, manualDistance: checked })}
+                            checked={tripData.returnTrip}
+                            onCheckedChange={(checked) => setTripData({ ...tripData, returnTrip: checked })}
                           />
-                          <Label>Enter distance manually</Label>
-                        </div>
-
-                        {tripData.manualDistance ? (
-                          <div className="space-y-2">
-                            <Label>Distance (km)</Label>
-                            <Input 
-                              type="number" 
-                              placeholder="Enter distance in kilometers"
-                              value={tripData.distance || ""}
-                              onChange={(e) => setTripData({ ...tripData, distance: parseFloat(e.target.value) || 0 })}
-                              className="bg-background"
-                            />
-                          </div>
-                        ) : (
-                          <div className="grid grid-cols-2 gap-4">
-                            <div className="space-y-2">
-                              <Label className="flex items-center gap-2">
-                                <MapPin className="h-4 w-4" />
-                                Trip From
-                              </Label>
-                              <Input 
-                                placeholder="e.g., MNL - Manila"
-                                value={tripData.from}
-                                onChange={(e) => setTripData({ ...tripData, from: e.target.value })}
-                                className="bg-background"
-                              />
-                            </div>
-                            <div className="space-y-2">
-                              <Label className="flex items-center gap-2">
-                                <ArrowRight className="h-4 w-4" />
-                                To
-                              </Label>
-                              <Input 
-                                placeholder="e.g., BKK - Bangkok"
-                                value={tripData.to}
-                                onChange={(e) => setTripData({ ...tripData, to: e.target.value })}
-                                className="bg-background"
-                              />
-                            </div>
-                          </div>
-                        )}
-
-                        {!tripData.manualDistance && (
-                          <div className="space-y-2">
-                            <Label>Estimated Distance (km)</Label>
-                            <Input 
-                              type="number" 
-                              placeholder="Distance will be calculated or enter manually"
-                              value={tripData.distance || ""}
-                              onChange={(e) => setTripData({ ...tripData, distance: parseFloat(e.target.value) || 0 })}
-                              className="bg-background"
-                            />
-                          </div>
-                        )}
-
-                        <div className="grid grid-cols-2 gap-4">
-                          <div className="space-y-2">
-                            <Label className="flex items-center gap-2">
-                              <Users className="h-4 w-4" />
-                              Travellers
-                            </Label>
-                            <Input 
-                              type="number" 
-                              min="1"
-                              value={tripData.travellers}
-                              onChange={(e) => setTripData({ ...tripData, travellers: parseInt(e.target.value) || 1 })}
-                              className="bg-background"
-                            />
-                          </div>
-                          <div className="flex items-center space-x-2 pt-8">
-                            <Switch 
-                              checked={tripData.returnTrip}
-                              onCheckedChange={(checked) => setTripData({ ...tripData, returnTrip: checked })}
-                            />
-                            <Label>Return Trip</Label>
-                          </div>
+                          <Label>Return Trip</Label>
                         </div>
                       </div>
                     )}
 
                     {/* Accommodation Form */}
                     {selectedCategory === "accommodation" && (
-                      <div className="space-y-4">
+                      <div className="space-y-3">
                         <div className="space-y-2">
                           <Label>Accommodation Type</Label>
                           <Select 
@@ -506,29 +479,28 @@ export default function CO2Calculator() {
                           </Select>
                         </div>
 
-                        <div className="grid grid-cols-2 gap-4">
-                          <div className="space-y-2">
-                            <Label className="flex items-center gap-2">
-                              <Calendar className="h-4 w-4" />
-                              Check-in Date
-                            </Label>
-                            <Input 
-                              type="date" 
-                              value={accommodationData.date}
-                              onChange={(e) => setAccommodationData({ ...accommodationData, date: e.target.value })}
-                              className="bg-background"
-                            />
-                          </div>
-                          <div className="space-y-2">
-                            <Label>Nights</Label>
-                            <Input 
-                              type="number" 
-                              min="1"
-                              value={accommodationData.nights}
-                              onChange={(e) => setAccommodationData({ ...accommodationData, nights: parseInt(e.target.value) || 1 })}
-                              className="bg-background"
-                            />
-                          </div>
+                        <div className="space-y-2">
+                          <Label className="flex items-center gap-2">
+                            <Calendar className="h-4 w-4" />
+                            Check-in Date
+                          </Label>
+                          <Input 
+                            type="date" 
+                            value={accommodationData.date}
+                            onChange={(e) => setAccommodationData({ ...accommodationData, date: e.target.value })}
+                            className="bg-background"
+                          />
+                        </div>
+                        
+                        <div className="space-y-2">
+                          <Label>Nights</Label>
+                          <Input 
+                            type="number" 
+                            min="1"
+                            value={accommodationData.nights}
+                            onChange={(e) => setAccommodationData({ ...accommodationData, nights: parseInt(e.target.value) || 1 })}
+                            className="bg-background"
+                          />
                         </div>
 
                         <div className="space-y-2">
@@ -562,7 +534,7 @@ export default function CO2Calculator() {
 
                     {/* Adventure Form */}
                     {selectedCategory === "adventure" && (
-                      <div className="space-y-4">
+                      <div className="space-y-3">
                         <div className="space-y-2">
                           <Label>Adventure Type</Label>
                           <Select 
@@ -585,32 +557,31 @@ export default function CO2Calculator() {
                           </Select>
                         </div>
 
-                        <div className="grid grid-cols-2 gap-4">
-                          <div className="space-y-2">
-                            <Label className="flex items-center gap-2">
-                              <Calendar className="h-4 w-4" />
-                              Date
-                            </Label>
-                            <Input 
-                              type="date" 
-                              value={adventureData.date}
-                              onChange={(e) => setAdventureData({ ...adventureData, date: e.target.value })}
-                              className="bg-background"
-                            />
-                          </div>
-                          <div className="space-y-2">
-                            <Label className="flex items-center gap-2">
-                              <Users className="h-4 w-4" />
-                              Participants
-                            </Label>
-                            <Input 
-                              type="number" 
-                              min="1"
-                              value={adventureData.participants}
-                              onChange={(e) => setAdventureData({ ...adventureData, participants: parseInt(e.target.value) || 1 })}
-                              className="bg-background"
-                            />
-                          </div>
+                        <div className="space-y-2">
+                          <Label className="flex items-center gap-2">
+                            <Calendar className="h-4 w-4" />
+                            Date
+                          </Label>
+                          <Input 
+                            type="date" 
+                            value={adventureData.date}
+                            onChange={(e) => setAdventureData({ ...adventureData, date: e.target.value })}
+                            className="bg-background"
+                          />
+                        </div>
+                        
+                        <div className="space-y-2">
+                          <Label className="flex items-center gap-2">
+                            <Users className="h-4 w-4" />
+                            Participants
+                          </Label>
+                          <Input 
+                            type="number" 
+                            min="1"
+                            value={adventureData.participants}
+                            onChange={(e) => setAdventureData({ ...adventureData, participants: parseInt(e.target.value) || 1 })}
+                            className="bg-background"
+                          />
                         </div>
 
                         <div className="space-y-2">
@@ -642,7 +613,7 @@ export default function CO2Calculator() {
                             <Label>Distance (km)</Label>
                             <Input 
                               type="number" 
-                              placeholder="Enter distance in kilometers"
+                              placeholder="Enter distance"
                               value={adventureData.distance || ""}
                               onChange={(e) => setAdventureData({ ...adventureData, distance: parseFloat(e.target.value) || 0 })}
                               className="bg-background"
@@ -654,157 +625,134 @@ export default function CO2Calculator() {
 
                     <Separator />
 
-                    {/* CO2 Preview */}
-                    {calculateCurrentCO2() > 0 && (
-                      <div className="bg-muted rounded-lg p-4">
-                        <div className="flex items-center justify-between">
-                          <span className="text-muted-foreground">Estimated CO₂ for this item:</span>
-                          <span className="text-2xl font-bold text-foreground">{calculateCurrentCO2()} kg</span>
-                        </div>
-                        <div className="flex items-center gap-2 mt-2 text-primary">
-                          <TreePine className="h-5 w-5" />
-                          <span>You'll need <strong>{treesNeeded(calculateCurrentCO2())} tree{treesNeeded(calculateCurrentCO2()) !== 1 ? "s" : ""}</strong> to offset this</span>
-                        </div>
-                      </div>
-                    )}
-
                     {/* Action Buttons */}
-                    <div className="flex gap-3">
+                    <div className="flex gap-2">
                       <Button 
                         onClick={confirmItem} 
                         disabled={calculateCurrentCO2() === 0}
                         className="flex-1"
+                        size="sm"
                       >
-                        <Plus className="h-4 w-4 mr-2" />
                         Confirm
                       </Button>
                       <Button 
                         variant="outline" 
                         onClick={resetCurrentItem}
+                        size="sm"
                       >
                         New Item
                       </Button>
                     </div>
                   </CardContent>
                 </Card>
+              </div>
 
-                {/* Items List */}
-                {items.length > 0 && (
-                  <Card>
-                    <CardHeader>
-                      <CardTitle>Trip Items</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="space-y-3">
+              {/* Column 2 - Trip CO2 Summary */}
+              <div className="space-y-6">
+                <Card className="h-fit">
+                  <CardHeader className="bg-primary text-primary-foreground rounded-t-lg">
+                    <CardTitle className="flex items-center gap-2 text-base">
+                      <TreePine className="h-5 w-5" />
+                      Trip CO₂
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="pt-4 space-y-4">
+                    {/* Items List */}
+                    {items.length > 0 ? (
+                      <div className="space-y-2">
                         {items.map((item) => {
                           const Icon = getItemIcon(item);
+                          const distance = (item as TripItem | AdventureItem).distance || 0;
                           return (
                             <div 
                               key={item.id} 
-                              className="flex items-center justify-between p-4 bg-muted rounded-lg"
+                              className="flex items-center justify-between p-2 bg-muted rounded-lg text-sm"
                             >
-                              <div className="flex items-center gap-4">
-                                <div className="p-2 bg-primary/10 rounded-lg">
-                                  <Icon className="h-5 w-5 text-primary" />
-                                </div>
+                              <div className="flex items-center gap-2">
+                                <Icon className="h-4 w-4 text-primary" />
                                 <div>
-                                  <p className="font-medium">{getItemLabel(item)}</p>
-                                  <p className="text-sm text-muted-foreground">{getItemDescription(item)}</p>
+                                  <p className="font-medium text-xs">{getItemLabel(item)}</p>
+                                  <p className="text-xs text-muted-foreground">{getItemDescription(item)}</p>
                                 </div>
                               </div>
-                              <div className="flex items-center gap-4">
+                              <div className="flex items-center gap-2">
                                 <div className="text-right">
-                                  <p className="font-bold">{item.co2} kg</p>
-                                  <p className="text-xs text-muted-foreground">CO₂</p>
+                                  {distance > 0 && (
+                                    <p className="text-xs text-muted-foreground">{distance.toLocaleString()} km</p>
+                                  )}
+                                  <p className="font-bold text-xs">{item.co2} kg</p>
                                 </div>
                                 <Button 
                                   variant="ghost" 
                                   size="icon"
+                                  className="h-6 w-6 text-destructive hover:text-destructive"
                                   onClick={() => deleteItem(item.id)}
-                                  className="text-destructive hover:text-destructive"
                                 >
-                                  <Trash2 className="h-4 w-4" />
+                                  <Trash2 className="h-3 w-3" />
                                 </Button>
                               </div>
                             </div>
                           );
                         })}
                       </div>
-                    </CardContent>
-                  </Card>
-                )}
-              </div>
+                    ) : (
+                      <p className="text-sm text-muted-foreground text-center py-4">
+                        No items added yet. Add your first trip item.
+                      </p>
+                    )}
 
-              {/* Right Column - Summary & Map */}
-              <div className="space-y-6">
-                <Card className="sticky top-8">
-                  <CardHeader className="bg-primary text-primary-foreground rounded-t-lg">
-                    <CardTitle className="flex items-center gap-2">
-                      <TreePine className="h-5 w-5" />
-                      Trip Summary
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="pt-6 space-y-6">
-                    {/* Distance */}
-                    <div className="flex justify-between items-center">
-                      <span className="text-muted-foreground">Total Distance</span>
-                      <span className="text-xl font-bold">{totalDistance.toLocaleString()} km</span>
-                    </div>
-                    
                     <Separator />
-                    
+
                     {/* Total CO2 */}
                     <div className="flex justify-between items-center">
-                      <span className="text-muted-foreground">Total CO₂</span>
-                      <span className="text-2xl font-bold text-foreground">
+                      <span className="text-muted-foreground text-sm">Total Trip CO₂</span>
+                      <span className="text-xl font-bold text-foreground">
                         {(totalCO2 + calculateCurrentCO2()).toLocaleString()} kg
                       </span>
                     </div>
 
-                    <Separator />
-
-                    {/* Trees Needed */}
-                    <div className="bg-primary/10 rounded-lg p-4 text-center">
-                      <div className="flex justify-center mb-2">
-                        <TreePine className="h-12 w-12 text-primary" />
+                    {/* Trees Needed Message */}
+                    <div className="bg-primary/10 rounded-lg p-3 text-center">
+                      <div className="flex justify-center mb-1">
+                        <TreePine className="h-8 w-8 text-primary" />
                       </div>
-                      <p className="text-muted-foreground mb-1">You'll need</p>
-                      <p className="text-4xl font-bold text-primary">{totalTrees}</p>
-                      <p className="text-muted-foreground">tree{totalTrees !== 1 ? "s" : ""} to offset your emissions</p>
-                    </div>
-
-                    {/* Action Buttons */}
-                    <div className="space-y-3">
-                      <Button className="w-full" size="lg">
-                        Save Trip
-                      </Button>
-                      <Button variant="secondary" className="w-full" size="lg">
-                        <TreePine className="h-4 w-4 mr-2" />
-                        Just Plant My Trees
-                      </Button>
+                      <p className="text-sm text-muted-foreground">
+                        You'll need <span className="font-bold text-primary text-lg">{totalTrees}</span> tree{totalTrees !== 1 ? "s" : ""} to remove this trip's CO₂ emissions
+                      </p>
                     </div>
 
                     {/* Info Text */}
-                    <p className="text-xs text-muted-foreground text-center">
+                    <p className="text-xs text-muted-foreground">
                       The trees you plant help create new future forests for our planet. 
                       We go that 'extra mile', combining your tree purchases with certified 
                       carbon credits investing into renewable energy projects.
                     </p>
-
-                    <Separator />
-
-                    <p className="text-sm text-center text-muted-foreground">
-                      Larger Business?{" "}
-                      <a href="#" className="text-primary hover:underline">
-                        Contact us
-                      </a>{" "}
-                      about automatically adding all your travel.
-                    </p>
                   </CardContent>
                 </Card>
+              </div>
 
-                {/* Map */}
+              {/* Column 3 - Map */}
+              <div className="space-y-4">
                 <CalculatorMap />
+                
+                {/* Action Buttons below map */}
+                <div className="space-y-2">
+                  <Button className="w-full" size="lg">
+                    Save Trip
+                  </Button>
+                  <Button variant="secondary" className="w-full" size="lg">
+                    <TreePine className="h-4 w-4 mr-2" />
+                    Just Plant My Trees
+                  </Button>
+                </div>
+
+                <p className="text-sm text-center text-muted-foreground">
+                  Larger Business?{" "}
+                  <a href="#" className="text-primary hover:underline">
+                    Contact us
+                  </a>{" "}
+                  about automatically adding all your travel.
+                </p>
               </div>
             </div>
           </div>
