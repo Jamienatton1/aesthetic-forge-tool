@@ -97,17 +97,17 @@ const CompensationReport = () => {
           </Card>
 
           {/* Total Emissions Hero Section */}
-          <Card className="border-2 border-border">
+          <Card className="bg-gradient-to-r from-primary/10 to-accent/10 border-primary/20">
             <CardContent className="py-12">
               <div className="flex flex-col items-center text-center space-y-4">
-                <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center">
-                  <BarChart3 className="w-8 h-8 text-foreground" />
+                <div className="w-16 h-16 bg-gradient-hero rounded-full flex items-center justify-center">
+                  <BarChart3 className="w-8 h-8 text-white" />
                 </div>
                 <div className="space-y-2">
                   <p className="text-sm font-medium text-muted-foreground uppercase tracking-wide">
                     Total Event Emissions
                   </p>
-                  <h2 className="text-6xl font-bold text-foreground tracking-tight">
+                  <h2 className="text-6xl font-bold text-primary tracking-tight">
                     {totalEmissions.toFixed(1)} <span className="text-3xl font-medium">tCO₂e</span>
                   </h2>
                   <p className="text-sm text-muted-foreground">
@@ -128,12 +128,12 @@ const CompensationReport = () => {
                 {categoryData.map((category, index) => (
                   <div key={index} className="p-6 bg-metric-card rounded-lg border border-border">
                     <div className="flex items-start gap-4">
-                      <div className="w-12 h-12 bg-muted rounded-full flex items-center justify-center flex-shrink-0">
-                        <category.icon className="w-6 h-6 text-foreground" />
+                      <div className="w-12 h-12 bg-gradient-hero rounded-full flex items-center justify-center flex-shrink-0">
+                        <category.icon className="w-6 h-6 text-white" />
                       </div>
                       <div className="flex-1 min-w-0">
                         <h3 className="font-medium text-foreground mb-1">{category.name}</h3>
-                        <div className="text-2xl font-bold text-foreground">
+                        <div className="text-2xl font-bold text-primary">
                           {category.emissions} <span className="text-sm font-normal text-muted-foreground">{category.unit}</span>
                         </div>
                         <p className="text-sm text-muted-foreground mt-1">{category.detail}</p>
@@ -166,7 +166,7 @@ const CompensationReport = () => {
           </div>
 
           {/* Compensation Section - Secondary, at the bottom */}
-          <Card className="bg-muted/30 border-dashed">
+          <Card className="bg-gradient-to-r from-accent/5 to-primary/5 border-accent/20">
             <CardHeader>
               <CardTitle className="text-xl text-foreground flex items-center gap-2">
                 <Leaf className="w-5 h-5 text-accent" />
@@ -212,7 +212,7 @@ const CompensationReport = () => {
                   <TreePine className="w-4 h-4" />
                   Tree Swag
                 </Button>
-                <Button variant="outline" className="flex items-center gap-2">
+                <Button className="flex items-center gap-2 bg-accent hover:bg-accent/90 text-accent-foreground">
                   <Leaf className="w-4 h-4" />
                   Purchase Offsets
                 </Button>
