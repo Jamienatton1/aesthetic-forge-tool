@@ -19,6 +19,7 @@ interface Invoice {
   id: string;
   number: string;
   date: string;
+  description: string;
   amount: number;
   paymentMethod: "card" | "invoice";
   status: "paid" | "unpaid" | "overdue";
@@ -26,11 +27,11 @@ interface Invoice {
 }
 
 const mockInvoices: Invoice[] = [
-  { id: "1", number: "INV-2024-001", date: "2024-01-15", amount: 400, paymentMethod: "card", status: "paid" },
-  { id: "2", number: "INV-2024-002", date: "2024-02-15", amount: 400, paymentMethod: "card", status: "paid" },
-  { id: "3", number: "INV-2024-003", date: "2024-03-15", amount: 400, paymentMethod: "invoice", status: "paid", dueDate: "2024-04-14" },
-  { id: "4", number: "INV-2024-004", date: "2024-04-15", amount: 400, paymentMethod: "invoice", status: "unpaid", dueDate: "2026-03-20" },
-  { id: "5", number: "INV-2024-005", date: "2024-05-15", amount: 400, paymentMethod: "invoice", status: "overdue", dueDate: "2025-01-10" },
+  { id: "1", number: "INV-2024-001", date: "2024-01-15", description: "Zeero Core Subscription", amount: 400, paymentMethod: "card", status: "paid" },
+  { id: "2", number: "INV-2024-002", date: "2024-02-15", description: "Zeero Core Subscription", amount: 400, paymentMethod: "card", status: "paid" },
+  { id: "3", number: "INV-2024-003", date: "2024-03-15", description: "Zeero Core Subscription", amount: 400, paymentMethod: "invoice", status: "paid", dueDate: "2024-04-14" },
+  { id: "4", number: "INV-2024-004", date: "2024-04-15", description: "Additional Report(s)", amount: 150, paymentMethod: "invoice", status: "unpaid", dueDate: "2026-03-20" },
+  { id: "5", number: "INV-2024-005", date: "2024-05-15", description: "Zeero Core Subscription", amount: 400, paymentMethod: "invoice", status: "overdue", dueDate: "2025-01-10" },
 ];
 
 type UserRole = "account_owner" | "billing_manager" | "user";
@@ -631,13 +632,12 @@ export default function OrganisationSettings() {
                     <Table>
                       <TableHeader>
                         <TableRow>
-                          <TableHead>Invoice #</TableHead>
                           <TableHead>Date</TableHead>
+                          <TableHead>Description</TableHead>
                           <TableHead>Amount</TableHead>
-                          <TableHead>Payment Method</TableHead>
                           <TableHead>Status</TableHead>
+                          <TableHead>Payment Method</TableHead>
                           <TableHead>Due Date</TableHead>
-                          <TableHead>Days Remaining</TableHead>
                           <TableHead className="text-right">Action</TableHead>
                         </TableRow>
                       </TableHeader>
@@ -646,9 +646,19 @@ export default function OrganisationSettings() {
                           const daysRemaining = getDaysRemaining(invoice.dueDate);
                           return (
                             <TableRow key={invoice.id}>
-                              <TableCell className="font-medium">{invoice.number}</TableCell>
                               <TableCell>{format(parseISO(invoice.date), "dd MMM yyyy")}</TableCell>
+                              <TableCell className="font-medium">{invoice.description}</TableCell>
                               <TableCell>${invoice.amount.toFixed(2)}</TableCell>
+                              <TableCell>
+                                <div className="flex items-center gap-1.5">
+                                  {getStatusBadge(invoice.status)}
+                                  {daysRemaining !== null && invoice.status !== "paid" && (
+                                    <span className={`text-xs ${daysRemaining < 0 ? "text-destructive" : "text-muted-foreground"}`}>
+                                      {daysRemaining < 0 ? `${Math.abs(daysRemaining)}d overdue` : `${daysRemaining}d left`}
+                                    </span>
+                                  )}
+                                </div>
+                              </TableCell>
                               <TableCell>
                                 <div className="flex items-center gap-1.5">
                                   {invoice.paymentMethod === "card" ? (
@@ -659,19 +669,8 @@ export default function OrganisationSettings() {
                                   <span className="capitalize">{invoice.paymentMethod}</span>
                                 </div>
                               </TableCell>
-                              <TableCell>{getStatusBadge(invoice.status)}</TableCell>
                               <TableCell>
                                 {invoice.dueDate ? format(parseISO(invoice.dueDate), "dd MMM yyyy") : "—"}
-                              </TableCell>
-                              <TableCell>
-                                {daysRemaining !== null ? (
-                                  <div className="flex items-center gap-1.5">
-                                    <Clock className="h-3.5 w-3.5 text-muted-foreground" />
-                                    <span className={daysRemaining < 0 ? "text-destructive font-medium" : "text-foreground"}>
-                                      {daysRemaining < 0 ? `${Math.abs(daysRemaining)} days overdue` : `${daysRemaining} days`}
-                                    </span>
-                                  </div>
-                                ) : "—"}
                               </TableCell>
                               <TableCell className="text-right">
                                 {(invoice.status === "unpaid" || invoice.status === "overdue") && (
