@@ -650,14 +650,7 @@ export default function OrganisationSettings() {
                               <TableCell className="font-medium">{invoice.description}</TableCell>
                               <TableCell>${invoice.amount.toFixed(2)}</TableCell>
                               <TableCell>
-                                <div className="flex items-center gap-1.5">
-                                  {getStatusBadge(invoice.status)}
-                                  {daysRemaining !== null && invoice.status !== "paid" && (
-                                    <span className={`text-xs ${daysRemaining < 0 ? "text-destructive" : "text-muted-foreground"}`}>
-                                      {daysRemaining < 0 ? `${Math.abs(daysRemaining)}d overdue` : `${daysRemaining}d left`}
-                                    </span>
-                                  )}
-                                </div>
+                                {getStatusBadge(invoice.status)}
                               </TableCell>
                               <TableCell>
                                 <div className="flex items-center gap-1.5">
