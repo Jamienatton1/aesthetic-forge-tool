@@ -9,9 +9,29 @@ import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { Check, X, UserPlus, Trash2, Mail, Home } from "lucide-react";
+import { Check, X, UserPlus, Trash2, Mail, Home, CreditCard, FileText, Clock, ShieldAlert } from "lucide-react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { toast } from "sonner";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { differenceInDays, format, parseISO } from "date-fns";
+
+interface Invoice {
+  id: string;
+  number: string;
+  date: string;
+  amount: number;
+  paymentMethod: "card" | "invoice";
+  status: "paid" | "unpaid" | "overdue";
+  dueDate?: string;
+}
+
+const mockInvoices: Invoice[] = [
+  { id: "1", number: "INV-2024-001", date: "2024-01-15", amount: 400, paymentMethod: "card", status: "paid" },
+  { id: "2", number: "INV-2024-002", date: "2024-02-15", amount: 400, paymentMethod: "card", status: "paid" },
+  { id: "3", number: "INV-2024-003", date: "2024-03-15", amount: 400, paymentMethod: "invoice", status: "paid", dueDate: "2024-04-14" },
+  { id: "4", number: "INV-2024-004", date: "2024-04-15", amount: 400, paymentMethod: "invoice", status: "unpaid", dueDate: "2026-03-20" },
+  { id: "5", number: "INV-2024-005", date: "2024-05-15", amount: 400, paymentMethod: "invoice", status: "overdue", dueDate: "2025-01-10" },
+];
 
 type UserRole = "account_owner" | "billing_manager" | "user";
 
@@ -40,6 +60,8 @@ export default function OrganisationSettings() {
     { id: "2", email: "jane@zeero-group.com", name: "Jane Doe", role: "billing_manager", status: "active" },
     { id: "3", email: "mike@zeero-group.com", name: "Mike Johnson", role: "user", status: "active" },
   ]);
+  const [selectedInvoice, setSelectedInvoice] = useState<Invoice | null>(null);
+  const [payDialogOpen, setPayDialogOpen] = useState(false);
   const [newUserEmail, setNewUserEmail] = useState("");
   const [newUserRole, setNewUserRole] = useState<UserRole>("user");
 
@@ -105,6 +127,37 @@ export default function OrganisationSettings() {
       u.id === userId ? { ...u, role: newRole } : u
     ));
     toast.success("Role updated successfully");
+  };
+
+  const currentUser = users[0]; // Mock: first user is logged in
+  const canAccessBilling = currentUser?.role === "account_owner" || currentUser?.role === "billing_manager";
+
+  const getStatusBadge = (status: Invoice["status"]) => {
+    switch (status) {
+      case "paid":
+        return <Badge variant="outline" className="bg-green-500/10 text-green-600 border-green-500/20">Paid</Badge>;
+      case "unpaid":
+        return <Badge variant="outline" className="bg-amber-500/10 text-amber-600 border-amber-500/20">Unpaid</Badge>;
+      case "overdue":
+        return <Badge variant="destructive">Overdue</Badge>;
+    }
+  };
+
+  const getDaysRemaining = (dueDate?: string) => {
+    if (!dueDate) return null;
+    const days = differenceInDays(parseISO(dueDate), new Date());
+    return days;
+  };
+
+  const handlePayByCard = (invoice: Invoice) => {
+    setSelectedInvoice(invoice);
+    setPayDialogOpen(true);
+  };
+
+  const confirmPayment = () => {
+    toast.success(`Payment initiated for ${selectedInvoice?.number}`);
+    setPayDialogOpen(false);
+    setSelectedInvoice(null);
   };
 
   return (
@@ -402,232 +455,358 @@ export default function OrganisationSettings() {
           </TabsContent>
 
           <TabsContent value="billing" className="mt-6 space-y-6">
-            <Card>
-              <CardHeader>
-                <CardTitle>Subscription Plans</CardTitle>
-                <CardDescription>Choose the plan that best fits your organisation's needs</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="grid grid-cols-3 gap-6">
-                  {/* Core Plan */}
-                  <div className={`border-2 rounded-lg p-6 ${plan === "Core" ? "border-primary bg-primary/5" : "border-border"}`}>
-                    <div className="space-y-4">
-                      <div>
-                        <h3 className="text-2xl font-bold text-foreground">Core</h3>
-                        <div className="mt-2">
-                          <span className="text-4xl font-bold text-foreground">$100</span>
-                          <span className="text-muted-foreground">/month</span>
-                        </div>
-                      </div>
-                      {plan === "Core" ? (
-                        <Badge variant="default" className="w-full justify-center">Current Plan</Badge>
-                      ) : (
-                        <Button variant="outline" className="w-full">Downgrade</Button>
-                      )}
-                      <Separator />
-                      <ul className="space-y-3 text-sm">
-                        <li className="flex items-center gap-2">
-                          <Check className="h-4 w-4 text-green-600" />
-                          <span>Impact Reports</span>
-                        </li>
-                        <li className="flex items-center gap-2 text-muted-foreground">
-                          <X className="h-4 w-4 text-red-600" />
-                          <span>Co-Branded Impact Reports</span>
-                        </li>
-                        <li className="flex items-center gap-2 text-muted-foreground">
-                          <X className="h-4 w-4 text-red-600" />
-                          <span>Expo & Logistics</span>
-                        </li>
-                        <li className="flex items-center gap-2 text-muted-foreground">
-                          <X className="h-4 w-4 text-red-600" />
-                          <span>White Labelled Reports</span>
-                        </li>
-                        <li className="flex items-center gap-2 text-muted-foreground">
-                          <X className="h-4 w-4 text-red-600" />
-                          <span>Multi-User Access</span>
-                        </li>
-                      </ul>
-                    </div>
-                  </div>
-
-                  {/* Pro Plan */}
-                  <div className={`border-2 rounded-lg p-6 ${plan === "Pro" ? "border-primary bg-primary/5" : "border-border"}`}>
-                    <div className="space-y-4">
-                      <div>
-                        <h3 className="text-2xl font-bold text-foreground">Pro</h3>
-                        <div className="mt-2">
-                          <span className="text-4xl font-bold text-foreground">$400</span>
-                          <span className="text-muted-foreground">/month</span>
-                        </div>
-                      </div>
-                      {plan === "Pro" ? (
-                        <Badge variant="default" className="w-full justify-center">Current Plan</Badge>
-                      ) : (
-                        <Button className="w-full">Upgrade to Pro</Button>
-                      )}
-                      <Separator />
-                      <ul className="space-y-3 text-sm">
-                        <li className="flex items-center gap-2">
-                          <Check className="h-4 w-4 text-green-600" />
-                          <span>Impact Reports</span>
-                        </li>
-                        <li className="flex items-center gap-2">
-                          <Check className="h-4 w-4 text-green-600" />
-                          <span>Co-Branded Impact Reports</span>
-                        </li>
-                        <li className="flex items-center gap-2">
-                          <Check className="h-4 w-4 text-green-600" />
-                          <span>Expo & Logistics</span>
-                        </li>
-                        <li className="flex items-center gap-2">
-                          <Check className="h-4 w-4 text-green-600" />
-                          <span>White Labelled Reports</span>
-                        </li>
-                        <li className="flex items-center gap-2">
-                          <Check className="h-4 w-4 text-green-600" />
-                          <span>Multi-User Access</span>
-                        </li>
-                      </ul>
-                    </div>
-                  </div>
-
-                  {/* Enterprise Plan */}
-                  <div className={`border-2 rounded-lg p-6 ${plan === "Enterprise" ? "border-primary bg-primary/5" : "border-border"}`}>
-                    <div className="space-y-4">
-                      <div>
-                        <h3 className="text-2xl font-bold text-foreground">Enterprise</h3>
-                        <div className="mt-2">
-                          <span className="text-4xl font-bold text-foreground">$1,000</span>
-                          <span className="text-muted-foreground">/month</span>
-                        </div>
-                      </div>
-                      {plan === "Enterprise" ? (
-                        <Badge variant="default" className="w-full justify-center">Current Plan</Badge>
-                      ) : (
-                        <Button className="w-full">Upgrade to Enterprise</Button>
-                      )}
-                      <Separator />
-                      <ul className="space-y-3 text-sm">
-                        <li className="flex items-center gap-2">
-                          <Check className="h-4 w-4 text-green-600" />
-                          <span>Impact Reports</span>
-                        </li>
-                        <li className="flex items-center gap-2">
-                          <Check className="h-4 w-4 text-green-600" />
-                          <span>Co-Branded Impact Reports</span>
-                        </li>
-                        <li className="flex items-center gap-2">
-                          <Check className="h-4 w-4 text-green-600" />
-                          <span>Expo & Logistics</span>
-                        </li>
-                        <li className="flex items-center gap-2">
-                          <Check className="h-4 w-4 text-green-600" />
-                          <span>White Labelled Reports</span>
-                        </li>
-                        <li className="flex items-center gap-2">
-                          <Check className="h-4 w-4 text-green-600" />
-                          <span>Multi-User Access</span>
-                        </li>
-                        <li className="flex items-center gap-2">
-                          <Check className="h-4 w-4 text-green-600" />
-                          <span>White Labelled Dashboard</span>
-                        </li>
-                        <li className="flex items-center gap-2">
-                          <Check className="h-4 w-4 text-green-600" />
-                          <span>Event & Team Analytics</span>
-                        </li>
-                        <li className="flex items-center gap-2">
-                          <Check className="h-4 w-4 text-green-600" />
-                          <span>Dedicated Support</span>
-                        </li>
-                        <li className="flex items-center gap-2">
-                          <Check className="h-4 w-4 text-green-600" />
-                          <span>In-Country Measurements</span>
-                        </li>
-                      </ul>
-                    </div>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <CardTitle>Billing Contact</CardTitle>
-                <CardDescription>Manage billing information and payment details</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-6">
-                <div className="space-y-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="billing-name">Full Name</Label>
-                    <Input
-                      id="billing-name"
-                      value={billingName}
-                      onChange={(e) => setBillingName(e.target.value)}
-                      placeholder="John Doe"
-                    />
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="billing-email">Email for Invoicing</Label>
-                    <Input
-                      id="billing-email"
-                      type="email"
-                      value={billingEmail}
-                      onChange={(e) => setBillingEmail(e.target.value)}
-                      placeholder="billing@company.com"
-                    />
-                    <p className="text-sm text-muted-foreground">
-                      Invoices and payment receipts will be sent to this email
+            {!canAccessBilling ? (
+              <Card>
+                <CardContent className="py-12">
+                  <div className="flex flex-col items-center justify-center text-center gap-3">
+                    <ShieldAlert className="h-12 w-12 text-muted-foreground" />
+                    <h3 className="text-lg font-semibold text-foreground">Restricted Access</h3>
+                    <p className="text-sm text-muted-foreground max-w-md">
+                      Only Account Owners and Billing Managers can view billing information and invoices. Contact your account owner for access.
                     </p>
                   </div>
+                </CardContent>
+              </Card>
+            ) : (
+              <>
+                <Card>
+                  <CardHeader className="pb-3">
+                    <CardTitle>Subscription Plans</CardTitle>
+                    <CardDescription>Choose the plan that best fits your organisation's needs</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="grid grid-cols-3 gap-4">
+                      {/* Core Plan */}
+                      <div className={`border-2 rounded-lg p-4 ${plan === "Core" ? "border-primary bg-primary/5" : "border-border"}`}>
+                        <div className="space-y-3">
+                          <div>
+                            <h3 className="text-lg font-bold text-foreground">Core</h3>
+                            <div className="mt-1">
+                              <span className="text-2xl font-bold text-foreground">$100</span>
+                              <span className="text-muted-foreground text-sm">/month</span>
+                            </div>
+                          </div>
+                          {plan === "Core" ? (
+                            <Badge variant="default" className="w-full justify-center">Current Plan</Badge>
+                          ) : (
+                            <Button variant="outline" size="sm" className="w-full">Downgrade</Button>
+                          )}
+                          <Separator />
+                          <ul className="space-y-1.5 text-sm">
+                            <li className="flex items-center gap-2">
+                              <Check className="h-3.5 w-3.5 text-green-600" />
+                              <span>Impact Reports</span>
+                            </li>
+                            <li className="flex items-center gap-2 text-muted-foreground">
+                              <X className="h-3.5 w-3.5 text-red-600" />
+                              <span>Co-Branded Impact Reports</span>
+                            </li>
+                            <li className="flex items-center gap-2 text-muted-foreground">
+                              <X className="h-3.5 w-3.5 text-red-600" />
+                              <span>Expo & Logistics</span>
+                            </li>
+                            <li className="flex items-center gap-2 text-muted-foreground">
+                              <X className="h-3.5 w-3.5 text-red-600" />
+                              <span>White Labelled Reports</span>
+                            </li>
+                            <li className="flex items-center gap-2 text-muted-foreground">
+                              <X className="h-3.5 w-3.5 text-red-600" />
+                              <span>Multi-User Access</span>
+                            </li>
+                          </ul>
+                        </div>
+                      </div>
 
-                  <div className="space-y-2">
-                    <Label htmlFor="billing-address">Billing Address</Label>
-                    <Input
-                      id="billing-address"
-                      placeholder="123 Main Street"
-                    />
-                  </div>
+                      {/* Pro Plan */}
+                      <div className={`border-2 rounded-lg p-4 ${plan === "Pro" ? "border-primary bg-primary/5" : "border-border"}`}>
+                        <div className="space-y-3">
+                          <div>
+                            <h3 className="text-lg font-bold text-foreground">Pro</h3>
+                            <div className="mt-1">
+                              <span className="text-2xl font-bold text-foreground">$400</span>
+                              <span className="text-muted-foreground text-sm">/month</span>
+                            </div>
+                          </div>
+                          {plan === "Pro" ? (
+                            <Badge variant="default" className="w-full justify-center">Current Plan</Badge>
+                          ) : (
+                            <Button size="sm" className="w-full">Upgrade to Pro</Button>
+                          )}
+                          <Separator />
+                          <ul className="space-y-1.5 text-sm">
+                            <li className="flex items-center gap-2">
+                              <Check className="h-3.5 w-3.5 text-green-600" />
+                              <span>Impact Reports</span>
+                            </li>
+                            <li className="flex items-center gap-2">
+                              <Check className="h-3.5 w-3.5 text-green-600" />
+                              <span>Co-Branded Impact Reports</span>
+                            </li>
+                            <li className="flex items-center gap-2">
+                              <Check className="h-3.5 w-3.5 text-green-600" />
+                              <span>Expo & Logistics</span>
+                            </li>
+                            <li className="flex items-center gap-2">
+                              <Check className="h-3.5 w-3.5 text-green-600" />
+                              <span>White Labelled Reports</span>
+                            </li>
+                            <li className="flex items-center gap-2">
+                              <Check className="h-3.5 w-3.5 text-green-600" />
+                              <span>Multi-User Access</span>
+                            </li>
+                          </ul>
+                        </div>
+                      </div>
 
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="city">City</Label>
-                      <Input id="city" placeholder="New York" />
+                      {/* Enterprise Plan */}
+                      <div className={`border-2 rounded-lg p-4 ${plan === "Enterprise" ? "border-primary bg-primary/5" : "border-border"}`}>
+                        <div className="space-y-3">
+                          <div>
+                            <h3 className="text-lg font-bold text-foreground">Enterprise</h3>
+                            <div className="mt-1">
+                              <span className="text-2xl font-bold text-foreground">$1,000</span>
+                              <span className="text-muted-foreground text-sm">/month</span>
+                            </div>
+                          </div>
+                          {plan === "Enterprise" ? (
+                            <Badge variant="default" className="w-full justify-center">Current Plan</Badge>
+                          ) : (
+                            <Button size="sm" className="w-full">Upgrade to Enterprise</Button>
+                          )}
+                          <Separator />
+                          <ul className="space-y-1.5 text-sm">
+                            <li className="flex items-center gap-2">
+                              <Check className="h-3.5 w-3.5 text-green-600" />
+                              <span>Impact Reports</span>
+                            </li>
+                            <li className="flex items-center gap-2">
+                              <Check className="h-3.5 w-3.5 text-green-600" />
+                              <span>Co-Branded Impact Reports</span>
+                            </li>
+                            <li className="flex items-center gap-2">
+                              <Check className="h-3.5 w-3.5 text-green-600" />
+                              <span>Expo & Logistics</span>
+                            </li>
+                            <li className="flex items-center gap-2">
+                              <Check className="h-3.5 w-3.5 text-green-600" />
+                              <span>White Labelled Reports</span>
+                            </li>
+                            <li className="flex items-center gap-2">
+                              <Check className="h-3.5 w-3.5 text-green-600" />
+                              <span>Multi-User Access</span>
+                            </li>
+                            <li className="flex items-center gap-2">
+                              <Check className="h-3.5 w-3.5 text-green-600" />
+                              <span>White Labelled Dashboard</span>
+                            </li>
+                            <li className="flex items-center gap-2">
+                              <Check className="h-3.5 w-3.5 text-green-600" />
+                              <span>Event & Team Analytics</span>
+                            </li>
+                            <li className="flex items-center gap-2">
+                              <Check className="h-3.5 w-3.5 text-green-600" />
+                              <span>Dedicated Support</span>
+                            </li>
+                            <li className="flex items-center gap-2">
+                              <Check className="h-3.5 w-3.5 text-green-600" />
+                              <span>In-Country Measurements</span>
+                            </li>
+                          </ul>
+                        </div>
+                      </div>
                     </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="postal-code">Postal Code</Label>
-                      <Input id="postal-code" placeholder="10001" />
+                  </CardContent>
+                </Card>
+
+                {/* Invoices Section */}
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <FileText className="h-5 w-5" />
+                      Invoices
+                    </CardTitle>
+                    <CardDescription>View and manage your invoices and payments</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <Table>
+                      <TableHeader>
+                        <TableRow>
+                          <TableHead>Invoice #</TableHead>
+                          <TableHead>Date</TableHead>
+                          <TableHead>Amount</TableHead>
+                          <TableHead>Payment Method</TableHead>
+                          <TableHead>Status</TableHead>
+                          <TableHead>Due Date</TableHead>
+                          <TableHead>Days Remaining</TableHead>
+                          <TableHead className="text-right">Action</TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {mockInvoices.map((invoice) => {
+                          const daysRemaining = getDaysRemaining(invoice.dueDate);
+                          return (
+                            <TableRow key={invoice.id}>
+                              <TableCell className="font-medium">{invoice.number}</TableCell>
+                              <TableCell>{format(parseISO(invoice.date), "dd MMM yyyy")}</TableCell>
+                              <TableCell>${invoice.amount.toFixed(2)}</TableCell>
+                              <TableCell>
+                                <div className="flex items-center gap-1.5">
+                                  {invoice.paymentMethod === "card" ? (
+                                    <CreditCard className="h-3.5 w-3.5 text-muted-foreground" />
+                                  ) : (
+                                    <FileText className="h-3.5 w-3.5 text-muted-foreground" />
+                                  )}
+                                  <span className="capitalize">{invoice.paymentMethod}</span>
+                                </div>
+                              </TableCell>
+                              <TableCell>{getStatusBadge(invoice.status)}</TableCell>
+                              <TableCell>
+                                {invoice.dueDate ? format(parseISO(invoice.dueDate), "dd MMM yyyy") : "—"}
+                              </TableCell>
+                              <TableCell>
+                                {daysRemaining !== null ? (
+                                  <div className="flex items-center gap-1.5">
+                                    <Clock className="h-3.5 w-3.5 text-muted-foreground" />
+                                    <span className={daysRemaining < 0 ? "text-destructive font-medium" : "text-foreground"}>
+                                      {daysRemaining < 0 ? `${Math.abs(daysRemaining)} days overdue` : `${daysRemaining} days`}
+                                    </span>
+                                  </div>
+                                ) : "—"}
+                              </TableCell>
+                              <TableCell className="text-right">
+                                {(invoice.status === "unpaid" || invoice.status === "overdue") && (
+                                  <Button size="sm" variant="outline" onClick={() => handlePayByCard(invoice)} className="gap-1.5">
+                                    <CreditCard className="h-3.5 w-3.5" />
+                                    Pay by Card
+                                  </Button>
+                                )}
+                              </TableCell>
+                            </TableRow>
+                          );
+                        })}
+                      </TableBody>
+                    </Table>
+                  </CardContent>
+                </Card>
+
+                {/* Billing Contact */}
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Billing Contact</CardTitle>
+                    <CardDescription>Manage billing information and payment details</CardDescription>
+                  </CardHeader>
+                  <CardContent className="space-y-6">
+                    <div className="space-y-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="billing-name">Full Name</Label>
+                        <Input
+                          id="billing-name"
+                          value={billingName}
+                          onChange={(e) => setBillingName(e.target.value)}
+                          placeholder="John Doe"
+                        />
+                      </div>
+
+                      <div className="space-y-2">
+                        <Label htmlFor="billing-email">Email for Invoicing</Label>
+                        <Input
+                          id="billing-email"
+                          type="email"
+                          value={billingEmail}
+                          onChange={(e) => setBillingEmail(e.target.value)}
+                          placeholder="billing@company.com"
+                        />
+                        <p className="text-sm text-muted-foreground">
+                          Invoices and payment receipts will be sent to this email
+                        </p>
+                      </div>
+
+                      <div className="space-y-2">
+                        <Label htmlFor="billing-address">Billing Address</Label>
+                        <Input
+                          id="billing-address"
+                          placeholder="123 Main Street"
+                        />
+                      </div>
+
+                      <div className="grid grid-cols-2 gap-4">
+                        <div className="space-y-2">
+                          <Label htmlFor="city">City</Label>
+                          <Input id="city" placeholder="New York" />
+                        </div>
+                        <div className="space-y-2">
+                          <Label htmlFor="postal-code">Postal Code</Label>
+                          <Input id="postal-code" placeholder="10001" />
+                        </div>
+                      </div>
+
+                      <div className="space-y-2">
+                        <Label htmlFor="country">Country</Label>
+                        <Select>
+                          <SelectTrigger id="country">
+                            <SelectValue placeholder="Select country" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="us">United States</SelectItem>
+                            <SelectItem value="uk">United Kingdom</SelectItem>
+                            <SelectItem value="ca">Canada</SelectItem>
+                            <SelectItem value="au">Australia</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
                     </div>
-                  </div>
 
-                  <div className="space-y-2">
-                    <Label htmlFor="country">Country</Label>
-                    <Select>
-                      <SelectTrigger id="country">
-                        <SelectValue placeholder="Select country" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="us">United States</SelectItem>
-                        <SelectItem value="uk">United Kingdom</SelectItem>
-                        <SelectItem value="ca">Canada</SelectItem>
-                        <SelectItem value="au">Australia</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                </div>
+                    <Separator />
 
-                <Separator />
-
-                <div className="flex justify-end gap-2">
-                  <Button variant="outline">Cancel</Button>
-                  <Button>Save Billing Details</Button>
-                </div>
-              </CardContent>
-            </Card>
+                    <div className="flex justify-end gap-2">
+                      <Button variant="outline">Cancel</Button>
+                      <Button>Save Billing Details</Button>
+                    </div>
+                  </CardContent>
+                </Card>
+              </>
+            )}
           </TabsContent>
         </Tabs>
       </div>
+
+      {/* Pay by Card Dialog */}
+      <Dialog open={payDialogOpen} onOpenChange={setPayDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Pay Invoice by Card</DialogTitle>
+            <DialogDescription>
+              Confirm payment for the following invoice
+            </DialogDescription>
+          </DialogHeader>
+          {selectedInvoice && (
+            <div className="space-y-3 py-2">
+              <div className="flex justify-between text-sm">
+                <span className="text-muted-foreground">Invoice</span>
+                <span className="font-medium">{selectedInvoice.number}</span>
+              </div>
+              <div className="flex justify-between text-sm">
+                <span className="text-muted-foreground">Amount</span>
+                <span className="font-medium">${selectedInvoice.amount.toFixed(2)}</span>
+              </div>
+              {selectedInvoice.dueDate && (
+                <div className="flex justify-between text-sm">
+                  <span className="text-muted-foreground">Due Date</span>
+                  <span className="font-medium">{format(parseISO(selectedInvoice.dueDate), "dd MMM yyyy")}</span>
+                </div>
+              )}
+              <Separator />
+            </div>
+          )}
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setPayDialogOpen(false)}>Cancel</Button>
+            <Button onClick={confirmPayment} className="gap-1.5">
+              <CreditCard className="h-4 w-4" />
+              Confirm Payment
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
