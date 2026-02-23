@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { Check, X, UserPlus, Trash2, Mail, Home, CreditCard, FileText, Clock, ShieldAlert, Eye } from "lucide-react";
+import { Check, X, UserPlus, Trash2, Mail, Home, CreditCard, FileText, Clock, ShieldAlert } from "lucide-react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { toast } from "sonner";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -27,11 +27,11 @@ interface Invoice {
 }
 
 const mockInvoices: Invoice[] = [
-  { id: "1", number: "INV-2024-001", date: "2024-01-15", description: "Zeero Core Subscription", amount: 400, paymentMethod: "card", status: "paid" },
-  { id: "2", number: "INV-2024-002", date: "2024-02-15", description: "Zeero Core Subscription", amount: 400, paymentMethod: "card", status: "paid" },
-  { id: "3", number: "INV-2024-003", date: "2024-03-15", description: "Zeero Core Subscription", amount: 400, paymentMethod: "invoice", status: "paid", dueDate: "2024-04-14" },
-  { id: "4", number: "INV-2024-004", date: "2024-04-15", description: "Additional Report(s)", amount: 150, paymentMethod: "invoice", status: "unpaid", dueDate: "2026-03-20" },
-  { id: "5", number: "INV-2024-005", date: "2024-05-15", description: "Zeero Core Subscription", amount: 400, paymentMethod: "invoice", status: "overdue", dueDate: "2025-01-10" },
+  { id: "1", number: "INV-2024-001", date: "2024-01-15", description: "Zeero Core Subscription", amount: 69, paymentMethod: "card", status: "paid" },
+  { id: "2", number: "INV-2024-002", date: "2024-02-15", description: "Zeero Core Subscription", amount: 69, paymentMethod: "card", status: "paid" },
+  { id: "3", number: "INV-2024-003", date: "2024-03-15", description: "Zeero Core Subscription", amount: 69, paymentMethod: "invoice", status: "paid", dueDate: "2024-04-14" },
+  { id: "4", number: "INV-2024-004", date: "2024-04-15", description: "Additional Report", amount: 25, paymentMethod: "invoice", status: "unpaid", dueDate: "2026-03-20" },
+  { id: "5", number: "INV-2024-005", date: "2024-05-15", description: "Zeero Core Subscription", amount: 69, paymentMethod: "invoice", status: "overdue", dueDate: "2025-01-10" },
 ];
 
 type UserRole = "account_owner" | "billing_manager" | "user";
@@ -63,8 +63,6 @@ export default function OrganisationSettings() {
   ]);
   const [selectedInvoice, setSelectedInvoice] = useState<Invoice | null>(null);
   const [payDialogOpen, setPayDialogOpen] = useState(false);
-  const [viewDialogOpen, setViewDialogOpen] = useState(false);
-  const [viewingInvoice, setViewingInvoice] = useState<Invoice | null>(null);
   const [newUserEmail, setNewUserEmail] = useState("");
   const [newUserRole, setNewUserRole] = useState<UserRole>("user");
 
@@ -668,18 +666,12 @@ export default function OrganisationSettings() {
                                 {invoice.dueDate ? format(parseISO(invoice.dueDate), "dd MMM yyyy") : "—"}
                               </TableCell>
                               <TableCell className="text-right">
-                                <div className="flex items-center justify-end gap-2">
-                                  <Button size="sm" variant="ghost" onClick={() => { setViewingInvoice(invoice); setViewDialogOpen(true); }} className="gap-1.5">
-                                    <Eye className="h-3.5 w-3.5" />
-                                    View
+                                {(invoice.status === "unpaid" || invoice.status === "overdue") && (
+                                  <Button size="sm" variant="outline" onClick={() => handlePayByCard(invoice)} className="gap-1.5">
+                                    <CreditCard className="h-3.5 w-3.5" />
+                                    Pay by Card
                                   </Button>
-                                  {(invoice.status === "unpaid" || invoice.status === "overdue") && (
-                                    <Button size="sm" variant="outline" onClick={() => handlePayByCard(invoice)} className="gap-1.5">
-                                      <CreditCard className="h-3.5 w-3.5" />
-                                      Pay by Card
-                                    </Button>
-                                  )}
-                                </div>
+                                )}
                               </TableCell>
                             </TableRow>
                           );
@@ -808,57 +800,6 @@ export default function OrganisationSettings() {
         </DialogContent>
       </Dialog>
 
-      {/* View Invoice Dialog */}
-      <Dialog open={viewDialogOpen} onOpenChange={setViewDialogOpen}>
-        <DialogContent className="sm:max-w-md">
-          <DialogHeader>
-            <DialogTitle>Invoice Details</DialogTitle>
-            <DialogDescription>
-              {viewingInvoice?.number}
-            </DialogDescription>
-          </DialogHeader>
-          {viewingInvoice && (
-            <div className="space-y-3 py-2">
-              <div className="flex justify-between text-sm">
-                <span className="text-muted-foreground">Date</span>
-                <span className="font-medium">{format(parseISO(viewingInvoice.date), "dd MMM yyyy")}</span>
-              </div>
-              <div className="flex justify-between text-sm">
-                <span className="text-muted-foreground">Description</span>
-                <span className="font-medium">{viewingInvoice.description}</span>
-              </div>
-              <div className="flex justify-between text-sm">
-                <span className="text-muted-foreground">Amount</span>
-                <span className="font-medium">${viewingInvoice.amount.toFixed(2)}</span>
-              </div>
-              <Separator />
-              <div className="flex justify-between text-sm">
-                <span className="text-muted-foreground">Payment Method</span>
-                <span className="font-medium capitalize">{viewingInvoice.paymentMethod}</span>
-              </div>
-              <div className="flex justify-between text-sm">
-                <span className="text-muted-foreground">Status</span>
-                {getStatusBadge(viewingInvoice.status)}
-              </div>
-              {viewingInvoice.dueDate && (
-                <div className="flex justify-between text-sm">
-                  <span className="text-muted-foreground">Due Date</span>
-                  <span className="font-medium">{format(parseISO(viewingInvoice.dueDate), "dd MMM yyyy")}</span>
-                </div>
-              )}
-            </div>
-          )}
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setViewDialogOpen(false)}>Close</Button>
-            {viewingInvoice && (viewingInvoice.status === "unpaid" || viewingInvoice.status === "overdue") && (
-              <Button onClick={() => { setViewDialogOpen(false); handlePayByCard(viewingInvoice); }} className="gap-1.5">
-                <CreditCard className="h-4 w-4" />
-                Pay by Card
-              </Button>
-            )}
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
     </div>
   );
 }
