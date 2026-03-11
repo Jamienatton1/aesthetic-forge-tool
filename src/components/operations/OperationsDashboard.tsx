@@ -91,7 +91,7 @@ export function OperationsDashboard() {
           title="Active Trials" 
           data={activeTrialsData} 
           currentValue={`${trialMetrics.activeTrials} active now`} 
-          color="hsl(25, 85%, 55%)"
+          color="hsl(30, 95%, 55%)"
         />
       </div>
 
