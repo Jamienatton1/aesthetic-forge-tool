@@ -68,8 +68,8 @@ const activationMetrics = {
 };
 
 const expiringTrials = [
-  { name: "GreenFest Ltd", daysLeft: 0 },
-  { name: "EcoSummit Co", daysLeft: 0 },
+  { name: "GreenFest Ltd", daysLeft: 1 },
+  { name: "EcoSummit Co", daysLeft: 1 },
   { name: "Blue Horizon Events", daysLeft: 1 },
   { name: "Nordic Travel Group", daysLeft: 2 },
   { name: "Sustainable Stays", daysLeft: 3 },
@@ -78,12 +78,21 @@ const expiringTrials = [
 export function OperationsDashboard() {
   return (
     <div className="space-y-6">
-      {/* Signup & Trial Row */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <MetricCard icon={<Building2 className="w-4 h-4" />} label="Signups (7d)" value={signupMetrics.last7Days} />
-        <MetricCard icon={<Building2 className="w-4 h-4" />} label="Signups (30d)" value={signupMetrics.last30Days} />
-        <MetricCard icon={<Users className="w-4 h-4" />} label="Active Trials" value={trialMetrics.activeTrials} />
-        <MetricCard icon={<AlertTriangle className="w-4 h-4" />} label="Expiring Today" value={trialMetrics.expiringToday} variant="warning" />
+      {/* Signup & Trial Charts Row */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        <TrendChart 
+          title="Signups" 
+          data={signupData} 
+          currentValue={`${signupMetrics.last30Days} this month`} 
+          color="hsl(220, 70%, 55%)"
+          showTotal
+        />
+        <TrendChart 
+          title="Active Trials" 
+          data={activeTrialsData} 
+          currentValue={`${trialMetrics.activeTrials} active now`} 
+          color="hsl(280, 60%, 55%)"
+        />
       </div>
 
       {/* Revenue Charts */}
