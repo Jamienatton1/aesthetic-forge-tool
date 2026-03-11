@@ -147,9 +147,9 @@ export function OperationsDashboard() {
           <CardContent className="space-y-2">
             {expiringTrials.map((trial) => (
               <div key={trial.name} className="flex items-center justify-between text-sm py-1.5 border-b last:border-0">
-                <span className="text-foreground font-medium">{trial.name}</span>
-                <Badge variant={trial.daysLeft === 0 ? "destructive" : "secondary"} className="text-xs">
-                  {trial.daysLeft === 0 ? "Today" : `${trial.daysLeft}d left`}
+                <span className="text-muted-foreground font-medium">{trial.name}</span>
+                <Badge variant="secondary" className="text-xs">
+                  {trial.daysLeft}d left
                 </Badge>
               </div>
             ))}
