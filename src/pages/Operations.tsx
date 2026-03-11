@@ -5,6 +5,7 @@ import { OperationsDashboard } from "@/components/operations/OperationsDashboard
 import { OperationsOrganisations } from "@/components/operations/OperationsOrganisations";
 import { OperationsUsers } from "@/components/operations/OperationsUsers";
 import { OperationsRevenue } from "@/components/operations/OperationsRevenue";
+import { OperationsNotifications } from "@/components/operations/OperationsNotifications";
 
 const Operations = () => {
   return (
@@ -20,7 +21,7 @@ const Operations = () => {
               <TabsTrigger value="organisations">Organisations</TabsTrigger>
               <TabsTrigger value="users">Users</TabsTrigger>
               <TabsTrigger value="revenue">Revenue</TabsTrigger>
-              <TabsTrigger value="notifications" disabled className="opacity-40">Notifications</TabsTrigger>
+              <TabsTrigger value="notifications">Notifications</TabsTrigger>
             </TabsList>
 
             <TabsContent value="dashboard">
@@ -37,6 +38,10 @@ const Operations = () => {
 
             <TabsContent value="revenue">
               <OperationsRevenue />
+            </TabsContent>
+
+            <TabsContent value="notifications">
+              <OperationsNotifications />
             </TabsContent>
           </Tabs>
         </main>
