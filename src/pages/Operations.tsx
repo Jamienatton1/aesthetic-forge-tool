@@ -4,6 +4,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { OperationsDashboard } from "@/components/operations/OperationsDashboard";
 import { OperationsOrganisations } from "@/components/operations/OperationsOrganisations";
 import { OperationsUsers } from "@/components/operations/OperationsUsers";
+import { OperationsRevenue } from "@/components/operations/OperationsRevenue";
 
 const Operations = () => {
   return (
