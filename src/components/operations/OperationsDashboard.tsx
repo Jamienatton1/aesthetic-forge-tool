@@ -188,8 +188,8 @@ function TrendChart({ title, data, currentValue, color, showTotal }: {
           <BarChart data={data} margin={{ top: 0, right: 0, left: -20, bottom: 0 }}>
             <defs>
               <linearGradient id={`gradient-${title}`} x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor={color} stopOpacity={0.8} />
-                <stop offset="100%" stopColor={color} stopOpacity={0.4} />
+                <stop offset="0%" stopColor={color} stopOpacity={0.9} />
+                <stop offset="100%" stopColor={color} stopOpacity={0.6} />
               </linearGradient>
             </defs>
             <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" vertical={false} />
