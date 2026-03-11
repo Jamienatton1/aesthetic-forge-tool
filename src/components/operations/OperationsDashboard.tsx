@@ -214,7 +214,9 @@ function RevenueChart({ title, data, currentValue, color, prefix }: {
   currentValue: string;
   color: string;
   prefix?: string;
-}) {
+) {
+  const gradientId = `gradient-revenue-${title.replace(/\s+/g, '-')}`;
+  
   return (
     <Card>
       <CardHeader className="pb-2">
@@ -228,19 +230,19 @@ function RevenueChart({ title, data, currentValue, color, prefix }: {
         <ResponsiveContainer width="100%" height={120}>
           <AreaChart data={data} margin={{ top: 0, right: 0, left: -20, bottom: 0 }}>
             <defs>
-              <linearGradient id={`gradient-${title}`} x1="0" y1="0" x2="0" y2="1">
+              <linearGradient id={gradientId} x1="0" y1="0" x2="0" y2="1">
                 <stop offset="0%" stopColor={color} stopOpacity={0.4} />
                 <stop offset="100%" stopColor={color} stopOpacity={0.1} />
               </linearGradient>
             </defs>
-            <CartesianGrid strokeDasharray="3 3" stroke="hsl(120, 20%, 90%)" vertical={false} />
+            <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" vertical={false} />
             <XAxis dataKey="month" tick={{ fontSize: 11 }} tickLine={false} axisLine={false} />
             <YAxis tick={{ fontSize: 11 }} tickLine={false} axisLine={false} tickFormatter={(v) => prefix ? `${prefix}${(v / 1000).toFixed(0)}k` : `${v}`} />
             <Tooltip
-              contentStyle={{ borderRadius: "8px", border: "1px solid hsl(120, 20%, 90%)", fontSize: 12 }}
+              contentStyle={{ borderRadius: "8px", border: "1px solid hsl(var(--border))", fontSize: 12 }}
               formatter={(value: number) => [prefix ? `${prefix}${value.toLocaleString()}` : value, title]}
             />
-            <Area type="monotone" dataKey="value" stroke={color} strokeWidth={2} fill={`url(#gradient-${title})`} />
+            <Area type="monotone" dataKey="value" stroke={color} strokeWidth={2} fill={`url(#${gradientId})`} />
           </AreaChart>
         </ResponsiveContainer>
       </CardContent>
