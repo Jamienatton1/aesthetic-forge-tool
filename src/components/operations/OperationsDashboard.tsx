@@ -99,7 +99,7 @@ export function OperationsDashboard() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
         <RevenueChart title="MRR" data={mrrData} currentValue="£4,830" color="hsl(160, 60%, 45%)" prefix="£" />
         <RevenueChart title="ARR" data={arrData} currentValue="£57,960" color="hsl(200, 60%, 50%)" prefix="£" />
-        <RevenueChart title="Paying Organisations" data={payingOrgsData} currentValue="34" color="hsl(280, 65%, 55%)" />
+        <RevenueChart title="Paying Organisations" data={payingOrgsData} currentValue="34" color="hsl(270, 80%, 65%)" />
       </div>
 
       {/* Activation & Trials Detail */}
